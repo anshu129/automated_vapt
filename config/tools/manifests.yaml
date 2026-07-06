@@ -1,0 +1,723 @@
+# Tool manifests — all integrated providers
+# Selection is capability-driven; not every tool runs on every target.
+version: "1.0"
+
+tools:
+  # --- Asset & Subdomain Discovery ---
+  amass:
+    binary: amass
+    capabilities: [PASSIVE_SUBDOMAIN_DISCOVERY, ACTIVE_SUBDOMAIN_DISCOVERY, CERTIFICATE_TRANSPARENCY_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["enum", "-passive", "-d", "{domain}"]
+    priority: 85
+    enabled: true
+
+  subfinder:
+    binary: subfinder
+    capabilities: [PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-d", "{domain}", "-silent"]
+    priority: 90
+    enabled: true
+
+  assetfinder:
+    binary: assetfinder
+    capabilities: [PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["--subs-only", "{domain}"]
+    priority: 70
+    enabled: true
+
+  findomain:
+    binary: findomain
+    capabilities: [PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-t", "{domain}", "-q"]
+    priority: 75
+    enabled: true
+
+  sublist3r:
+    binary: sublist3r
+    capabilities: [PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-d", "{domain}"]
+    priority: 60
+    enabled: true
+
+  oneforall:
+    binary: oneforall
+    capabilities: [PASSIVE_SUBDOMAIN_DISCOVERY, ACTIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["--target", "{domain}", "run"]
+    priority: 80
+    enabled: true
+
+  chaos-client:
+    binary: chaos
+    capabilities: [EXTERNAL_DATASET_DISCOVERY, PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE_QUOTA
+    output_format: text
+    base_args: ["-d", "{domain}", "-silent"]
+    priority: 65
+    requires_api_key: true
+    enabled: true
+
+  github-subdomains:
+    binary: github-subdomains
+    capabilities: [CODE_REFERENCE_DISCOVERY, PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE_QUOTA
+    output_format: text
+    base_args: ["-d", "{domain}"]
+    priority: 55
+    enabled: true
+
+  crobat:
+    binary: crobat
+    capabilities: [EXTERNAL_DATASET_DISCOVERY, PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-s", "{domain}"]
+    priority: 50
+    enabled: true
+
+  crtsh:
+    binary: curl
+    capabilities: [CERTIFICATE_TRANSPARENCY_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-s", "https://crt.sh/?q=%.{domain}&output=json"]
+    priority: 70
+    enabled: true
+    wrapper: crtsh
+
+  # --- DNS ---
+  dnsx:
+    binary: dnsx
+    capabilities: [DNS_RESOLUTION, WILDCARD_DETECTION]
+    capability_group: DNS
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-d", "{hostname}", "-a", "-aaaa", "-cname", "-resp", "-json"]
+    priority: 95
+    enabled: true
+
+  shuffledns:
+    binary: shuffledns
+    capabilities: [DNS_BRUTEFORCE, DNS_RESOLUTION]
+    capability_group: DNS
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-d", "{domain}", "-w", "{wordlist}"]
+    priority: 60
+    enabled: true
+
+  massdns:
+    binary: massdns
+    capabilities: [HIGH_VOLUME_DNS_RESOLUTION, DNS_RESOLUTION]
+    capability_group: DNS
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-r", "{resolvers}", "-t", "A", "-o", "S", "{targets_file}"]
+    priority: 70
+    enabled: true
+
+  puredns:
+    binary: puredns
+    capabilities: [DNS_RESOLUTION, WILDCARD_DETECTION]
+    capability_group: DNS
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["resolve", "{targets_file}", "-r", "{resolvers}"]
+    priority: 75
+    enabled: true
+
+  altdns:
+    binary: altdns
+    capabilities: [DNS_PERMUTATION_GENERATION]
+    capability_group: DNS
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-i", "{hosts_file}", "-o", "{output}"]
+    priority: 50
+    enabled: true
+
+  dnsgen:
+    binary: dnsgen
+    capabilities: [DNS_PERMUTATION_GENERATION]
+    capability_group: DNS
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["{domain}"]
+    priority: 45
+    enabled: true
+
+  mapcidr:
+    binary: mapcidr
+    capabilities: [CIDR_EXPANSION]
+    capability_group: DNS
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-cidr", "{cidr}", "-silent"]
+    priority: 80
+    enabled: true
+
+  # --- Host / Service ---
+  httpx:
+    binary: httpx
+    capabilities: [HTTP_PROBING, HOST_REACHABILITY_ASSESSMENT, WEB_FINGERPRINTING]
+    capability_group: HTTP_WEB
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{url}", "-json", "-silent", "-status-code", "-title", "-tech-detect"]
+    priority: 95
+    enabled: true
+
+  nmap:
+    binary: nmap
+    capabilities: [PORT_DISCOVERY, SERVICE_IDENTIFICATION, PROTOCOL_CONFIRMATION]
+    capability_group: HOST_SERVICE
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: xml
+    base_args: ["-Pn", "-sV", "-oX", "-", "{target}"]
+    priority: 90
+    enabled: true
+
+  naabu:
+    binary: naabu
+    capabilities: [PORT_DISCOVERY]
+    capability_group: HOST_SERVICE
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-host", "{hostname}", "-json"]
+    priority: 85
+    enabled: true
+
+  masscan:
+    binary: masscan
+    capabilities: [PORT_DISCOVERY]
+    capability_group: HOST_SERVICE
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["{ip}", "-p", "{ports}", "--rate", "{rate}"]
+    priority: 70
+    enabled: true
+
+  rustscan:
+    binary: rustscan
+    capabilities: [PORT_DISCOVERY]
+    capability_group: HOST_SERVICE
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-a", "{ip}", "--", "-sV"]
+    priority: 80
+    enabled: true
+
+  zmap:
+    binary: zmap
+    capabilities: [PORT_DISCOVERY]
+    capability_group: HOST_SERVICE
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-p", "{port}", "{cidr}"]
+    priority: 50
+    enabled: true
+
+  autorecon:
+    binary: autorecon
+    capabilities: [SERVICE_IDENTIFICATION, PORT_DISCOVERY]
+    capability_group: HOST_SERVICE
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["{ip}"]
+    priority: 60
+    enabled: true
+
+  # --- Historical URL / Crawling ---
+  gau:
+    binary: gau
+    capabilities: [HISTORICAL_URL_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["{domain}", "--subs"]
+    priority: 85
+    enabled: true
+
+  waybackurls:
+    binary: waybackurls
+    capabilities: [ARCHIVE_DISCOVERY, HISTORICAL_URL_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["{domain}"]
+    priority: 80
+    enabled: true
+
+  waymore:
+    binary: waymore
+    capabilities: [ARCHIVE_DISCOVERY, HISTORICAL_URL_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-i", "{domain}", "-mode", "U"]
+    priority: 75
+    enabled: true
+
+  katana:
+    binary: katana
+    capabilities: [LIVE_CRAWLING, ENDPOINT_EXTRACTION, JAVASCRIPT_COLLECTION]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{url}", "-jsonl", "-silent", "-jc"]
+    priority: 90
+    enabled: true
+
+  hakrawler:
+    binary: hakrawler
+    capabilities: [LIVE_CRAWLING, ENDPOINT_EXTRACTION]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-url", "{url}", "-plain"]
+    priority: 70
+    enabled: true
+
+  photon:
+    binary: photon
+    capabilities: [LIVE_CRAWLING, ENDPOINT_EXTRACTION]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-u", "{url}", "-q"]
+    priority: 65
+    enabled: true
+
+  # --- Directory / Content ---
+  ffuf:
+    binary: ffuf
+    capabilities: [CONTENT_DISCOVERY, FILE_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{url}/FUZZ", "-w", "{wordlist}", "-json"]
+    priority: 85
+    enabled: true
+
+  feroxbuster:
+    binary: feroxbuster
+    capabilities: [CONTENT_DISCOVERY, DIRECTORY_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{url}", "-w", "{wordlist}", "--json"]
+    priority: 80
+    enabled: true
+
+  gobuster:
+    binary: gobuster
+    capabilities: [DIRECTORY_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["dir", "-u", "{url}", "-w", "{wordlist}", "-q"]
+    priority: 75
+    enabled: true
+
+  dirsearch:
+    binary: dirsearch
+    capabilities: [DIRECTORY_DISCOVERY, FILE_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{url}", "--json-report", "-"]
+    priority: 70
+    enabled: true
+
+  wfuzz:
+    binary: wfuzz
+    capabilities: [CONTENT_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-c", "-z", "file,{wordlist}", "--hc", "404", "{url}/FUZZ"]
+    priority: 60
+    enabled: true
+
+  # --- Parameters / URL ---
+  arjun:
+    binary: arjun
+    capabilities: [PARAMETER_DISCOVERY]
+    capability_group: HTTP_WEB
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{url}", "-oJ", "-"]
+    priority: 85
+    enabled: true
+
+  paramspider:
+    binary: paramspider
+    capabilities: [PARAMETER_DISCOVERY]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-d", "{domain}"]
+    priority: 75
+    enabled: true
+
+  unfurl:
+    binary: unfurl
+    capabilities: [URL_NORMALIZATION]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["paths"]
+    priority: 50
+    enabled: true
+    stdin: true
+
+  gf:
+    binary: gf
+    capabilities: [URL_PATTERN_CLASSIFICATION]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["{pattern}"]
+    priority: 45
+    enabled: true
+    stdin: true
+
+  qsreplace:
+    binary: qsreplace
+    capabilities: [QUERY_MUTATION_PREPARATION]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["{payload}"]
+    priority: 40
+    enabled: true
+    stdin: true
+
+  # --- JS / Secrets ---
+  linkfinder:
+    binary: python
+    capabilities: [STATIC_API_REFERENCE_EXTRACTION, STATIC_ROUTE_EXTRACTION]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["linkfinder.py", "-i", "{js_url}", "-o", "cli"]
+    priority: 70
+    enabled: true
+
+  secretfinder:
+    binary: python
+    capabilities: [SECRET_INDICATOR_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: text
+    base_args: ["SecretFinder.py", "-i", "{url}", "-o", "cli"]
+    priority: 65
+    enabled: true
+
+  trufflehog:
+    binary: trufflehog
+    capabilities: [SECRET_INDICATOR_DISCOVERY, REPOSITORY_SECRET_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["filesystem", "{path}", "--json"]
+    priority: 80
+    enabled: true
+
+  gitleaks:
+    binary: gitleaks
+    capabilities: [REPOSITORY_SECRET_DISCOVERY, SECRET_INDICATOR_DISCOVERY]
+    capability_group: CRAWLING
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["detect", "--source", "{path}", "--report-format", "json", "--report-path", "-"]
+    priority: 85
+    enabled: true
+
+  github-code-search:
+    binary: curl
+    capabilities: [CODE_REFERENCE_DISCOVERY]
+    capability_group: SUBDOMAIN_DISCOVERY
+    safety_class: PASSIVE
+    cost_tier: FREE_QUOTA
+    output_format: json
+    base_args: []
+    priority: 40
+    enabled: true
+    wrapper: github_search
+
+  # --- Fingerprinting ---
+  wappalyzer:
+    binary: wappalyzer
+    capabilities: [TECHNOLOGY_IDENTIFICATION, WEB_FINGERPRINTING]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["{url}", "-P"]
+    priority: 75
+    enabled: true
+
+  whatweb:
+    binary: whatweb
+    capabilities: [TECHNOLOGY_IDENTIFICATION, WEB_FINGERPRINTING]
+    capability_group: HTTP_WEB
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-a", "3", "{url}"]
+    priority: 80
+    enabled: true
+
+  wafw00f:
+    binary: wafw00f
+    capabilities: [WAF_IDENTIFICATION]
+    capability_group: HTTP_WEB
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["{url}", "-o", "-"]
+    priority: 90
+    enabled: true
+
+  tlsx:
+    binary: tlsx
+    capabilities: [TLS_CHARACTERIZATION]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-u", "{hostname}", "-json", "-silent"]
+    priority: 90
+    enabled: true
+
+  webanalyze:
+    binary: webanalyze
+    capabilities: [TECHNOLOGY_IDENTIFICATION]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-host", "{url}"]
+    priority: 70
+    enabled: true
+
+  builtwith:
+    binary: curl
+    capabilities: [TECHNOLOGY_IDENTIFICATION]
+    capability_group: HTTP_WEB
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    base_args: []
+    priority: 30
+    enabled: false
+
+  # --- OSINT (optional paid — disabled by default) ---
+  shodan:
+    binary: shodan
+    capabilities: [EXTERNAL_ASSET_ENRICHMENT, INTERNET_SERVICE_OBSERVATION]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    base_args: ["host", "{ip}"]
+    priority: 50
+    requires_api_key: true
+    enabled: false
+
+  censys:
+    binary: censys
+    capabilities: [EXTERNAL_ASSET_ENRICHMENT]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    base_args: ["search", "{ip}"]
+    requires_api_key: true
+    enabled: false
+
+  securitytrails:
+    binary: curl
+    capabilities: [HISTORICAL_SERVICE_OBSERVATION, PASSIVE_SUBDOMAIN_DISCOVERY]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    requires_api_key: true
+    enabled: false
+
+  netlas:
+    binary: netlas
+    capabilities: [EXTERNAL_ASSET_ENRICHMENT]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    requires_api_key: true
+    enabled: false
+
+  zoomeye:
+    binary: zoomeye
+    capabilities: [EXTERNAL_ASSET_ENRICHMENT]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    requires_api_key: true
+    enabled: false
+
+  fofa:
+    binary: curl
+    capabilities: [EXTERNAL_ASSET_ENRICHMENT]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: OPTIONAL_PAID
+    output_format: json
+    requires_api_key: true
+    enabled: false
+
+  urlscan:
+    binary: curl
+    capabilities: [EXTERNAL_ASSET_ENRICHMENT]
+    capability_group: OSINT
+    safety_class: PASSIVE
+    cost_tier: FREE_QUOTA
+    output_format: json
+    base_args: ["-s", "https://urlscan.io/api/v1/search/?q=domain:{domain}"]
+    priority: 60
+    enabled: true
+
+  # --- Cloud ---
+  cloud_enum:
+    binary: cloud_enum
+    capabilities: [CLOUD_ASSET_DISCOVERY]
+    capability_group: CLOUD
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-k", "{keyword}"]
+    priority: 80
+    enabled: true
+
+  s3scanner:
+    binary: s3scanner
+    capabilities: [CLOUD_ASSET_DISCOVERY]
+    capability_group: CLOUD
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["-bucket", "{bucket}"]
+    priority: 75
+    enabled: true
+
+  scoutsuite:
+    binary: scout
+    capabilities: [CLOUD_CONFIGURATION_ASSESSMENT]
+    capability_group: CLOUD
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: json
+    base_args: ["aws", "--report-dir", "{output}"]
+    priority: 70
+    enabled: true
+
+  # --- API ---
+  kiterunner:
+    binary: kr
+    capabilities: [API_ROUTE_DISCOVERY]
+    capability_group: API
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: text
+    base_args: ["scan", "{url}"]
+    priority: 85
+    enabled: true
+
+  inql:
+    binary: inql
+    capabilities: [GRAPHQL_SCHEMA_INVENTORY, API_OPERATION_INVENTORY]
+    capability_group: API
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: ["-t", "{url}"]
+    priority: 80
+    enabled: true
+
+  mitmproxy-import:
+    binary: python
+    capabilities: [TRAFFIC_OBSERVATION_IMPORT]
+    capability_group: API
+    safety_class: PASSIVE
+    cost_tier: FREE
+    output_format: json
+    base_args: []
+    priority: 50
+    enabled: true
+    wrapper: mitmproxy_import

@@ -1,0 +1,104 @@
+# Per-tool help invocation recipes
+version: "1.0"
+
+defaults:
+  timeout_seconds: 45
+  help_argv:
+    - ["-h"]
+    - ["--help"]
+    - ["help"]
+
+tools:
+  amass:
+    help_argv:
+      - ["enum", "-h"]
+      - ["-h"]
+  gobuster:
+    help_argv:
+      - ["dir", "-h"]
+      - ["-h"]
+  trufflehog:
+    help_argv:
+      - ["--help"]
+  gitleaks:
+    help_argv:
+      - ["detect", "--help"]
+      - ["--help"]
+  scoutsuite:
+    binary: scout
+    help_argv:
+      - ["--help"]
+  kiterunner:
+    binary: kr
+    help_argv:
+      - ["--help"]
+  chaos-client:
+    binary: chaos
+  crtsh:
+    skip_live_help: true
+  github-code-search:
+    skip_live_help: true
+  builtwith:
+    skip_live_help: true
+  securitytrails:
+    skip_live_help: true
+  fofa:
+    skip_live_help: true
+  urlscan:
+    skip_live_help: true
+  mitmproxy-import:
+    skip_live_help: true
+  httpx:
+    help_argv:
+      - ["-h"]
+      - ["--help"]
+  subfinder:
+    help_argv:
+      - ["-h"]
+  dnsx:
+    help_argv:
+      - ["-h"]
+  katana:
+    help_argv:
+      - ["-h"]
+  naabu:
+    help_argv:
+      - ["-h"]
+  ffuf:
+    help_argv:
+      - ["-H"]
+      - ["-h"]
+  feroxbuster:
+    help_argv:
+      - ["--help"]
+  dirsearch:
+    help_argv:
+      - ["-h"]
+  wfuzz:
+    help_argv:
+      - ["-h"]
+  arjun:
+    help_argv:
+      - ["-h"]
+      - ["--help"]
+  wafw00f:
+    help_argv:
+      - ["-h"]
+      - ["--help"]
+  tlsx:
+    help_argv:
+      - ["-h"]
+  gau:
+    help_argv:
+      - ["-h"]
+      - ["--help"]
+  rustscan:
+    help_argv:
+      - ["-h"]
+      - ["--help"]
+  masscan:
+    help_argv:
+      - ["--help"]
+  nmap:
+    help_argv:
+      - ["-h"]

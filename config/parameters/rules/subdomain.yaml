@@ -1,0 +1,116 @@
+# Adaptive parameter rules — subdomain discovery tools
+version: "2.0"
+
+rules:
+  - id: param-amass-passive-only
+    tool: amass
+    reference_param: passive-mode
+    when:
+      any_of: [passive_only]
+    add_args: ["enum", "-passive"]
+    explanation: >-
+      PASSIVE_ONLY profile: Amass must use passive enumeration only (no packets to
+      target infrastructure) per OWASP Amass tutorial enum -passive semantics.
+
+  - id: param-amass-brute-low-gain
+    tool: amass
+    reference_param: active-brute
+    when:
+      any_of: [low_subdomain_gain]
+      none_of: [passive_only]
+    add_args: ["-brute"]
+    explanation: >-
+      Passive OSINT yielded low unique subdomain gain; Amass -brute performs
+      authorized DNS brute-force against authoritative nameservers.
+
+  - id: param-subfinder-all-sources
+    tool: subfinder
+    reference_param: all-sources
+    when:
+      any_of: [low_subdomain_gain]
+    add_args: ["-all"]
+    explanation: >-
+      Subfinder default sources insufficient; -all enables full passive source
+      set per projectdiscovery/subfinder documentation.
+
+  - id: param-subfinder-no-recursive-passive
+    tool: subfinder
+    reference_param: recursive
+    when:
+      passive_only: true
+    add_args: []
+    never: true
+    explanation: >-
+      Recursive subdomain discovery disabled under PASSIVE_ONLY; would increase
+      query volume beyond passive OSINT scope.
+
+  - id: param-findomain-threads-cautious
+    tool: findomain
+    reference_param: threads
+    when:
+      any_of: [rate_limited]
+    add_args: ["-t", "10"]
+    explanation: >-
+      API/resolver rate limiting observed; reduce Findomain thread count from
+      default to avoid upstream throttling.
+
+  - id: param-sublist3r-brute-active
+    tool: sublist3r
+    reference_param: brute-mode
+    when:
+      any_of: [low_subdomain_gain]
+      none_of: [passive_only]
+    add_args: ["-b"]
+    explanation: >-
+      Passive engine search exhausted; Sublist3r -b enables DNS brute module
+      when active scope permits.
+
+  - id: param-oneforall-brute
+    tool: oneforall
+    reference_param: brute
+    when:
+      any_of: [low_subdomain_gain]
+      none_of: [passive_only]
+    add_args: ["--brute", "True"]
+    explanation: >-
+      OneForAll module pipeline low yield; enable brute DNS when not passive_only.
+
+  - id: param-chaos-json
+    tool: chaos-client
+    reference_param: json
+    when:
+      any_of: [large_target_set]
+    add_args: ["-json"]
+    explanation: >-
+      Large subdomain set expected; JSON output preserves Chaos metadata for
+      evidence correlation.
+
+  - id: param-github-subdomains-token
+    tool: github-subdomains
+    reference_param: token
+    when:
+      any_of: [rate_limited]
+    add_args: ["-t", "{github_token}"]
+    explanation: >-
+      GitHub unauthenticated search rate-limited; token required per GitHub REST
+      API rate limit documentation.
+
+  - id: param-crobat-low-gain
+    tool: crobat
+    reference_param: search
+    when:
+      any_of: [low_subdomain_gain]
+    add_args: ["-s", "{domain}"]
+    explanation: >-
+      Marginal gain from primary passive sources; Crobat queries Sonar passive
+      DNS as supplemental EXTERNAL_DATASET_DISCOVERY.
+
+  - id: param-crtsh-dedupe
+    tool: crtsh
+    reference_param: dedupe
+    when:
+      any_of: [large_target_set]
+    add_args: ["dedupe=true"]
+    explanation: >-
+      Large CT log result set; crt.sh dedupe collapses duplicate certificate
+      common names per crt.sh query syntax.

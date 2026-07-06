@@ -1,0 +1,84 @@
+# Parameter discovery and URL processing
+version: "2.0"
+category: url_parameters
+
+tools:
+  arjun:
+    official_docs:
+      - https://github.com/s0md3v/Arjun
+    summary: HTTP parameter discovery suite.
+    parameters:
+      - id: json-stdout
+        flags: ["-u", "{url}", "-oJ", "-"]
+        when_to_use: PARAMETER_DISCOVERY on endpoints with query string potential.
+        rationale: "Arjun -oJ JSON to stdout per README for pipeline parsing."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["-t", "10"]
+        when_to_use: Reduce threads when WAF returns 429 on parameter probes.
+        rationale: "-t controls concurrent parameter guess requests."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: stable
+        flags: ["--stable"]
+        when_to_use: Noisy targets with inconsistent response lengths.
+        rationale: "--stable uses stable detection mode per Arjun docs."
+        operational_triggers: [waf_detected]
+      - id: include
+        flags: ["--include", "GET,POST"]
+        when_to_use: API endpoints accepting multiple methods.
+        rationale: "Restrict or expand HTTP methods for parameter mining."
+        operational_triggers: [api_surface_detected]
+
+  paramspider:
+    official_docs:
+      - https://github.com/devanshbatham/ParamSpider
+    summary: Mines parameters from web archive URLs for a domain.
+    parameters:
+      - id: domain
+        flags: ["-d", "{domain}"]
+        when_to_use: Passive PARAMETER_DISCOVERY from archived URLs.
+        rationale: "ParamSpider queries wayback for URLs with query strings."
+        operational_triggers: [manifest_base]
+      - id: level
+        flags: ["-l", "2"]
+        when_to_use: Deep archive mining when initial pass low yield.
+        rationale: "-l archive crawl depth per ParamSpider README."
+        operational_triggers: [low_subdomain_gain]
+
+  unfurl:
+    official_docs:
+      - https://github.com/tomnomnom/unfurl
+    summary: URL parsing and formatting utility.
+    parameters:
+      - id: paths
+        flags: ["paths"]
+        when_to_use: URL_NORMALIZATION extracting path components from URL list.
+        rationale: "unfurl paths format outputs URL paths from stdin stream."
+        operational_triggers: [manifest_base]
+      - id: keys
+        flags: ["keys"]
+        when_to_use: Extract query parameter names from discovered URLs.
+        rationale: "unfurl keys outputs unique query keys for param inventory."
+        operational_triggers: [api_surface_detected]
+
+  gf:
+    official_docs:
+      - https://github.com/tomnomnom/gf
+    summary: Grep-for patterns on URLs (SSRF, XSS, redirect, etc.).
+    parameters:
+      - id: pattern
+        flags: ["{pattern}"]
+        when_to_use: URL_PATTERN_CLASSIFICATION after URL harvest.
+        rationale: "gf pattern files filter URLs by vulnerability-relevant patterns."
+        operational_triggers: [manifest_base]
+
+  qsreplace:
+    official_docs:
+      - https://github.com/tomnomnom/qsreplace
+    summary: Replace query string values in URLs on stdin.
+    parameters:
+      - id: payload
+        flags: ["{payload}"]
+        when_to_use: QUERY_MUTATION_PREPARATION for validation test generation.
+        rationale: "qsreplace substitutes parameter values with payload token."
+        operational_triggers: [manifest_base]

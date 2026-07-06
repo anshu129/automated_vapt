@@ -1,0 +1,161 @@
+# Host probing, port discovery, and service identification
+version: "2.0"
+category: host_service
+
+tools:
+  httpx:
+    official_docs:
+      - https://github.com/projectdiscovery/httpx
+    summary: HTTP toolkit for probing live web services and fingerprinting.
+    parameters:
+      - id: json-silent
+        flags: ["-json", "-silent"]
+        when_to_use: Machine-readable HTTP probe results for parsers.
+        rationale: "httpx documents -json -silent for pipeline integration."
+        operational_triggers: [manifest_base]
+      - id: tech-detect
+        flags: ["-tech-detect"]
+        when_to_use: HTTP_PROBING when technology stack unknown.
+        rationale: "Wappalyzer-based tech detection built into httpx per README."
+        operational_triggers: [manifest_base]
+      - id: rate-limit
+        flags: ["-rate-limit", "50"]
+        when_to_use: HTTP 429, connection resets, or WAF throttling observed.
+        rationale: "httpx -rate-limit caps requests/second to avoid defensive blocking."
+        operational_triggers: [rate_limited, waf_detected]
+      - id: retries-timeout
+        flags: ["-retries", "3", "-timeout", "30"]
+        when_to_use: HIGH_LATENCY profile or prior inconclusive probes.
+        rationale: "Retries handle transient timeouts; extended timeout for slow TLS/CDN."
+        operational_triggers: [previous_timeouts]
+      - id: follow-redirects
+        flags: ["-follow-redirects", "-max-redirects", "5"]
+        when_to_use: HTTP_CHARACTERIZATION to map redirect chains to canonical URL.
+        rationale: "httpx redirect following documents max chain depth for accurate surface."
+        operational_triggers: [capability_HTTP_CHARACTERIZATION]
+      - id: no-fallback-http
+        flags: ["-no-fallback"]
+        when_to_use: tls_enforced known; skip automatic HTTP→HTTPS fallback probes.
+        rationale: "Reduces duplicate requests when HSTS or redirect-to-HTTPS confirmed."
+        operational_triggers: [tls_enforced]
+      - id: cdn-bypass
+        flags: ["-H", "Host: {hostname}"]
+        when_to_use: Origin IP discovered behind CDN for direct virtual-host probing.
+        rationale: "Direct IP probing requires correct Host header per httpx CDN bypass guidance."
+        operational_triggers: [cdn_detected]
+
+  naabu:
+    official_docs:
+      - https://github.com/projectdiscovery/naabu
+    summary: Fast port scanner using SYN/CONNECT scanning.
+    parameters:
+      - id: json-host
+        flags: ["-host", "{hostname}", "-json"]
+        when_to_use: PORT_DISCOVERY on resolved hostnames.
+        rationale: "naabu -json outputs structured port list for SERVICE_OBSERVED events."
+        operational_triggers: [manifest_base]
+      - id: scan-all-ips
+        flags: ["-scan-all-ips"]
+        when_to_use: Hostname resolves to multiple A records (CDN, load balancer).
+        rationale: "naabu README -scan-all-ips probes every resolved IP address."
+        operational_triggers: [cdn_detected, large_target_set]
+      - id: rate
+        flags: ["-rate", "500"]
+        when_to_use: Firewall inferred or prior scan triggered throttling.
+        rationale: "-rate packets per second; reduce to avoid IDS saturation."
+        operational_triggers: [rate_limited, firewall_inferred]
+      - id: top-ports
+        flags: ["-top-ports", "1000"]
+        when_to_use: Initial fast sweep before full port range.
+        rationale: "naabu -top-ports scans common ports first per nmap top-ports list."
+        operational_triggers: [manifest_base]
+      - id: skip-host-discovery
+        flags: ["-Pn"]
+        when_to_use: ICMP blocked; naabu should not assume host unreachable.
+        rationale: "Skips ping phase analogous to nmap -Pn."
+        operational_triggers: [icmp_blocked]
+
+  masscan:
+    official_docs:
+      - https://github.com/robertdavidgraham/masscan
+    summary: Internet-scale port scanner; requires raw network privileges.
+    parameters:
+      - id: rate
+        flags: ["--rate", "1000"]
+        when_to_use: CIDR or large IP scope; default rate tuned per interface capacity.
+        rationale: "masscan README --rate is primary throttle; exceeding causes packet loss."
+        operational_triggers: [cidr_scope]
+      - id: rate-cautious
+        flags: ["--rate", "500"]
+        when_to_use: Rate limiting or firewall inferred on prior masscan pass.
+        rationale: "Lower rate reduces dropped probes and IDS alerts."
+        operational_triggers: [rate_limited, firewall_inferred]
+      - id: banners
+        flags: ["--banners"]
+        when_to_use: SERVICE_IDENTIFICATION after open ports found.
+        rationale: "--banners grabs basic service banners per masscan documentation."
+        operational_triggers: [capability_SERVICE_IDENTIFICATION]
+
+  rustscan:
+    official_docs:
+      - https://github.com/RustScan/RustScan
+    summary: Fast port scanner that pipes open ports to nmap for service detection.
+    parameters:
+      - id: address
+        flags: ["-a", "{ip}"]
+        when_to_use: Single-host fast port discovery.
+        rationale: "rustscan -a specifies target IP/hostname."
+        operational_triggers: [manifest_base]
+      - id: batch-size
+        flags: ["-b", "2000"]
+        when_to_use: Default batch; reduce on rate_limited targets.
+        rationale: "-b controls concurrent port scan batch size per rustscan README."
+        operational_triggers: [rate_limited]
+      - id: nmap-pipe
+        flags: ["--", "-sV"]
+        when_to_use: Always when rustscan used for SERVICE_IDENTIFICATION chain.
+        rationale: "rustscan passes open ports to trailing nmap command after --."
+        operational_triggers: [manifest_base]
+
+  zmap:
+    official_docs:
+      - https://github.com/zmap/zmap
+    summary: Internet-wide single-port scanner for large CIDR scopes.
+    parameters:
+      - id: port
+        flags: ["-p", "{port}"]
+        when_to_use: CIDR_EXPANSION follow-up; one port per zmap invocation.
+        rationale: "zmap design scans one port across entire range per README."
+        operational_triggers: [cidr_scope]
+      - id: bandwidth
+        flags: ["-B", "10M"]
+        when_to_use: Cap bandwidth to avoid network saturation on shared links.
+        rationale: "-B limits bits/sec; zmap docs recommend tuning for link capacity."
+        operational_triggers: [rate_limited]
+      - id: blacklist
+        flags: ["-b", "{blacklist}"]
+        when_to_use: Exclude out-of-scope IPs from expanded CIDR.
+        rationale: "zmap blacklist file excludes IPs per scope manager output."
+        operational_triggers: [cidr_scope]
+
+  autorecon:
+    official_docs:
+      - https://github.com/Tib3rius/AutoRecon
+    summary: Multi-threaded automated recon wrapper around nmap and service scripts.
+    parameters:
+      - id: target-ip
+        flags: ["{ip}"]
+        when_to_use: Deep SERVICE_IDENTIFICATION on single high-value host.
+        rationale: "AutoRecon runs extensive nmap script suite per target IP."
+        operational_triggers: [manifest_base]
+      - id: port-scans-only
+        flags: ["--only-scans-dir"]
+        when_to_use: When full output volume must be limited.
+        rationale: "Restricts output directories per AutoRecon CLI help."
+        operational_triggers: [rate_limited]
+      - id: aggressive
+        flags: ["--aggressive"]
+        when_to_use: Never when rate_limited or production fragile target.
+        rationale: "Aggressive mode increases nmap script intensity; scope-gated."
+        operational_triggers: []
+        avoid_when: [rate_limited, waf_detected]

@@ -1,0 +1,123 @@
+# Technology, WAF, TLS, and web fingerprinting
+version: "2.0"
+category: fingerprinting
+
+tools:
+  wappalyzer:
+    official_docs:
+      - https://github.com/wappalyzer/wappalyzer
+    summary: Technology stack identification from HTTP responses.
+    parameters:
+      - id: pretty-json
+        flags: ["{url}", "-P"]
+        when_to_use: TECHNOLOGY_IDENTIFICATION passive fingerprint pass.
+        rationale: "wappalyzer CLI -P pretty JSON output per npm package docs."
+        operational_triggers: [manifest_base]
+      - id: probe
+        flags: ["--probe", "basic"]
+        when_to_use: Reduce probe intensity when rate_limited.
+        rationale: "Probe depth controls number of HTTP requests sent."
+        operational_triggers: [rate_limited]
+
+  whatweb:
+    official_docs:
+      - https://github.com/urbanadventurer/WhatWeb
+    summary: Web scanner identifying CMS, plugins, and server technologies.
+    parameters:
+      - id: aggression-3
+        flags: ["-a", "3"]
+        when_to_use: Balanced fingerprinting; aggression 3 per WhatWeb wiki.
+        rationale: >-
+          WhatWeb aggression levels 1-4; level 3 triggers additional plugin requests
+          without full aggressive redirect following.
+        operational_triggers: [manifest_base]
+      - id: aggression-1
+        flags: ["-a", "1"]
+        when_to_use: WAF or rate_limited; passive-style single request.
+        rationale: "Aggression 1 sends minimal requests per WhatWeb documentation."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: user-agent
+        flags: ["--user-agent", "Mozilla/5.0"]
+        when_to_use: Default UA blocked by WAF; use browser-like UA.
+        rationale: "WhatWeb --user-agent overrides default scanner signature."
+        operational_triggers: [waf_detected]
+
+  wafw00f:
+    official_docs:
+      - https://github.com/EnableSecurity/wafw00f
+    summary: Identifies Web Application Firewall products.
+    parameters:
+      - id: json-output
+        flags: ["{url}", "-o", "-"]
+        when_to_use: WAF_IDENTIFICATION before active content discovery.
+        rationale: "wafw00f JSON output for parser to set waf_detected context."
+        operational_triggers: [manifest_base]
+      - id: findall
+        flags: ["-a"]
+        when_to_use: Multiple WAF layers or CDN+WAF chain suspected.
+        rationale: "wafw00f -a tests all WAF signatures per README."
+        operational_triggers: [cdn_detected]
+      - id: proxy
+        flags: ["-p", "{proxy}"]
+        when_to_use: Authorized testing through corporate proxy only.
+        rationale: "Optional proxy for egress-restricted scan workers."
+        operational_triggers: []
+
+  tlsx:
+    official_docs:
+      - https://github.com/projectdiscovery/tlsx
+    summary: TLS data gathering and certificate analysis.
+    parameters:
+      - id: json-silent
+        flags: ["-u", "{hostname}", "-json", "-silent"]
+        when_to_use: TLS_CHARACTERIZATION for transport security applicability.
+        rationale: "tlsx JSON includes cipher suites, cert SANs, expiry per README."
+        operational_triggers: [manifest_base]
+      - id: san
+        flags: ["-san"]
+        when_to_use: Discover additional hostnames from certificate SANs.
+        rationale: "tlsx -san outputs subject alternative names for asset graph."
+        operational_triggers: [manifest_base]
+      - id: expired
+        flags: ["-expired"]
+        when_to_use: Include expired certificates in SAN harvesting.
+        rationale: "Historical certs may reveal decommissioned subdomains."
+        operational_triggers: [low_subdomain_gain]
+      - id: cipher
+        flags: ["-cipher"]
+        when_to_use: TLS_CONFIGURATION vulnerability class assessment.
+        rationale: "Cipher enumeration for weak protocol detection."
+        operational_triggers: [capability_TLS_CHARACTERIZATION]
+
+  webanalyze:
+    official_docs:
+      - https://github.com/rverton/webanalyze
+    summary: Port of Wappalyzer technology detection in Go.
+    parameters:
+      - id: host
+        flags: ["-host", "{url}"]
+        when_to_use: Alternative tech fingerprint when wappalyzer unavailable.
+        rationale: "webanalyze -host single URL scan per README."
+        operational_triggers: [manifest_base]
+      - id: crawl
+        flags: ["-crawl", "2"]
+        when_to_use: Deeper tech detection on multi-page apps.
+        rationale: "-crawl depth follows internal links for tech tags."
+        operational_triggers: [api_surface_detected]
+        avoid_when: [rate_limited]
+
+  builtwith:
+    official_docs:
+      - https://api.builtwith.com/
+    summary: Commercial technology profiling API.
+    parameters:
+      - id: domain-api
+        flags: ["DOMAIN_API"]
+        when_to_use: Optional paid enrichment when API key configured.
+        rationale: "BuiltWith Domain API returns technology history per vendor docs."
+        operational_triggers: [manifest_base]
+      - id: free-api
+        flags: ["FREE_API"]
+        when_to_use: Limited free tier lookups only.
+        rationale: "BuiltWith free API has strict quota per documentation."
+        operational_triggers: [rate_limited]

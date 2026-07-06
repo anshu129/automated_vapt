@@ -1,0 +1,677 @@
+# Full nmap parameter catalog — mirrors nmap -h / man page structure
+# Generated from official Nmap 7.99SVN help; re-run scripts/generate_nmap_reference.py to refresh
+version: '2.0'
+category: host_service
+tools:
+  nmap:
+    tool_version: 7.99SVN
+    official_docs:
+    - https://nmap.org
+    - https://nmap.org/book/man.html
+    - https://nmap.org/book/man-host-discovery.html
+    - https://nmap.org/book/man-port-scanning-techniques.html
+    - https://nmap.org/book/man-performance.html
+    usage: nmap [Scan Type(s)] [Options] {target specification}
+    summary: Network mapper for host discovery, port scanning, service/version detection, NSE scripts, and OS fingerprinting.
+    examples:
+    - nmap -v -A scanme.nmap.org
+    - nmap -v -sn 192.168.0.0/16 10.0.0.0/8
+    - nmap -v -iR 10000 -Pn -p 80
+    platform_manifest_base_args:
+    - -sV
+    - -oX
+    - '-'
+    - '{target}'
+    parameter_groups:
+    - id: TARGET_SPECIFICATION
+      title: Target specification
+      parameters:
+      - id: target
+        flags:
+        - '{target}'
+        description: 'Hostname, IP, CIDR, or range. Ex: scanme.nmap.org, 192.168.0.0/24'
+        rationale: 'Official nmap 7.99SVN help: Hostname, IP, CIDR, or range. Ex: scanme.nmap.org, 192.168.0.0/24'
+      - id: iL
+        flags:
+        - -iL <inputfilename>
+        description: Input from list of hosts/networks
+        rationale: 'Official nmap 7.99SVN help: Input from list of hosts/networks'
+      - id: iR
+        flags:
+        - -iR <num hosts>
+        description: Choose random targets
+        rationale: 'Official nmap 7.99SVN help: Choose random targets'
+      - id: exclude
+        flags:
+        - --exclude <host1[,host2]...>
+        description: Exclude hosts/networks from scan
+        rationale: 'Official nmap 7.99SVN help: Exclude hosts/networks from scan'
+      - id: excludefile
+        flags:
+        - --excludefile <exclude_file>
+        description: Exclude list from file
+        rationale: 'Official nmap 7.99SVN help: Exclude list from file'
+      description: Can pass hostnames, IP addresses, networks, etc.
+    - id: HOST_DISCOVERY
+      title: Host discovery
+      parameters:
+      - id: sL
+        flags:
+        - -sL
+        description: List scan — list targets without sending packets
+        rationale: 'Official nmap 7.99SVN help: List scan — list targets without sending packets'
+      - id: sn
+        flags:
+        - -sn
+        description: Ping scan — disable port scan (host discovery only)
+        rationale: 'Official nmap 7.99SVN help: Ping scan — disable port scan (host discovery only)'
+        when_to_use: HOST_REACHABILITY_ASSESSMENT only; no port scan noise.
+        operational_triggers:
+        - passive_only
+      - id: Pn
+        flags:
+        - -Pn
+        description: Treat all hosts as online — skip host discovery
+        rationale: 'Official nmap 7.99SVN help: Treat all hosts as online — skip host discovery'
+        when_to_use: ICMP blocked or firewall drops ping; host may still have open ports.
+        operational_triggers:
+        - icmp_blocked
+        - firewall_inferred
+        adaptive_rule_id: param-nmap-skip-ping-icmp
+        doc_url: https://nmap.org/book/man-host-discovery.html
+      - id: PS
+        flags:
+        - -PS[portlist]
+        description: TCP SYN discovery to given ports
+        rationale: 'Official nmap 7.99SVN help: TCP SYN discovery to given ports'
+      - id: PA
+        flags:
+        - -PA[portlist]
+        description: TCP ACK discovery to given ports
+        rationale: 'Official nmap 7.99SVN help: TCP ACK discovery to given ports'
+      - id: PU
+        flags:
+        - -PU[portlist]
+        description: UDP discovery to given ports
+        rationale: 'Official nmap 7.99SVN help: UDP discovery to given ports'
+      - id: PY
+        flags:
+        - -PY[portlist]
+        description: SCTP discovery to given ports
+        rationale: 'Official nmap 7.99SVN help: SCTP discovery to given ports'
+      - id: PE
+        flags:
+        - -PE
+        description: ICMP echo request discovery
+        rationale: 'Official nmap 7.99SVN help: ICMP echo request discovery'
+      - id: PP
+        flags:
+        - -PP
+        description: ICMP timestamp request discovery
+        rationale: 'Official nmap 7.99SVN help: ICMP timestamp request discovery'
+      - id: PM
+        flags:
+        - -PM
+        description: ICMP netmask request discovery
+        rationale: 'Official nmap 7.99SVN help: ICMP netmask request discovery'
+      - id: PO
+        flags:
+        - -PO[protocol list]
+        description: IP protocol ping
+        rationale: 'Official nmap 7.99SVN help: IP protocol ping'
+      - id: n
+        flags:
+        - -n
+        description: Never do DNS resolution
+        rationale: 'Official nmap 7.99SVN help: Never do DNS resolution'
+      - id: R
+        flags:
+        - -R
+        description: Always resolve DNS
+        rationale: 'Official nmap 7.99SVN help: Always resolve DNS'
+      - id: dns-servers
+        flags:
+        - --dns-servers <serv1[,serv2]...>
+        description: Specify custom DNS servers
+        rationale: 'Official nmap 7.99SVN help: Specify custom DNS servers'
+      - id: system-dns
+        flags:
+        - --system-dns
+        description: Use OS DNS resolver
+        rationale: 'Official nmap 7.99SVN help: Use OS DNS resolver'
+      - id: traceroute
+        flags:
+        - --traceroute
+        description: Trace hop path to each host
+        rationale: 'Official nmap 7.99SVN help: Trace hop path to each host'
+      - id: disable-arp-ping
+        flags:
+        - --disable-arp-ping
+        description: No ARP/ND ping on local ethernet
+        rationale: 'Official nmap 7.99SVN help: No ARP/ND ping on local ethernet'
+        when_to_use: Proxy ARP or LAN false positives; disable implicit ARP discovery on ethernet.
+        operational_triggers:
+        - proxy_arp_suspected
+        - local_network_target
+        - firewall_inferred
+        adaptive_rule_id: param-nmap-disable-arp-ping-proxy-arp
+        doc_url: https://nmap.org/book/man-host-discovery.html
+    - id: SCAN_TECHNIQUES
+      title: Scan techniques
+      parameters:
+      - id: sS
+        flags:
+        - -sS
+        description: TCP SYN scan (default for privileged users)
+        rationale: 'Official nmap 7.99SVN help: TCP SYN scan (default for privileged users)'
+        when_to_use: Filtered ports or stateful firewall; SYN scan without completing handshake.
+        operational_triggers:
+        - filtered_ports_observed
+        - firewall_inferred
+        adaptive_rule_id: param-nmap-tcp-syn-filtered
+      - id: sT
+        flags:
+        - -sT
+        description: TCP connect scan
+        rationale: 'Official nmap 7.99SVN help: TCP connect scan'
+      - id: sA
+        flags:
+        - -sA
+        description: TCP ACK scan
+        rationale: 'Official nmap 7.99SVN help: TCP ACK scan'
+      - id: sW
+        flags:
+        - -sW
+        description: TCP Window scan
+        rationale: 'Official nmap 7.99SVN help: TCP Window scan'
+      - id: sM
+        flags:
+        - -sM
+        description: TCP Maimon scan
+        rationale: 'Official nmap 7.99SVN help: TCP Maimon scan'
+      - id: sU
+        flags:
+        - -sU
+        description: UDP scan
+        rationale: 'Official nmap 7.99SVN help: UDP scan'
+      - id: sN
+        flags:
+        - -sN
+        description: TCP Null scan
+        rationale: 'Official nmap 7.99SVN help: TCP Null scan'
+      - id: sF
+        flags:
+        - -sF
+        description: TCP FIN scan
+        rationale: 'Official nmap 7.99SVN help: TCP FIN scan'
+      - id: sX
+        flags:
+        - -sX
+        description: TCP Xmas scan
+        rationale: 'Official nmap 7.99SVN help: TCP Xmas scan'
+      - id: scanflags
+        flags:
+        - --scanflags <flags>
+        description: Customize TCP scan flags
+        rationale: 'Official nmap 7.99SVN help: Customize TCP scan flags'
+      - id: sI
+        flags:
+        - -sI <zombie host[:probeport]>
+        description: Idle scan
+        rationale: 'Official nmap 7.99SVN help: Idle scan'
+      - id: sY
+        flags:
+        - -sY
+        description: SCTP INIT scan
+        rationale: 'Official nmap 7.99SVN help: SCTP INIT scan'
+      - id: sZ
+        flags:
+        - -sZ
+        description: SCTP COOKIE-ECHO scan
+        rationale: 'Official nmap 7.99SVN help: SCTP COOKIE-ECHO scan'
+      - id: sO
+        flags:
+        - -sO
+        description: IP protocol scan
+        rationale: 'Official nmap 7.99SVN help: IP protocol scan'
+      - id: b
+        flags:
+        - -b <FTP relay host>
+        description: FTP bounce scan
+        rationale: 'Official nmap 7.99SVN help: FTP bounce scan'
+    - id: PORT_SPECIFICATION
+      title: Port specification and scan order
+      parameters:
+      - id: p
+        flags:
+        - -p <port ranges>
+        description: 'Only scan specified ports. Ex: -p22; -p1-65535; -p U:53,T:80'
+        rationale: 'Official nmap 7.99SVN help: Only scan specified ports. Ex: -p22; -p1-65535; -p U:53,T:80'
+      - id: exclude-ports
+        flags:
+        - --exclude-ports <port ranges>
+        description: Exclude ports from scanning
+        rationale: 'Official nmap 7.99SVN help: Exclude ports from scanning'
+      - id: F
+        flags:
+        - -F
+        description: Fast mode — scan fewer ports than default
+        rationale: 'Official nmap 7.99SVN help: Fast mode — scan fewer ports than default'
+        when_to_use: Initial PORT_DISCOVERY pass on large target sets before full port sweep.
+        operational_triggers:
+        - large_target_set
+        - cidr_scope
+      - id: r
+        flags:
+        - -r
+        description: Scan ports sequentially — do not randomize
+        rationale: 'Official nmap 7.99SVN help: Scan ports sequentially — do not randomize'
+      - id: top-ports
+        flags:
+        - --top-ports <number>
+        description: Scan N most common ports
+        rationale: 'Official nmap 7.99SVN help: Scan N most common ports'
+        when_to_use: Fast first pass; scan most common ports before full range.
+        operational_triggers:
+        - large_target_set
+      - id: port-ratio
+        flags:
+        - --port-ratio <ratio>
+        description: Scan ports more common than ratio
+        rationale: 'Official nmap 7.99SVN help: Scan ports more common than ratio'
+    - id: SERVICE_VERSION
+      title: Service/version detection
+      parameters:
+      - id: sV
+        flags:
+        - -sV
+        description: Probe open ports for service/version info
+        rationale: 'Official nmap 7.99SVN help: Probe open ports for service/version info'
+        when_to_use: SERVICE_IDENTIFICATION capability; default in platform manifest base_args.
+        operational_triggers:
+        - manifest_base
+        platform_default: true
+      - id: version-intensity
+        flags:
+        - --version-intensity <0-9>
+        description: Version probe intensity level
+        rationale: 'Official nmap 7.99SVN help: Version probe intensity level'
+      - id: version-light
+        flags:
+        - --version-light
+        description: Limit to likely probes (intensity 2)
+        rationale: 'Official nmap 7.99SVN help: Limit to likely probes (intensity 2)'
+      - id: version-all
+        flags:
+        - --version-all
+        description: Try every probe (intensity 9)
+        rationale: 'Official nmap 7.99SVN help: Try every probe (intensity 9)'
+      - id: version-trace
+        flags:
+        - --version-trace
+        description: Show detailed version scan activity
+        rationale: 'Official nmap 7.99SVN help: Show detailed version scan activity'
+    - id: SCRIPT_SCAN
+      title: Script scan (NSE)
+      parameters:
+      - id: sC
+        flags:
+        - -sC
+        description: Equivalent to --script=default
+        rationale: 'Official nmap 7.99SVN help: Equivalent to --script=default'
+      - id: script
+        flags:
+        - --script=<Lua scripts>
+        description: Comma-separated scripts, directories, or categories
+        rationale: 'Official nmap 7.99SVN help: Comma-separated scripts, directories, or categories'
+      - id: script-args
+        flags:
+        - --script-args=<n1=v1,...>
+        description: Arguments to NSE scripts
+        rationale: 'Official nmap 7.99SVN help: Arguments to NSE scripts'
+      - id: script-args-file
+        flags:
+        - --script-args-file=filename
+        description: NSE args from file
+        rationale: 'Official nmap 7.99SVN help: NSE args from file'
+      - id: script-trace
+        flags:
+        - --script-trace
+        description: Show all data sent and received
+        rationale: 'Official nmap 7.99SVN help: Show all data sent and received'
+      - id: script-updatedb
+        flags:
+        - --script-updatedb
+        description: Update the script database
+        rationale: 'Official nmap 7.99SVN help: Update the script database'
+      - id: script-help
+        flags:
+        - --script-help=<Lua scripts>
+        description: Show help about scripts
+        rationale: 'Official nmap 7.99SVN help: Show help about scripts'
+    - id: OS_DETECTION
+      title: OS detection
+      parameters:
+      - id: O
+        flags:
+        - -O
+        description: Enable OS detection
+        rationale: 'Official nmap 7.99SVN help: Enable OS detection'
+      - id: osscan-limit
+        flags:
+        - --osscan-limit
+        description: Limit OS detection to promising targets
+        rationale: 'Official nmap 7.99SVN help: Limit OS detection to promising targets'
+      - id: osscan-guess
+        flags:
+        - --osscan-guess
+        description: Guess OS more aggressively
+        rationale: 'Official nmap 7.99SVN help: Guess OS more aggressively'
+    - id: TIMING_PERFORMANCE
+      title: Timing and performance
+      parameters:
+      - id: T0
+        flags:
+        - -T0
+        description: Paranoid timing template
+        rationale: 'Official nmap 7.99SVN help: Paranoid timing template'
+      - id: T1
+        flags:
+        - -T1
+        description: Sneaky timing template
+        rationale: 'Official nmap 7.99SVN help: Sneaky timing template'
+      - id: T2
+        flags:
+        - -T2
+        description: Polite timing template
+        rationale: 'Official nmap 7.99SVN help: Polite timing template'
+        when_to_use: Rate limiting or IDS throttling observed on prior probes.
+        operational_triggers:
+        - rate_limited
+        adaptive_rule_id: param-nmap-timing-rate-limited
+      - id: T3
+        flags:
+        - -T3
+        description: Normal timing template (default)
+        rationale: 'Official nmap 7.99SVN help: Normal timing template (default)'
+      - id: T4
+        flags:
+        - -T4
+        description: Aggressive timing template
+        rationale: 'Official nmap 7.99SVN help: Aggressive timing template'
+      - id: T5
+        flags:
+        - -T5
+        description: Insane timing template
+        rationale: 'Official nmap 7.99SVN help: Insane timing template'
+      - id: min-hostgroup
+        flags:
+        - --min-hostgroup/--max-hostgroup <size>
+        description: Parallel host scan group sizes
+        rationale: 'Official nmap 7.99SVN help: Parallel host scan group sizes'
+      - id: min-parallelism
+        flags:
+        - --min-parallelism/--max-parallelism <n>
+        description: Probe parallelization
+        rationale: 'Official nmap 7.99SVN help: Probe parallelization'
+      - id: rtt-timeout
+        flags:
+        - --min-rtt-timeout/--max-rtt-timeout/initial-rtt-timeout <time>
+        description: Probe RTT timeouts
+        rationale: 'Official nmap 7.99SVN help: Probe RTT timeouts'
+      - id: max-retries
+        flags:
+        - --max-retries <tries>
+        description: Cap port scan probe retransmissions
+        rationale: 'Official nmap 7.99SVN help: Cap port scan probe retransmissions'
+      - id: host-timeout
+        flags:
+        - --host-timeout <time>
+        description: Give up on target after duration
+        rationale: 'Official nmap 7.99SVN help: Give up on target after duration'
+        when_to_use: HIGH_LATENCY profile or slow/unresponsive targets.
+        operational_triggers:
+        - previous_timeouts
+        adaptive_rule_id: param-nmap-host-timeout-latency
+      - id: scan-delay
+        flags:
+        - --scan-delay/--max-scan-delay <time>
+        description: Delay between probes
+        rationale: 'Official nmap 7.99SVN help: Delay between probes'
+      - id: min-rate
+        flags:
+        - --min-rate <number>
+        description: Send packets no slower than N per second
+        rationale: 'Official nmap 7.99SVN help: Send packets no slower than N per second'
+      - id: max-rate
+        flags:
+        - --max-rate <number>
+        description: Send packets no faster than N per second
+        rationale: 'Official nmap 7.99SVN help: Send packets no faster than N per second'
+        when_to_use: Cap probe rate when rate_limited or fragile production target.
+        operational_triggers:
+        - rate_limited
+        - waf_detected
+    - id: FIREWALL_EVASION
+      title: Firewall/IDS evasion and spoofing
+      parameters:
+      - id: f
+        flags:
+        - -f
+        description: Fragment packets
+        rationale: 'Official nmap 7.99SVN help: Fragment packets'
+      - id: mtu
+        flags:
+        - --mtu <val>
+        description: Fragment packets with given MTU
+        rationale: 'Official nmap 7.99SVN help: Fragment packets with given MTU'
+      - id: D
+        flags:
+        - -D <decoy1,decoy2[,ME],...>
+        description: Cloak scan with decoys
+        rationale: 'Official nmap 7.99SVN help: Cloak scan with decoys'
+      - id: S
+        flags:
+        - -S <IP_Address>
+        description: Spoof source address
+        rationale: 'Official nmap 7.99SVN help: Spoof source address'
+      - id: e
+        flags:
+        - -e <iface>
+        description: Use specified interface
+        rationale: 'Official nmap 7.99SVN help: Use specified interface'
+      - id: source-port
+        flags:
+        - -g/--source-port <portnum>
+        description: Use given source port
+        rationale: 'Official nmap 7.99SVN help: Use given source port'
+      - id: proxies
+        flags:
+        - --proxies <url1,[url2],...>
+        description: Relay through HTTP/SOCKS4 proxies
+        rationale: 'Official nmap 7.99SVN help: Relay through HTTP/SOCKS4 proxies'
+      - id: data
+        flags:
+        - --data <hex string>
+        description: Append custom payload to packets
+        rationale: 'Official nmap 7.99SVN help: Append custom payload to packets'
+      - id: data-string
+        flags:
+        - --data-string <string>
+        description: Append custom ASCII payload
+        rationale: 'Official nmap 7.99SVN help: Append custom ASCII payload'
+      - id: data-length
+        flags:
+        - --data-length <num>
+        description: Append random data to packets
+        rationale: 'Official nmap 7.99SVN help: Append random data to packets'
+      - id: ip-options
+        flags:
+        - --ip-options <options>
+        description: Send packets with specified IP options
+        rationale: 'Official nmap 7.99SVN help: Send packets with specified IP options'
+      - id: ttl
+        flags:
+        - --ttl <val>
+        description: Set IP TTL field
+        rationale: 'Official nmap 7.99SVN help: Set IP TTL field'
+      - id: spoof-mac
+        flags:
+        - --spoof-mac <mac/prefix/vendor>
+        description: Spoof MAC address
+        rationale: 'Official nmap 7.99SVN help: Spoof MAC address'
+      - id: badsum
+        flags:
+        - --badsum
+        description: Send packets with bogus checksum
+        rationale: 'Official nmap 7.99SVN help: Send packets with bogus checksum'
+      platform_policy: Documented for completeness. Automated scans use only scope-authorized options; decoy/spoof flags require
+        explicit approval.
+    - id: OUTPUT
+      title: Output
+      parameters:
+      - id: oN
+        flags:
+        - -oN <file>
+        description: Normal format output
+        rationale: 'Official nmap 7.99SVN help: Normal format output'
+      - id: oX
+        flags:
+        - -oX <file>
+        description: XML format output
+        rationale: 'Official nmap 7.99SVN help: XML format output'
+        when_to_use: Platform parser consumes XML on stdout (-oX -).
+        operational_triggers:
+        - manifest_base
+        platform_default: true
+      - id: oS
+        flags:
+        - -oS <file>
+        description: Script kiddie format output
+        rationale: 'Official nmap 7.99SVN help: Script kiddie format output'
+      - id: oG
+        flags:
+        - -oG <file>
+        description: Grepable format output
+        rationale: 'Official nmap 7.99SVN help: Grepable format output'
+      - id: oA
+        flags:
+        - -oA <basename>
+        description: Output in normal, XML, and grepable formats
+        rationale: 'Official nmap 7.99SVN help: Output in normal, XML, and grepable formats'
+      - id: v
+        flags:
+        - -v
+        description: Increase verbosity
+        rationale: 'Official nmap 7.99SVN help: Increase verbosity'
+      - id: d
+        flags:
+        - -d
+        description: Increase debugging level
+        rationale: 'Official nmap 7.99SVN help: Increase debugging level'
+      - id: reason
+        flags:
+        - --reason
+        description: Display reason a port is in a particular state
+        rationale: 'Official nmap 7.99SVN help: Display reason a port is in a particular state'
+        when_to_use: Evidence quality debugging when port states are ambiguous (filtered vs closed).
+        operational_triggers:
+        - filtered_ports_observed
+        - inconclusive_dns
+      - id: open
+        flags:
+        - --open
+        description: Only show open (or possibly open) ports
+        rationale: 'Official nmap 7.99SVN help: Only show open (or possibly open) ports'
+      - id: packet-trace
+        flags:
+        - --packet-trace
+        description: Show all packets sent and received
+        rationale: 'Official nmap 7.99SVN help: Show all packets sent and received'
+      - id: iflist
+        flags:
+        - --iflist
+        description: Print host interfaces and routes
+        rationale: 'Official nmap 7.99SVN help: Print host interfaces and routes'
+      - id: append-output
+        flags:
+        - --append-output
+        description: Append to output files
+        rationale: 'Official nmap 7.99SVN help: Append to output files'
+      - id: resume
+        flags:
+        - --resume <filename>
+        description: Resume aborted scan
+        rationale: 'Official nmap 7.99SVN help: Resume aborted scan'
+      - id: noninteractive
+        flags:
+        - --noninteractive
+        description: Disable runtime keyboard interactions
+        rationale: 'Official nmap 7.99SVN help: Disable runtime keyboard interactions'
+      - id: stylesheet
+        flags:
+        - --stylesheet <path/URL>
+        description: XSL stylesheet for XML to HTML
+        rationale: 'Official nmap 7.99SVN help: XSL stylesheet for XML to HTML'
+      - id: webxml
+        flags:
+        - --webxml
+        description: Reference stylesheet from Nmap.Org
+        rationale: 'Official nmap 7.99SVN help: Reference stylesheet from Nmap.Org'
+      - id: no-stylesheet
+        flags:
+        - --no-stylesheet
+        description: Do not associate XSL with XML output
+        rationale: 'Official nmap 7.99SVN help: Do not associate XSL with XML output'
+    - id: MISC
+      title: Miscellaneous
+      parameters:
+      - id: '6'
+        flags:
+        - '-6'
+        description: Enable IPv6 scanning
+        rationale: 'Official nmap 7.99SVN help: Enable IPv6 scanning'
+      - id: A
+        flags:
+        - -A
+        description: OS detection, version detection, script scan, and traceroute
+        rationale: 'Official nmap 7.99SVN help: OS detection, version detection, script scan, and traceroute'
+      - id: datadir
+        flags:
+        - --datadir <dirname>
+        description: Custom Nmap data file location
+        rationale: 'Official nmap 7.99SVN help: Custom Nmap data file location'
+      - id: send-eth
+        flags:
+        - --send-eth
+        description: Send using raw ethernet frames
+        rationale: 'Official nmap 7.99SVN help: Send using raw ethernet frames'
+      - id: send-ip
+        flags:
+        - --send-ip
+        description: Send using raw IP packets
+        rationale: 'Official nmap 7.99SVN help: Send using raw IP packets'
+        when_to_use: Alternative to ARP on LAN when --disable-arp-ping set; use IP-level probes.
+        operational_triggers:
+        - proxy_arp_suspected
+        - local_network_target
+      - id: privileged
+        flags:
+        - --privileged
+        description: Assume user is fully privileged
+        rationale: 'Official nmap 7.99SVN help: Assume user is fully privileged'
+      - id: unprivileged
+        flags:
+        - --unprivileged
+        description: Assume user lacks raw socket privileges
+        rationale: 'Official nmap 7.99SVN help: Assume user lacks raw socket privileges'
+      - id: V
+        flags:
+        - -V
+        description: Print version number
+        rationale: 'Official nmap 7.99SVN help: Print version number'
+      - id: h
+        flags:
+        - -h
+        description: Print help summary
+        rationale: 'Official nmap 7.99SVN help: Print help summary'

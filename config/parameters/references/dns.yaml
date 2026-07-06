@@ -1,0 +1,154 @@
+# DNS resolution, brute-force, and permutation tools
+version: "2.0"
+category: dns
+
+tools:
+  dnsx:
+    official_docs:
+      - https://github.com/projectdiscovery/dnsx
+    summary: Fast DNS toolkit for resolution, wildcard detection, and record extraction.
+    parameters:
+      - id: record-types
+        flags: ["-a", "-aaaa", "-cname", "-resp"]
+        when_to_use: Full hostname resolution for asset graph (A/AAAA/CNAME chain).
+        rationale: "dnsx README documents -a -aaaa -cname for comprehensive record retrieval."
+        operational_triggers: [manifest_base]
+      - id: json-output
+        flags: ["-json"]
+        when_to_use: Structured parsing into DNS_RESOLVED events.
+        rationale: "JSON lines include host, TTL, and resolver metadata for evidence quality."
+        operational_triggers: [manifest_base]
+      - id: retry
+        flags: ["-retry", "3"]
+        when_to_use: Inconclusive DNS or HIGH_LATENCY / NO_DISCOVERY_ASSUMPTION profiles.
+        rationale: >-
+          '-retry' re-sends queries on timeout. dnsx docs recommend retries before concluding
+          NXDOMAIN when resolvers are slow or anycast-flapping.
+        operational_triggers: [inconclusive_dns, previous_timeouts]
+      - id: wildcard-detect
+        flags: ["-wd", "{domain}"]
+        when_to_use: Wildcard DNS suspected from false-positive subdomain flood.
+        rationale: >-
+          '-wd' enables wildcard detection filter per dnsx README; prevents bogus
+          HAS_SUBDOMAIN relationships from wildcard apex responses.
+        operational_triggers: [wildcard_dns_suspected]
+      - id: rate-limit
+        flags: ["-rate-limit", "100"]
+        when_to_use: Authoritative NS rate limiting or SERVFAIL spikes observed.
+        rationale: "dnsx -rate-limit caps queries/sec to avoid resolver throttling."
+        operational_triggers: [rate_limited]
+
+  shuffledns:
+    official_docs:
+      - https://github.com/projectdiscovery/shuffledns
+    summary: MassDNS wrapper with wildcard filtering for DNS brute-force.
+    parameters:
+      - id: wordlist-brute
+        flags: ["-w", "{wordlist}"]
+        when_to_use: Active DNS_BRUTEFORCE after passive enumeration plateaus.
+        rationale: "shuffledns requires wordlist for brute; uses massdns backend for speed."
+        operational_triggers: [low_subdomain_gain]
+        avoid_when: [passive_only, wildcard_dns_suspected]
+      - id: massdns-path
+        flags: ["-massdns", "{massdns_bin}"]
+        when_to_use: Non-default massdns installation path on executor host.
+        rationale: "shuffledns delegates resolution to massdns binary per project docs."
+        operational_triggers: [manifest_base]
+      - id: wildcard-filter
+        flags: ["-wf", "{wildcard_file}"]
+        when_to_use: Wildcard detected; filter false positives before emitting hostnames.
+        rationale: "-wf applies wildcard fingerprint file from prior dnsx -wd run."
+        operational_triggers: [wildcard_dns_suspected]
+
+  massdns:
+    official_docs:
+      - https://github.com/blechschmidt/massdns
+    summary: High-performance DNS stub resolver for bulk lookups.
+    parameters:
+      - id: resolvers
+        flags: ["-r", "{resolvers}"]
+        when_to_use: Always; quality resolver list critical for accuracy.
+        rationale: "massdns README requires -r resolver file; public resolvers affect completeness."
+        operational_triggers: [manifest_base]
+      - id: output-simple
+        flags: ["-o", "S"]
+        when_to_use: Simple output for piping to puredns/shuffledns filters.
+        rationale: "-o S format documented as simple name type data lines."
+        operational_triggers: [manifest_base]
+      - id: concurrency
+        flags: ["-s", "2000"]
+        when_to_use: Large target files without rate limiting from resolvers.
+        rationale: >-
+          '-s' sets concurrent outstanding queries. Reduce when SERVFAIL or rate_limited
+          observed from upstream resolvers.
+        operational_triggers: [large_target_set]
+        avoid_when: [rate_limited]
+
+  puredns:
+    official_docs:
+      - https://github.com/d3mondev/puredns
+    summary: DNS resolver with wildcard detection and invalid result filtering.
+    parameters:
+      - id: resolve
+        flags: ["resolve"]
+        when_to_use: HIGH_VOLUME_DNS_RESOLUTION after permutation generation.
+        rationale: "puredns resolve validates candidate hostnames against wildcard baseline."
+        operational_triggers: [manifest_base]
+      - id: resolvers
+        flags: ["-r", "{resolvers}"]
+        when_to_use: Always; trusted resolver list improves negative evidence quality.
+        rationale: "puredns uses resolver file same as massdns ecosystem."
+        operational_triggers: [manifest_base]
+      - id: wildcard-filter
+        flags: ["-w", "{wildcard_file}"]
+        when_to_use: After dnsx/shuffledns wildcard fingerprint captured.
+        rationale: "puredns -w filters wildcard matches per README wildcard filtering section."
+        operational_triggers: [wildcard_dns_suspected]
+
+  altdns:
+    official_docs:
+      - https://github.com/infosec-au/altdns
+    summary: Generates subdomain permutations from known hostnames.
+    parameters:
+      - id: input-hosts
+        flags: ["-i", "{hosts_file}"]
+        when_to_use: DNS_PERMUTATION_GENERATION after initial subdomain harvest.
+        rationale: "altdns -i takes discovered hosts to produce mutation candidates."
+        operational_triggers: [manifest_base]
+      - id: wordlist
+        flags: ["-w", "{words_file}"]
+        when_to_use: Custom mutation words beyond defaults.
+        rationale: "Optional wordlist extends insertion patterns per altdns README."
+        operational_triggers: [low_subdomain_gain]
+
+  dnsgen:
+    official_docs:
+      - https://github.com/AlephNullSK/dnsgen
+    summary: Generates domain permutations from input domains using word mangling.
+    parameters:
+      - id: stdin-domain
+        flags: ["{domain}"]
+        when_to_use: Permutation generation from apex or known subdomains.
+        rationale: "dnsgen accepts domain on stdin/arg and outputs candidate FQDNs."
+        operational_triggers: [manifest_base]
+
+  mapcidr:
+    official_docs:
+      - https://github.com/projectdiscovery/mapcidr
+    summary: CIDR expansion and IP manipulation utility.
+    parameters:
+      - id: cidr-input
+        flags: ["-cidr", "{cidr}"]
+        when_to_use: CIDR_EXPANSION when scope includes network ranges.
+        rationale: "mapcidr -cidr expands range to individual IPs for port scan tasks."
+        operational_triggers: [cidr_scope]
+      - id: silent
+        flags: ["-silent"]
+        when_to_use: Pipeline output of IPs only.
+        rationale: "-silent suppresses info logs per mapcidr README."
+        operational_triggers: [manifest_base]
+      - id: aggregate
+        flags: ["-aggregate"]
+        when_to_use: Reverse operation or summarizing expanded IPs back to minimal CIDR set.
+        rationale: "Aggregation reduces task fan-out for downstream masscan/zmap."
+        operational_triggers: [large_target_set]

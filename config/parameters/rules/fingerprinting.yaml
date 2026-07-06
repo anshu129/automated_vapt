@@ -1,0 +1,77 @@
+# Adaptive parameter rules — fingerprinting
+version: "2.0"
+
+rules:
+  - id: param-whatweb-aggression-waf
+    tool: whatweb
+    reference_param: aggression-1
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["-a", "1"]
+    explanation: >-
+      WAF/rate limit; WhatWeb aggression 1 sends minimal requests per wiki levels.
+
+  - id: param-whatweb-ua-waf
+    tool: whatweb
+    reference_param: user-agent
+    when:
+      any_of: [waf_detected]
+    add_args: ["--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"]
+    explanation: >-
+      Default scanner UA blocked; browser-like User-Agent per WhatWeb docs.
+
+  - id: param-wafw00f-findall
+    tool: wafw00f
+    reference_param: findall
+    when:
+      capability: WAF_IDENTIFICATION
+    add_args: ["-a"]
+    explanation: >-
+      Comprehensive WAF fingerprint; wafw00f -a tests all signatures to populate
+      waf_detected operational context for downstream tools.
+
+  - id: param-wafw00f-cdn-findall
+    tool: wafw00f
+    reference_param: findall
+    when:
+      any_of: [cdn_detected]
+    add_args: ["-a"]
+    explanation: >-
+      CDN fronting suspected; test all WAF/CDN layers with wafw00f -a.
+
+  - id: param-tlsx-san-harvest
+    tool: tlsx
+    reference_param: san
+    when:
+      always: true
+    add_args: ["-san"]
+    explanation: >-
+      Extract certificate SANs for subdomain discovery correlation.
+
+  - id: param-tlsx-cipher-tls
+    tool: tlsx
+    reference_param: cipher
+    when:
+      capability: TLS_CHARACTERIZATION
+    add_args: ["-cipher"]
+    explanation: >-
+      TLS characterization; enumerate cipher suites for TRANSPORT_SECURITY class.
+
+  - id: param-wappalyzer-probe-cautious
+    tool: wappalyzer
+    reference_param: probe
+    when:
+      any_of: [rate_limited]
+    add_args: ["--probe", "basic"]
+    explanation: >-
+      Rate limited; wappalyzer basic probe sends fewer HTTP requests.
+
+  - id: param-webanalyze-no-crawl-rate-limit
+    tool: webanalyze
+    reference_param: crawl
+    when:
+      any_of: [rate_limited]
+    never: true
+    add_args: []
+    explanation: >-
+      Rate limited; webanalyze -crawl disabled to avoid multi-page request burst.

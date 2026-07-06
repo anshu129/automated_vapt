@@ -1,0 +1,106 @@
+# OSINT enrichment platforms
+version: "2.0"
+category: osint
+
+tools:
+  shodan:
+    official_docs:
+      - https://developer.shodan.io/api
+    summary: Internet-connected device search engine.
+    parameters:
+      - id: host-lookup
+        flags: ["host", "{ip}"]
+        when_to_use: EXTERNAL_ASSET_ENRICHMENT on confirmed in-scope IPs.
+        rationale: "Shodan CLI host returns open ports, banners, vuln tags per API docs."
+        operational_triggers: [manifest_base]
+      - id: history
+        flags: ["--history"]
+        when_to_use: Historical service observation for change detection.
+        rationale: "Shodan host history shows past exposed services."
+        operational_triggers: [large_target_set]
+
+  censys:
+    official_docs:
+      - https://search.censys.io/api
+    summary: Internet asset search via Censys platform.
+    parameters:
+      - id: search-ip
+        flags: ["search", "{ip}"]
+        when_to_use: Enrichment when Shodan data incomplete.
+        rationale: "Censys search API returns certificate and service observations."
+        operational_triggers: [manifest_base]
+      - id: index-hosts
+        flags: ["hosts", "{ip}"]
+        when_to_use: Host detail view for port/protocol inventory.
+        rationale: "Censys hosts endpoint per API v2 documentation."
+        operational_triggers: [manifest_base]
+
+  securitytrails:
+    official_docs:
+      - https://docs.securitytrails.com/
+    summary: DNS history and subdomain intelligence API.
+    parameters:
+      - id: subdomains
+        flags: ["domain/{domain}/subdomains"]
+        when_to_use: Passive subdomain pass when other sources low yield.
+        rationale: "SecurityTrails subdomains endpoint per API reference."
+        operational_triggers: [low_subdomain_gain]
+      - id: dns-history
+        flags: ["history/{domain}/dns/a"]
+        when_to_use: HISTORICAL_SERVICE_OBSERVATION for IP migration tracking.
+        rationale: "DNS history reveals previously exposed infrastructure."
+        operational_triggers: [manifest_base]
+
+  netlas:
+    official_docs:
+      - https://docs.netlas.io/
+    summary: Attack surface management and internet search API.
+    parameters:
+      - id: host-info
+        flags: ["host", "{ip}"]
+        when_to_use: EXTERNAL_ASSET_ENRICHMENT alternative data source.
+        rationale: "Netlas host API returns services and certificates."
+        operational_triggers: [manifest_base]
+
+  zoomeye:
+    official_docs:
+      - https://www.zoomeye.org/doc
+    summary: Cyberspace search engine API.
+    parameters:
+      - id: host-search
+        flags: ["host", "{ip}"]
+        when_to_use: Regional asset visibility (APAC coverage emphasis).
+        rationale: "ZoomEye host search per API documentation."
+        operational_triggers: [manifest_base]
+
+  fofa:
+    official_docs:
+      - https://en.fofa.info/api
+    summary: Cyberspace asset search engine.
+    parameters:
+      - id: search-query
+        flags: ['domain="{domain}"']
+        when_to_use: Broad internet exposure check for domain assets.
+        rationale: "FOFA query syntax per official API documentation."
+        operational_triggers: [manifest_base]
+      - id: size
+        flags: ["size=100"]
+        when_to_use: Paginate large result sets.
+        rationale: "FOFA size parameter controls results per page."
+        operational_triggers: [large_target_set]
+
+  urlscan:
+    official_docs:
+      - https://urlscan.io/docs/api/
+    summary: URL scanner and search platform.
+    parameters:
+      - id: search-domain
+        flags: ["q=domain:{domain}"]
+        when_to_use: EXTERNAL_ASSET_ENRICHMENT for observed URLs and technologies.
+        rationale: "urlscan search API domain query per docs."
+        operational_triggers: [manifest_base]
+      - id: visibility-public
+        flags: ["visibility=public"]
+        when_to_use: Only query public scans; never submit new scans without approval.
+        rationale: "urlscan visibility parameter; passive search only in default profile."
+        operational_triggers: [passive_only]

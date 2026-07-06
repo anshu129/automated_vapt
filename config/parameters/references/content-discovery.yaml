@@ -1,0 +1,135 @@
+# Directory brute-force and content discovery
+version: "2.0"
+category: content_discovery
+
+tools:
+  ffuf:
+    official_docs:
+      - https://github.com/ffuf/ffuf
+    summary: Fast web fuzzer for directories, parameters, and virtual host discovery.
+    parameters:
+      - id: json-output
+        flags: ["-json"]
+        when_to_use: Structured FILE_DISCOVERY results.
+        rationale: "ffuf -json emits machine-readable match records."
+        operational_triggers: [manifest_base]
+      - id: rate
+        flags: ["-rate", "50"]
+        when_to_use: WAF or HTTP 429 during content discovery.
+        rationale: "ffuf -rate requests per second; critical behind WAF."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: timeout
+        flags: ["-timeout", "15"]
+        when_to_use: Slow responses or CDN latency.
+        rationale: "Per-request timeout prevents hung fuzzer threads."
+        operational_triggers: [previous_timeouts]
+      - id: mc
+        flags: ["-mc", "200,204,301,302,307,401,403"]
+        when_to_use: Filter meaningful HTTP status codes for surface inventory.
+        rationale: "ffuf match codes; 403 indicates existence behind auth/WAF."
+        operational_triggers: [manifest_base]
+      - id: recursion
+        flags: ["-recursion", "-recursion-depth", "2"]
+        when_to_use: Directory listings found; recurse into discovered paths.
+        rationale: "ffuf recursion docs; depth limited to control request volume."
+        operational_triggers: [large_target_set]
+        avoid_when: [waf_detected, rate_limited]
+
+  feroxbuster:
+    official_docs:
+      - https://github.com/epi052/feroxbuster
+    summary: Recursive content discovery tool written in Rust.
+    parameters:
+      - id: json
+        flags: ["--json"]
+        when_to_use: Pipeline parsing of discovered paths.
+        rationale: "feroxbuster --json line-delimited JSON per README."
+        operational_triggers: [manifest_base]
+      - id: rate-limit
+        flags: ["--rate-limit", "50"]
+        when_to_use: WAF or rate_limited HTTP observed.
+        rationale: "--rate-limit caps concurrent request rate."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: timeout
+        flags: ["--timeout", "15"]
+        when_to_use: High latency targets.
+        rationale: "Request timeout in seconds per CLI help."
+        operational_triggers: [previous_timeouts]
+      - id: no-recursion
+        flags: ["--no-recursion"]
+        when_to_use: WAF blocking recursive discovery; flat wordlist only.
+        rationale: "Disables automatic subdirectory recursion."
+        operational_triggers: [waf_detected, rate_limited]
+
+  gobuster:
+    official_docs:
+      - https://github.com/OJ/gobuster
+    summary: Directory/DNS/VHost busting tool.
+    parameters:
+      - id: dir-mode
+        flags: ["dir", "-u", "{url}", "-w", "{wordlist}", "-q"]
+        when_to_use: DIRECTORY_DISCOVERY standard invocation.
+        rationale: "gobuster dir mode documented in README for path brute-force."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["-t", "20"]
+        when_to_use: Reduce threads when WAF/rate limited.
+        rationale: "-t thread count; lower reduces parallel request burst."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: status-codes
+        flags: ["-s", "200,204,301,302,307,401,403"]
+        when_to_use: Match codes indicating existing resources.
+        rationale: "gobuster -s positive status code filter."
+        operational_triggers: [manifest_base]
+      - id: no-error
+        flags: ["-b"]
+        when_to_use: Hide 404-length responses when soft-404 detected.
+        rationale: "-b blacklist status codes or lengths per gobuster docs."
+        operational_triggers: [waf_detected]
+
+  dirsearch:
+    official_docs:
+      - https://github.com/maurosoria/dirsearch
+    summary: Web path scanner with recursive and threaded discovery.
+    parameters:
+      - id: json-report
+        flags: ["--json-report", "-"]
+        when_to_use: stdout JSON for artifact storage.
+        rationale: "dirsearch --json-report documented output format."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["-t", "20"]
+        when_to_use: Default; reduce under WAF.
+        rationale: "Thread count -t per dirsearch help."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: delay
+        flags: ["--delay", "0.5"]
+        when_to_use: Rate limited or WAF detected.
+        rationale: "Delay between requests in seconds."
+        operational_triggers: [rate_limited, waf_detected]
+      - id: exclude-status
+        flags: ["--exclude-status", "404,400"]
+        when_to_use: Filter noise from soft errors.
+        rationale: "Status exclusion per dirsearch filtering options."
+        operational_triggers: [manifest_base]
+
+  wfuzz:
+    official_docs:
+      - https://github.com/xmendez/wfuzz
+    summary: Web application fuzzer for brute-forcing parameters and directories.
+    parameters:
+      - id: hide-404
+        flags: ["--hc", "404"]
+        when_to_use: Default; hide not-found responses.
+        rationale: "wfuzz --hc hides response codes per documentation."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["-t", "20"]
+        when_to_use: Reduce when target throttles connections.
+        rationale: "-t concurrent jobs; lower under rate_limited."
+        operational_triggers: [rate_limited, waf_detected]
+      - id: delay
+        flags: ["-z", "range", "0.1-1.0"]
+        when_to_use: WAF detected; introduce jitter between requests.
+        rationale: "wfuzz payload delay patterns for throttle evasion (authorized testing)."
+        operational_triggers: [waf_detected]

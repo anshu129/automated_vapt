@@ -1,0 +1,85 @@
+# Adaptive parameter rules — content discovery
+version: "2.0"
+
+rules:
+  - id: param-ffuf-rate-cautious
+    tool: ffuf
+    reference_param: rate
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["-rate", "50", "-timeout", "15"]
+    explanation: >-
+      WAF or HTTP 429; ffuf -rate and -timeout throttle directory fuzzing.
+
+  - id: param-ffuf-match-codes
+    tool: ffuf
+    reference_param: mc
+    when:
+      always: true
+    add_args: ["-mc", "200,204,301,302,307,401,403"]
+    explanation: >-
+      Match status codes indicating existing paths including 401/403 existence proofs.
+
+  - id: param-ffuf-no-recursion-waf
+    tool: ffuf
+    reference_param: recursion
+    when:
+      any_of: [waf_detected, rate_limited]
+    never: true
+    add_args: []
+    explanation: >-
+      WAF/rate limit; ffuf recursion disabled to prevent exponential request growth.
+
+  - id: param-feroxbuster-rate-cautious
+    tool: feroxbuster
+    reference_param: rate-limit
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["--rate-limit", "50", "--timeout", "15"]
+    explanation: >-
+      WAF throttling; feroxbuster --rate-limit caps request rate.
+
+  - id: param-feroxbuster-no-recursion-waf
+    tool: feroxbuster
+    reference_param: no-recursion
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["--no-recursion"]
+    explanation: >-
+      Recursive discovery blocked by WAF; flat wordlist scan only.
+
+  - id: param-gobuster-threads-cautious
+    tool: gobuster
+    reference_param: threads
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["-t", "10"]
+    explanation: >-
+      Reduce gobuster -t threads when target returns 429 or WAF challenges.
+
+  - id: param-gobuster-soft-404
+    tool: gobuster
+    reference_param: no-error
+    when:
+      any_of: [waf_detected]
+    add_args: ["-b", "404"]
+    explanation: >-
+      WAF soft-404 behavior; gobuster -b hides 404-length false positives.
+
+  - id: param-dirsearch-delay-waf
+    tool: dirsearch
+    reference_param: delay
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["--delay", "0.5", "-t", "10"]
+    explanation: >-
+      WAF/rate limit; dirsearch --delay and reduced -t threads.
+
+  - id: param-wfuzz-threads-cautious
+    tool: wfuzz
+    reference_param: threads
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["-t", "10"]
+    explanation: >-
+      Throttled target; reduce wfuzz concurrent jobs.

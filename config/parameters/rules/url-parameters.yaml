@@ -1,0 +1,48 @@
+# Adaptive parameter rules — URL parameters & processing
+version: "2.0"
+
+rules:
+  - id: param-arjun-threads-cautious
+    tool: arjun
+    reference_param: threads
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["-t", "5"]
+    explanation: >-
+      WAF returns 429 on parameter probes; reduce Arjun -t thread count.
+
+  - id: param-arjun-stable-waf
+    tool: arjun
+    reference_param: stable
+    when:
+      any_of: [waf_detected]
+    add_args: ["--stable"]
+    explanation: >-
+      WAF causes variable response lengths; Arjun --stable detection mode.
+
+  - id: param-arjun-methods-api
+    tool: arjun
+    reference_param: include
+    when:
+      any_of: [api_surface_detected]
+    add_args: ["--include", "GET,POST,PUT"]
+    explanation: >-
+      API surface; test GET/POST/PUT for hidden parameters per REST patterns.
+
+  - id: param-paramspider-depth
+    tool: paramspider
+    reference_param: level
+    when:
+      any_of: [low_subdomain_gain]
+    add_args: ["-l", "2"]
+    explanation: >-
+      Extend ParamSpider archive depth when initial parameter harvest low yield.
+
+  - id: param-unfurl-keys-api
+    tool: unfurl
+    reference_param: keys
+    when:
+      any_of: [api_surface_detected]
+    add_args: ["keys"]
+    explanation: >-
+      Extract query parameter names from API URL harvest for inventory.

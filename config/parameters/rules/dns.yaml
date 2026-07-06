@@ -1,0 +1,82 @@
+# Adaptive parameter rules — DNS tools
+version: "2.0"
+
+rules:
+  - id: param-dnsx-retry-inconclusive
+    tool: dnsx
+    reference_param: retry
+    when:
+      any_of: [inconclusive_dns, previous_timeouts]
+      profile_in: [HIGH_LATENCY, NO_DISCOVERY_ASSUMPTION, STANDARD]
+    add_args: ["-retry", "3"]
+    explanation: >-
+      Prior DNS attempt inconclusive or timed out; dnsx -retry re-sends queries
+      before concluding negative evidence per dnsx README.
+
+  - id: param-dnsx-wildcard
+    tool: dnsx
+    reference_param: wildcard-detect
+    when:
+      any_of: [wildcard_dns_suspected]
+    add_args: ["-wd", "{domain}"]
+    explanation: >-
+      Wildcard DNS suspected from false-positive subdomain flood; dnsx -wd
+      fingerprints wildcard responses to filter bogus hosts.
+
+  - id: param-dnsx-rate-limit
+    tool: dnsx
+    reference_param: rate-limit
+    when:
+      any_of: [rate_limited]
+    add_args: ["-rate-limit", "100"]
+    explanation: >-
+      Resolver SERVFAIL or throttling observed; dnsx -rate-limit caps QPS to
+      authoritative nameservers.
+
+  - id: param-shuffledns-wildcard-filter
+    tool: shuffledns
+    reference_param: wildcard-filter
+    when:
+      any_of: [wildcard_dns_suspected]
+    add_args: ["-wf", "{wildcard_file}"]
+    explanation: >-
+      Wildcard baseline captured; shuffledns -wf filters brute results matching
+      wildcard fingerprint.
+
+  - id: param-shuffledns-no-brute-passive
+    tool: shuffledns
+    reference_param: wordlist-brute
+    when:
+      passive_only: true
+    never: true
+    add_args: []
+    explanation: >-
+      DNS brute-force blocked under PASSIVE_ONLY execution profile.
+
+  - id: param-massdns-concurrency-cautious
+    tool: massdns
+    reference_param: concurrency
+    when:
+      any_of: [rate_limited]
+    add_args: ["-s", "500"]
+    explanation: >-
+      Resolver rate limiting; reduce massdns -s outstanding query concurrency.
+
+  - id: param-puredns-wildcard
+    tool: puredns
+    reference_param: wildcard-filter
+    when:
+      any_of: [wildcard_dns_suspected]
+    add_args: ["-w", "{wildcard_file}"]
+    explanation: >-
+      puredns -w applies wildcard filter file from prior dnsx wildcard detection.
+
+  - id: param-mapcidr-aggregate
+    tool: mapcidr
+    reference_param: aggregate
+    when:
+      any_of: [large_target_set, cidr_scope]
+    add_args: ["-aggregate"]
+    explanation: >-
+      Large expanded IP set; mapcidr -aggregate minimizes CIDR blocks for
+      downstream scanner task fan-out.

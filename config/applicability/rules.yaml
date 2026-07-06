@@ -1,0 +1,127 @@
+version: "1.0"
+rules:
+  - rule_id: web-app-baseline
+    description: Core web application vulnerability classes when HTTP surface is confirmed
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: metadata.http_confirmed
+          eq: true
+    outputs:
+      - class_code: AUTHENTICATION
+        state: APPLICABLE
+        confidence: 0.85
+      - class_code: SESSION_MANAGEMENT
+        state: APPLICABLE
+        confidence: 0.85
+      - class_code: AUTHORIZATION
+        state: APPLICABLE
+        confidence: 0.85
+      - class_code: INPUT_VALIDATION
+        state: APPLICABLE
+        confidence: 0.85
+      - class_code: SECURITY_HEADERS
+        state: APPLICABLE
+        confidence: 0.85
+      - class_code: TRANSPORT_SECURITY
+        state: APPLICABLE
+        confidence: 0.85
+
+  - rule_id: web-app-tls-class
+    description: TLS configuration testing when HTTPS is in use
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: uses_https
+          eq: true
+    outputs:
+      - class_code: TLS_CONFIGURATION
+        state: APPLICABLE
+        confidence: 0.8
+
+  - rule_id: upload-surface-observed
+    description: File upload handling when upload surface is present
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: metadata.has_upload
+          eq: true
+    outputs:
+      - class_code: FILE_HANDLING
+        state: APPLICABLE
+        confidence: 0.75
+      - class_code: UPLOAD_SECURITY
+        state: APPLICABLE
+        confidence: 0.8
+
+  - rule_id: upload-endpoint-pattern
+    description: Upload endpoints inferred from crawl inventory
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: endpoints
+          any_match: upload
+    outputs:
+      - class_code: UPLOAD_SECURITY
+        state: APPLICABLE
+        confidence: 0.7
+
+  - rule_id: object-id-endpoints
+    description: Object identifiers in API paths with auth surface
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: endpoints
+          any_match: "/api/users"
+        - field: endpoints
+          any_match: login
+    outputs:
+      - class_code: OBJECT_LEVEL_AUTHORIZATION
+        state: APPLICABLE
+        confidence: 0.75
+
+  - rule_id: graphql-endpoint
+    description: GraphQL attack surface
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: endpoints
+          any_match: graphql
+    outputs:
+      - class_code: GRAPHQL_SECURITY
+        state: APPLICABLE
+        confidence: 0.8
+
+  - rule_id: known-component-technology-only
+    description: Technology without version confidence — possibly applicable only
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: technologies
+          exists: true
+        - field: metadata.technology_versions_confident
+          eq: false
+    outputs:
+      - class_code: KNOWN_COMPONENT_VULNERABILITY
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+
+  - rule_id: injection-surface
+    description: Input surfaces from parameters and forms
+    condition:
+      all:
+        - field: asset_type
+          eq: WEB_APPLICATION
+        - field: surface.PARAMETER_INVENTORY
+          in: [COMPLETE, PARTIAL]
+    outputs:
+      - class_code: INJECTION_CLASS
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.6

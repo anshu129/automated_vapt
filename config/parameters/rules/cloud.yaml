@@ -1,0 +1,48 @@
+# Adaptive parameter rules — cloud reconnaissance
+version: "2.0"
+
+rules:
+  - id: param-cloud-enum-threads
+    tool: cloud_enum
+    reference_param: threads
+    when:
+      any_of: [rate_limited]
+    add_args: ["-t", "3"]
+    explanation: >-
+      Cloud API rate limiting; reduce cloud_enum -t parallel provider queries.
+
+  - id: param-s3scanner-json
+    tool: s3scanner
+    reference_param: json
+    when:
+      always: true
+    add_args: ["-json"]
+    explanation: >-
+      Structured S3 bucket findings for cloud asset graph ingestion.
+
+  - id: param-s3scanner-enumerate
+    tool: s3scanner
+    reference_param: enumerate
+    when:
+      any_of: [low_subdomain_gain, cloud_asset_candidate]
+    add_args: ["-enumerate"]
+    explanation: >-
+      Cloud asset candidate; enumerate bucket name permutations from keyword.
+
+  - id: param-scoutsuite-no-browser
+    tool: scoutsuite
+    reference_param: no-browser
+    when:
+      always: true
+    add_args: ["--no-browser"]
+    explanation: >-
+      Headless automation; ScoutSuite --no-browser for CI scan workers.
+
+  - id: param-scoutsuite-services-limited
+    tool: scoutsuite
+    reference_param: services
+    when:
+      any_of: [rate_limited]
+    add_args: ["--services", "s3,iam"]
+    explanation: >-
+      API throttling; limit ScoutSuite to critical services subset.

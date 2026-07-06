@@ -1,0 +1,39 @@
+# Adaptive parameter rules — OSINT (enabled tools only)
+version: "2.0"
+
+rules:
+  - id: param-urlscan-public-only
+    tool: urlscan
+    reference_param: visibility-public
+    when:
+      any_of: [passive_only]
+    add_args: ["visibility=public"]
+    explanation: >-
+      PASSIVE_ONLY; query existing public urlscan results only, no new submissions.
+
+  - id: param-shodan-history
+    tool: shodan
+    reference_param: history
+    when:
+      capability: HISTORICAL_SERVICE_OBSERVATION
+    add_args: ["--history"]
+    explanation: >-
+      Historical service observation; Shodan host history for change detection.
+
+  - id: param-securitytrails-subs-low-gain
+    tool: securitytrails
+    reference_param: subdomains
+    when:
+      any_of: [low_subdomain_gain]
+    add_args: []
+    explanation: >-
+      Supplemental passive subdomain source when primary enumerators low yield.
+
+  - id: param-fofa-size-large
+    tool: fofa
+    reference_param: size
+    when:
+      any_of: [large_target_set]
+    add_args: ["size=100"]
+    explanation: >-
+      Large FOFA result set; maximize per-page results within API quota.

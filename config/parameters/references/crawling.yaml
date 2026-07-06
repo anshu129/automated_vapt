@@ -1,0 +1,135 @@
+# Historical URL discovery and live crawling
+version: "2.0"
+category: crawling
+
+tools:
+  gau:
+    official_docs:
+      - https://github.com/lc/gau
+    summary: Fetch known URLs from AlienVault OTX, Wayback, Common Crawl, URLScan.
+    parameters:
+      - id: subs
+        flags: ["--subs"]
+        when_to_use: Include URLs from discovered subdomains, not just apex domain.
+        rationale: "gau --subs expands query to all subdomains per README."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["--threads", "5"]
+        when_to_use: Throttle provider API calls when rate_limited.
+        rationale: "Thread count controls concurrent provider requests."
+        operational_triggers: [rate_limited]
+      - id: blacklist
+        flags: ["--blacklist", "png,jpg,gif"]
+        when_to_use: Reduce noise from static assets in endpoint inventory.
+        rationale: "gau --blacklist filters extensions per CLI documentation."
+        operational_triggers: [large_target_set]
+      - id: providers
+        flags: ["--providers", "wayback,otx,commoncrawl"]
+        when_to_use: Rate limit on one provider; rotate to others.
+        rationale: "Selective providers when one API throttles requests."
+        operational_triggers: [rate_limited]
+
+  waybackurls:
+    official_docs:
+      - https://github.com/tomnomnom/waybackurls
+    summary: Fetch all URLs from Wayback Machine for a domain.
+    parameters:
+      - id: domain-stdin
+        flags: ["{domain}"]
+        when_to_use: ARCHIVE_DISCOVERY passive historical surface mapping.
+        rationale: "waybackurls queries web.archive.org CDX API for domain."
+        operational_triggers: [manifest_base]
+      - id: dates
+        flags: ["-dates"]
+        when_to_use: Temporal analysis of endpoint appearance required.
+        rationale: "-dates includes archive timestamps per tool README."
+        operational_triggers: [large_target_set]
+
+  waymore:
+    official_docs:
+      - https://github.com/xnl-h4ck3r/waymore
+    summary: Discover URLs from Wayback, VirusTotal, Common Crawl, and more.
+    parameters:
+      - id: url-mode
+        flags: ["-mode", "U"]
+        when_to_use: URL-only output mode for piping to httpx validation.
+        rationale: "waymore -mode U outputs URLs per author documentation."
+        operational_triggers: [manifest_base]
+      - id: depth
+        flags: ["-l", "1"]
+        when_to_use: Reduce depth when rate_limited on archive APIs.
+        rationale: "Limits crawl depth of linked archive pages."
+        operational_triggers: [rate_limited]
+
+  katana:
+    official_docs:
+      - https://github.com/projectdiscovery/katana
+    summary: Next-gen crawling framework with JS parsing and headless option.
+    parameters:
+      - id: json-silent
+        flags: ["-jsonl", "-silent"]
+        when_to_use: Structured ENDPOINT_DISCOVERED event emission.
+        rationale: "katana JSONL output includes request metadata per README."
+        operational_triggers: [manifest_base]
+      - id: js-crawl
+        flags: ["-jc"]
+        when_to_use: JAVASCRIPT_COLLECTION; extract endpoints from JS files.
+        rationale: "-jc enables JavaScript file crawling and parsing."
+        operational_triggers: [manifest_base]
+      - id: depth-standard
+        flags: ["-d", "3"]
+        when_to_use: STANDARD profile initial crawl breadth.
+        rationale: "-d max depth; katana docs recommend 3-5 for web apps."
+        operational_triggers: [manifest_base]
+      - id: depth-cautious
+        flags: ["-d", "2", "-delay", "1"]
+        when_to_use: WAF or rate limiting detected on prior crawl.
+        rationale: "Reduced depth and delay lower request rate through WAF."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: headless
+        flags: ["-hl"]
+        when_to_use: SPA detected (React/Vue) where static crawl misses routes.
+        rationale: "Headless browser mode for client-rendered navigation per katana docs."
+        operational_triggers: [api_surface_detected]
+      - id: scope
+        flags: ["-fs", "fqdn"]
+        when_to_use: Prevent crawler leaving in-scope hostname boundary.
+        rationale: "-fs fqdn field scope restricts to same FQDN."
+        operational_triggers: [manifest_base]
+
+  hakrawler:
+    official_docs:
+      - https://github.com/hakluke/hakrawler
+    summary: Simple, fast web crawler for gathering URLs.
+    parameters:
+      - id: url-plain
+        flags: ["-url", "{url}", "-plain"]
+        when_to_use: Lightweight crawl alternative when katana blocked.
+        rationale: "hakrawler -plain outputs URLs only, one per line."
+        operational_triggers: [manifest_base]
+      - id: depth
+        flags: ["-depth", "2"]
+        when_to_use: WAF/rate limit; hakrawler has no built-in throttle.
+        rationale: "Depth limits total requests on defensive targets."
+        operational_triggers: [waf_detected, rate_limited]
+
+  photon:
+    official_docs:
+      - https://github.com/s0md3v/Photon
+    summary: Web crawler extracting URLs, files, and secrets from responses.
+    parameters:
+      - id: quiet
+        flags: ["-u", "{url}", "-q"]
+        when_to_use: Quiet mode for pipeline integration.
+        rationale: "Photon -q suppresses banner and progress output."
+        operational_triggers: [manifest_base]
+      - id: level
+        flags: ["-l", "2"]
+        when_to_use: Reduce crawl level under WAF pressure.
+        rationale: "-l crawl depth per Photon wiki documentation."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: tld
+        flags: ["--tld"]
+        when_to_use: Stay within same TLD/registrable domain scope.
+        rationale: "Restricts external domain following per Photon options."
+        operational_triggers: [manifest_base]

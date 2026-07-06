@@ -1,0 +1,34 @@
+app:
+  name: vapt-platform
+  debug: false
+
+database:
+  pool_size: 10
+  echo: false
+
+scheduler:
+  global_concurrency: 50
+  default_lease_seconds: 300
+
+ai:
+  enabled: false
+  provider: mistral
+
+mcp:
+  enabled: false
+  read_only: true
+
+engagement:
+  allow_passive: true
+  allow_low_impact: true
+  allow_state_changing: false
+  allow_destructive: false
+  no_discovery_assumption: true
+
+providers:
+  shodan:
+    enabled: false
+    cost_tier: OPTIONAL_PAID
+
+recursive_correlation:
+  max_depth: 10

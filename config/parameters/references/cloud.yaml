@@ -1,0 +1,67 @@
+# Cloud asset reconnaissance
+version: "2.0"
+category: cloud
+
+tools:
+  cloud_enum:
+    official_docs:
+      - https://github.com/initstring/cloud_enum
+    summary: Multi-cloud OSINT enumeration (Azure, AWS, GCP).
+    parameters:
+      - id: keyword
+        flags: ["-k", "{keyword}"]
+        when_to_use: CLOUD_ASSET_DISCOVERY from org name or domain keyword.
+        rationale: "cloud_enum -k searches public cloud resources by keyword per README."
+        operational_triggers: [cloud_asset_candidate]
+      - id: disable-aws
+        flags: ["--disable-aws"]
+        when_to_use: Scope confirms Azure/GCP only.
+        rationale: "Disable unnecessary provider checks to reduce API noise."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["-t", "5"]
+        when_to_use: Reduce threads when cloud APIs rate limit.
+        rationale: "Thread count for parallel provider queries."
+        operational_triggers: [rate_limited]
+
+  s3scanner:
+    official_docs:
+      - https://github.com/sa7mon/S3Scanner
+    summary: Enumerate open S3 buckets by name permutation.
+    parameters:
+      - id: bucket-name
+        flags: ["-bucket", "{bucket}"]
+        when_to_use: Test candidate bucket names derived from domain/org keyword.
+        rationale: "s3scanner checks bucket existence and ACL per README."
+        operational_triggers: [cloud_asset_candidate]
+      - id: enumerate
+        flags: ["-enumerate"]
+        when_to_use: Brute bucket names from wordlist when keyword known.
+        rationale: "Enumeration mode tries wordlist permutations."
+        operational_triggers: [low_subdomain_gain]
+      - id: json
+        flags: ["-json"]
+        when_to_use: Structured output for cloud asset graph.
+        rationale: "JSON output for parser integration."
+        operational_triggers: [manifest_base]
+
+  scoutsuite:
+    official_docs:
+      - https://github.com/nccgroup/ScoutSuite
+    summary: Multi-cloud security auditing tool (requires cloud credentials).
+    parameters:
+      - id: aws-report
+        flags: ["aws", "--report-dir", "{output}"]
+        when_to_use: CLOUD_CONFIGURATION_ASSESSMENT with authorized AWS credentials.
+        rationale: "ScoutSuite AWS provider per official usage documentation."
+        operational_triggers: [manifest_base]
+      - id: no-browser
+        flags: ["--no-browser"]
+        when_to_use: Headless CI/automation report generation.
+        rationale: "Prevents browser auto-open on report completion."
+        operational_triggers: [manifest_base]
+      - id: services
+        flags: ["--services", "s3,iam,ec2"]
+        when_to_use: Scope-limited service assessment to reduce audit time.
+        rationale: "ScoutSuite --services filters analyzed AWS services."
+        operational_triggers: [rate_limited]

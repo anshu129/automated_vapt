@@ -1,0 +1,249 @@
+# Adaptive parameter rules — host / service discovery
+version: "2.0"
+
+rules:
+  # --- nmap (per nmap.org/book/man-host-discovery.html) ---
+  - id: param-nmap-disable-arp-ping-proxy-arp
+    tool: nmap
+    reference_param: disable-arp-ping
+    when:
+      any_of: [proxy_arp_suspected, local_network_target]
+    add_args: ["--disable-arp-ping"]
+    explanation: >-
+      Local ethernet scan with proxy ARP or false ARP positives; nmap man page
+      documents --disable-arp-ping for networks where routers reply to all ARP
+      requests making every host appear up.
+
+  - id: param-nmap-disable-arp-ping-firewall
+    tool: nmap
+    reference_param: disable-arp-ping
+    when:
+      any_of: [firewall_inferred, filtered_ports_observed]
+    add_args: ["--disable-arp-ping"]
+    explanation: >-
+      Filtered ports/firewall inferred on LAN target; disable implicit ARP host
+      discovery so nmap uses configured IP-level probes for accurate host state.
+
+  - id: param-nmap-skip-ping-icmp
+    tool: nmap
+    reference_param: Pn
+    when:
+      any_of: [icmp_blocked, firewall_inferred]
+    add_args: ["-Pn"]
+    explanation: >-
+      ICMP host discovery blocked; nmap -Pn skips ping phase and probes ports
+      directly per nmap host discovery documentation.
+
+  - id: param-nmap-tcp-syn-filtered
+    tool: nmap
+    reference_param: sS
+    when:
+      any_of: [firewall_inferred, filtered_ports_observed]
+    add_args: ["-sS"]
+    explanation: >-
+      Stateful firewall filtering observed; TCP SYN scan (-sS) avoids completing
+      handshake and improves port state accuracy on filtered hosts.
+
+  - id: param-nmap-timing-rate-limited
+    tool: nmap
+    reference_param: T2
+    when:
+      any_of: [rate_limited]
+    add_args: ["-T2"]
+    explanation: >-
+      Probe rate limiting or drops observed; nmap timing template T2 (polite)
+      reduces packets per second per nmap performance documentation.
+
+  - id: param-nmap-host-timeout-latency
+    tool: nmap
+    reference_param: host-timeout
+    when:
+      profile_in: [HIGH_LATENCY]
+    add_args: ["--host-timeout", "300s"]
+    explanation: >-
+      HIGH_LATENCY profile; extend per-host timeout for WAN/high-latency targets.
+
+  # --- httpx ---
+  - id: param-httpx-rate-limit
+    tool: httpx
+    reference_param: rate-limit
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["-rate-limit", "50"]
+    explanation: >-
+      HTTP 429 or WAF throttling; httpx -rate-limit reduces requests/sec.
+
+  - id: param-httpx-retries-latency
+    tool: httpx
+    reference_param: retries-timeout
+    when:
+      profile_in: [HIGH_LATENCY]
+    add_args: ["-retries", "3", "-timeout", "30"]
+    explanation: >-
+      HIGH_LATENCY profile after inconclusive probe; increase retries and timeout.
+
+  - id: param-httpx-follow-redirects
+    tool: httpx
+    reference_param: follow-redirects
+    when:
+      capability: HTTP_CHARACTERIZATION
+    add_args: ["-follow-redirects", "-max-redirects", "5"]
+    explanation: >-
+      HTTP characterization requires mapping redirect chains to canonical base URL.
+
+  - id: param-httpx-no-fallback-tls
+    tool: httpx
+    reference_param: no-fallback-http
+    when:
+      any_of: [tls_enforced]
+    add_args: ["-no-fallback"]
+    explanation: >-
+      TLS/HSTS enforced; skip httpx automatic HTTP fallback to reduce duplicate probes.
+
+  - id: param-httpx-cdn-host-header
+    tool: httpx
+    reference_param: cdn-bypass
+    when:
+      any_of: [cdn_detected]
+    add_args: ["-H", "Host: {hostname}"]
+    explanation: >-
+      Origin IP discovered behind CDN; Host header required for correct vhost response.
+
+  # --- naabu ---
+  - id: param-naabu-rate-cautious
+    tool: naabu
+    reference_param: rate
+    when:
+      any_of: [rate_limited, firewall_inferred]
+    add_args: ["-rate", "500"]
+    explanation: >-
+      Firewall or rate limiting; naabu -rate reduces packets/sec.
+
+  - id: param-naabu-scan-all-ips
+    tool: naabu
+    reference_param: scan-all-ips
+    when:
+      any_of: [cdn_detected]
+    add_args: ["-scan-all-ips"]
+    explanation: >-
+      Multiple A records/CDN; naabu -scan-all-ips probes every resolved IP.
+
+  - id: param-naabu-skip-ping
+    tool: naabu
+    reference_param: Pn
+    when:
+      any_of: [icmp_blocked]
+    add_args: ["-Pn"]
+    explanation: >-
+      ICMP blocked; naabu -Pn skips host discovery ping.
+
+  # --- masscan ---
+  - id: param-masscan-rate-cautious
+    tool: masscan
+    reference_param: rate-cautious
+    when:
+      any_of: [rate_limited, firewall_inferred]
+    add_args: ["--rate", "500"]
+    explanation: >-
+      Prior scan throttled; masscan --rate reduced to limit packet loss.
+
+  - id: param-masscan-rate-cidr
+    tool: masscan
+    reference_param: rate
+    when:
+      any_of: [cidr_scope]
+      none_of: [rate_limited]
+    add_args: ["--rate", "1000"]
+    explanation: >-
+      CIDR scope scan; masscan rate tuned for interface capacity per README.
+
+  - id: param-masscan-banners
+    tool: masscan
+    reference_param: banners
+    when:
+      capability: SERVICE_IDENTIFICATION
+    add_args: ["--banners"]
+    explanation: >-
+      SERVICE_IDENTIFICATION capability; masscan --banners grabs service banners.
+
+  # --- rustscan ---
+  - id: param-rustscan-batch-cautious
+    tool: rustscan
+    reference_param: batch-size
+    when:
+      any_of: [rate_limited, firewall_inferred]
+    add_args: ["-b", "500"]
+    explanation: >-
+      Target throttling probes; reduce rustscan batch size.
+
+  # --- zmap ---
+  - id: param-zmap-bandwidth
+    tool: zmap
+    reference_param: bandwidth
+    when:
+      any_of: [rate_limited, cidr_scope]
+    add_args: ["-B", "10M"]
+    explanation: >-
+      CIDR scan on shared link or prior saturation; zmap -B caps bandwidth.
+
+  - id: param-nmap-fast-large-target
+    tool: nmap
+    reference_param: F
+    when:
+      any_of: [large_target_set, cidr_scope]
+      capability: PORT_DISCOVERY
+    add_args: ["-F"]
+    explanation: >-
+      Large target set; nmap -F fast mode scans fewer ports for initial sweep
+      before deeper SERVICE_IDENTIFICATION pass.
+
+  - id: param-nmap-top-ports-large
+    tool: nmap
+    reference_param: top-ports
+    when:
+      any_of: [large_target_set]
+      none_of: [rate_limited]
+    add_args: ["--top-ports", "1000"]
+    explanation: >-
+      Large scope; --top-ports 1000 prioritizes common ports per nmap port
+      frequency data before full range scan.
+
+  - id: param-nmap-reason-filtered
+    tool: nmap
+    reference_param: reason
+    when:
+      any_of: [filtered_ports_observed]
+    add_args: ["--reason"]
+    explanation: >-
+      Filtered ports observed; --reason documents why each port is open/closed/filtered
+      for evidence quality and analyst review.
+
+  - id: param-nmap-max-rate-cautious
+    tool: nmap
+    reference_param: max-rate
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["--max-rate", "100"]
+    explanation: >-
+      Rate limiting detected; --max-rate caps packets/sec per nmap timing docs.
+
+  - id: param-nmap-send-ip-proxy-arp
+    tool: nmap
+    reference_param: send-ip
+    when:
+      any_of: [proxy_arp_suspected, local_network_target]
+    add_args: ["--send-ip"]
+    explanation: >-
+      Proxy ARP on LAN; --send-ip uses IP-level probes instead of ethernet ARP
+      per nmap man page send-eth/send-ip options.
+
+  # --- autorecon ---
+  - id: param-autorecon-no-aggressive-waf
+    tool: autorecon
+    reference_param: aggressive
+    when:
+      any_of: [waf_detected, rate_limited]
+    never: true
+    add_args: []
+    explanation: >-
+      WAF/rate limit detected; AutoRecon aggressive nmap scripts withheld.

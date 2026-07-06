@@ -1,0 +1,103 @@
+# Adaptive parameter rules — crawling & historical URL tools
+version: "2.0"
+
+rules:
+  - id: param-gau-threads-cautious
+    tool: gau
+    reference_param: threads
+    when:
+      any_of: [rate_limited]
+    add_args: ["--threads", "2"]
+    explanation: >-
+      Archive API rate limiting; reduce gau --threads to avoid provider 429s.
+
+  - id: param-gau-blacklist-assets
+    tool: gau
+    reference_param: blacklist
+    when:
+      any_of: [large_target_set]
+    add_args: ["--blacklist", "png,jpg,gif,css,woff,svg"]
+    explanation: >-
+      Large historical URL set; filter static asset extensions for endpoint focus.
+
+  - id: param-waybackurls-dates
+    tool: waybackurls
+    reference_param: dates
+    when:
+      any_of: [large_target_set]
+    add_args: ["-dates"]
+    explanation: >-
+      Include archive timestamps for temporal endpoint correlation.
+
+  - id: param-waymore-depth-cautious
+    tool: waymore
+    reference_param: depth
+    when:
+      any_of: [rate_limited]
+    add_args: ["-l", "1"]
+    explanation: >-
+      Archive API throttled; reduce waymore linked-page depth.
+
+  - id: param-katana-depth-standard
+    tool: katana
+    reference_param: depth-standard
+    when:
+      profile_in: [STANDARD]
+      none_of: [waf_detected, rate_limited]
+    add_args: ["-d", "3"]
+    explanation: >-
+      Standard crawl depth per katana docs for initial surface enumeration.
+
+  - id: param-katana-depth-cautious
+    tool: katana
+    reference_param: depth-cautious
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["-d", "2", "-delay", "1"]
+    explanation: >-
+      WAF or rate limit; reduce katana depth and add inter-request delay.
+
+  - id: param-katana-headless-spa
+    tool: katana
+    reference_param: headless
+    when:
+      any_of: [api_surface_detected]
+    add_args: ["-hl"]
+    explanation: >-
+      SPA/API surface detected; katana headless mode renders client-side routes.
+
+  - id: param-katana-scope-fqdn
+    tool: katana
+    reference_param: scope
+    when:
+      always: true
+    add_args: ["-fs", "fqdn"]
+    explanation: >-
+      Restrict crawl to same FQDN; prevents out-of-scope third-party following.
+
+  - id: param-hakrawler-depth-cautious
+    tool: hakrawler
+    reference_param: depth
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["-depth", "2"]
+    explanation: >-
+      Defensive target; limit hakrawler depth to reduce request volume.
+
+  - id: param-photon-level-cautious
+    tool: photon
+    reference_param: level
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["-l", "2"]
+    explanation: >-
+      WAF/rate limit; reduce Photon crawl level per wiki documentation.
+
+  - id: param-photon-tld-scope
+    tool: photon
+    reference_param: tld
+    when:
+      always: true
+    add_args: ["--tld"]
+    explanation: >-
+      Stay within registrable domain scope during Photon crawl.

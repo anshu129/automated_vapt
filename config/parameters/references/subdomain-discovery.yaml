@@ -1,0 +1,186 @@
+# Researched parameter rationale — Asset & Subdomain Discovery tools
+# Each parameter cites official tool behavior and maps to operational_context facts.
+version: "2.0"
+category: subdomain_discovery
+
+tools:
+  amass:
+    official_docs:
+      - https://github.com/owasp-amass/amass/blob/master/doc/tutorial.md
+      - https://nmap.org/book/man-host-discovery.html
+    summary: OWASP Amass performs DNS enumeration via passive OSINT and optional active techniques.
+    parameters:
+      - id: passive-mode
+        flags: ["enum", "-passive"]
+        when_to_use: Default for authorized passive recon; no packets sent to target infrastructure.
+        rationale: >-
+          Amass tutorial documents 'enum -passive' as querying only third-party APIs and datasets.
+          Required when execution profile is PASSIVE_ONLY or scope restricts active probing.
+        operational_triggers: [passive_only]
+      - id: active-brute
+        flags: ["-brute"]
+        when_to_use: Passive sources exhausted and scope permits active DNS brute-force.
+        rationale: >-
+          Amass '-brute' performs subdomain brute-forcing against authoritative nameservers.
+          Only after low_subdomain_gain from passive passes to avoid unnecessary noise.
+        operational_triggers: [low_subdomain_gain]
+      - id: timeout
+        flags: ["-timeout", "10"]
+        when_to_use: High-latency APIs or slow resolver responses on prior attempts.
+        rationale: >-
+          Amass '-timeout' sets minutes per enumeration event; increase when prior runs timed out.
+        operational_triggers: [previous_timeouts]
+
+  subfinder:
+    official_docs:
+      - https://github.com/projectdiscovery/subfinder
+    summary: Fast passive subdomain discovery from curated OSINT sources.
+    parameters:
+      - id: silent
+        flags: ["-silent"]
+        when_to_use: Always in automated pipelines; stdout is one hostname per line.
+        rationale: "Subfinder README documents -silent for machine-readable output only."
+        operational_triggers: [manifest_base]
+      - id: all-sources
+        flags: ["-all"]
+        when_to_use: Marginal discovery gain below threshold after default source set.
+        rationale: >-
+          '-all' uses all sources including slower/community APIs. Subfinder docs recommend
+          when default providers return insufficient unique hosts.
+        operational_triggers: [low_subdomain_gain]
+      - id: recursive
+        flags: ["-recursive"]
+        when_to_use: Never under PASSIVE_ONLY; only when active scope allows deeper enumeration.
+        rationale: >-
+          Recursive mode discovers nested subdomains (a.b.example.com). Increases query volume;
+          disabled when passive_only or rate_limited upstream APIs.
+        operational_triggers: [low_subdomain_gain]
+        avoid_when: [passive_only, rate_limited]
+
+  assetfinder:
+    official_docs:
+      - https://github.com/tomnomnom/assetfinder
+    summary: Finds related domains and subdomains from public sources.
+    parameters:
+      - id: subs-only
+        flags: ["--subs-only"]
+        when_to_use: Scope is subdomain enumeration, not related apex domains.
+        rationale: >-
+          assetfinder README states '--subs-only' restricts output to subdomains of the
+          target domain, avoiding unrelated domain noise in asset graph.
+        operational_triggers: [manifest_base]
+
+  findomain:
+    official_docs:
+      - https://github.com/Findomain/Findomain
+    summary: Cross-platform subdomain enumerator using multiple APIs.
+    parameters:
+      - id: quiet
+        flags: ["-q"]
+        when_to_use: Pipeline execution; suppresses progress UI.
+        rationale: "Findomain -q quiet mode outputs only discovered hostnames."
+        operational_triggers: [manifest_base]
+      - id: threads
+        flags: ["-t", "50"]
+        when_to_use: Large domain with many API sources and no rate limiting observed.
+        rationale: >-
+          '-t' controls resolver/API thread count. Reduce when rate_limited on passive APIs.
+        operational_triggers: [large_target_set]
+        avoid_when: [rate_limited]
+
+  sublist3r:
+    official_docs:
+      - https://github.com/aboul3la/Sublist3r
+    summary: Python tool querying search engines and passive DNS for subdomains.
+    parameters:
+      - id: default-engines
+        flags: ["-d", "{domain}"]
+        when_to_use: Standard passive pass; uses default search engine sources.
+        rationale: "Sublist3r -d specifies target domain for engine-based discovery."
+        operational_triggers: [manifest_base]
+      - id: brute-mode
+        flags: ["-b"]
+        when_to_use: Active brute enabled in scope after passive low yield.
+        rationale: >-
+          '-b' enables subbrute DNS brute-force module. State-changing; not used when passive_only.
+        operational_triggers: [low_subdomain_gain]
+        avoid_when: [passive_only]
+
+  oneforall:
+    official_docs:
+      - https://github.com/shmilylty/OneForAll
+    summary: Comprehensive subdomain integration framework with many modules.
+    parameters:
+      - id: run-target
+        flags: ["--target", "{domain}", "run"]
+        when_to_use: Standard invocation per OneForAll CLI documentation.
+        rationale: "oneforall --target DOMAIN run executes configured module pipeline."
+        operational_triggers: [manifest_base]
+      - id: brute
+        flags: ["--brute", "True"]
+        when_to_use: Active DNS brute after passive modules underperform.
+        rationale: "OneForAll brute flag enables DNS dict attack; scope-gated."
+        operational_triggers: [low_subdomain_gain]
+        avoid_when: [passive_only]
+
+  chaos-client:
+    official_docs:
+      - https://github.com/projectdiscovery/chaos-client
+    summary: ProjectDiscovery Chaos dataset client for subdomains.
+    parameters:
+      - id: silent
+        flags: ["-silent"]
+        when_to_use: Pipeline parsing; requires PDCP API key in environment.
+        rationale: "chaos-client -silent outputs hostnames only for downstream dnsx."
+        operational_triggers: [manifest_base]
+      - id: json
+        flags: ["-json"]
+        when_to_use: When structured metadata (timestamp, source) needed for evidence graph.
+        rationale: "JSON output includes discovery metadata per chaos-client README."
+        operational_triggers: [large_target_set]
+
+  github-subdomains:
+    official_docs:
+      - https://github.com/gwen001/github-subdomains
+    summary: Discovers subdomains referenced in GitHub code search results.
+    parameters:
+      - id: domain-flag
+        flags: ["-d", "{domain}"]
+        when_to_use: CODE_REFERENCE_DISCOVERY capability against in-scope domain.
+        rationale: "Tool searches GitHub for domain string occurrences in public repos."
+        operational_triggers: [manifest_base]
+      - id: token
+        flags: ["-t", "{github_token}"]
+        when_to_use: When unauthenticated search rate-limited (HTTP 403/429).
+        rationale: "GitHub API requires token for higher rate limits per GitHub REST docs."
+        operational_triggers: [rate_limited]
+
+  crobat:
+    official_docs:
+      - https://github.com/cgboal/sonarsearch
+    summary: Sonar/Crobat API client for passive subdomain search.
+    parameters:
+      - id: search
+        flags: ["-s", "{domain}"]
+        when_to_use: EXTERNAL_DATASET_DISCOVERY when other passive sources saturated.
+        rationale: "Crobat queries Rapid7 Sonar passive DNS dataset by domain suffix."
+        operational_triggers: [low_subdomain_gain]
+
+  crtsh:
+    official_docs:
+      - https://crt.sh/
+      - https://github.com/crtsh/crtsh/wiki
+    summary: Certificate Transparency log search via crt.sh JSON API.
+    parameters:
+      - id: wildcard-query
+        flags: ["%.{domain}"]
+        when_to_use: CERTIFICATE_TRANSPARENCY_DISCOVERY for all issued certs matching domain.
+        rationale: >-
+          crt.sh '?q=%.domain&output=json' returns all certificates where domain appears
+          in CN or SAN per CT log query syntax documented on crt.sh.
+        operational_triggers: [manifest_base]
+      - id: dedupe
+        flags: ["dedupe=true"]
+        when_to_use: Large CT result sets with duplicate common names.
+        rationale: "crt.sh supports dedupe parameter to collapse duplicate certificate entries."
+        operational_triggers: [large_target_set]

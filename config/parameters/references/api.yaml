@@ -1,0 +1,67 @@
+# API reconnaissance
+version: "2.0"
+category: api
+
+tools:
+  kiterunner:
+    official_docs:
+      - https://github.com/assetnote/kiterunner
+    summary: Contextual API route brute-force using OpenAPI/wordlist routes.
+    parameters:
+      - id: scan
+        flags: ["scan", "{url}"]
+        when_to_use: API_ROUTE_DISCOVERY on confirmed API base URLs.
+        rationale: "kiterunner scan mode per README uses contextual route database."
+        operational_triggers: [api_surface_detected]
+      - id: wordlist
+        flags: ["-w", "{routes_db}"]
+        when_to_use: Custom route database for detected framework (e.g. spring, rails).
+        rationale: "-w wordlist selection affects route prediction accuracy."
+        operational_triggers: [manifest_base]
+      - id: delay
+        flags: ["--delay", "100ms"]
+        when_to_use: WAF or rate_limited API gateway.
+        rationale: "Inter-request delay reduces 429 responses."
+        operational_triggers: [waf_detected, rate_limited]
+      - id: headers
+        flags: ["-H", "Authorization: Bearer {token}"]
+        when_to_use: auth_required API with provided test credentials.
+        rationale: "Authenticated route discovery requires auth header per scope."
+        operational_triggers: [auth_required]
+
+  inql:
+    official_docs:
+      - https://github.com/doyensec/inql
+    summary: GraphQL security testing toolkit and schema enumerator.
+    parameters:
+      - id: target
+        flags: ["-t", "{url}"]
+        when_to_use: graphql_endpoint detected or /graphql path found.
+        rationale: "inql -t target GraphQL endpoint per documentation."
+        operational_triggers: [graphql_endpoint]
+      - id: generate
+        flags: ["--generate"]
+        when_to_use: Generate schema inventory and query templates.
+        rationale: "Schema generation for GRAPHQL_SCHEMA_INVENTORY capability."
+        operational_triggers: [graphql_endpoint]
+      - id: headers
+        flags: ["-H", "Authorization: Bearer {token}"]
+        when_to_use: Introspection behind authentication.
+        rationale: "Auth headers for protected GraphQL endpoints."
+        operational_triggers: [auth_required]
+
+  mitmproxy-import:
+    official_docs:
+      - https://docs.mitmproxy.org/stable/
+    summary: Import traffic observations from mitmproxy dump for API inventory.
+    parameters:
+      - id: flow-file
+        flags: ["-r", "{flow_file}"]
+        when_to_use: TRAFFIC_OBSERVATION_IMPORT from credentialed manual session.
+        rationale: "mitmproxy -r reads flow file per official CLI documentation."
+        operational_triggers: [auth_required]
+      - id: set
+        flags: ["--set", "stream_large_bodies=1"]
+        when_to_use: Large API response bodies in captured flows.
+        rationale: "Streams large bodies to avoid memory exhaustion per mitmproxy docs."
+        operational_triggers: [large_target_set]

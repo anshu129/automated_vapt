@@ -1,0 +1,48 @@
+# Adaptive parameter rules — API reconnaissance
+version: "2.0"
+
+rules:
+  - id: param-kiterunner-delay-waf
+    tool: kiterunner
+    reference_param: delay
+    when:
+      any_of: [waf_detected, rate_limited]
+    add_args: ["--delay", "100ms"]
+    explanation: >-
+      API gateway WAF/429; kiterunner inter-request delay reduces throttling.
+
+  - id: param-kiterunner-auth
+    tool: kiterunner
+    reference_param: headers
+    when:
+      any_of: [auth_required]
+    add_args: ["-H", "Authorization: Bearer {token}"]
+    explanation: >-
+      Authenticated API scope; Authorization header for route discovery.
+
+  - id: param-inql-generate-graphql
+    tool: inql
+    reference_param: generate
+    when:
+      any_of: [graphql_endpoint]
+    add_args: ["--generate"]
+    explanation: >-
+      GraphQL endpoint confirmed; inql --generate builds schema inventory.
+
+  - id: param-inql-auth
+    tool: inql
+    reference_param: headers
+    when:
+      any_of: [auth_required, graphql_endpoint]
+    add_args: ["-H", "Authorization: Bearer {token}"]
+    explanation: >-
+      Protected GraphQL; auth header for introspection when scope provides token.
+
+  - id: param-mitmproxy-stream-large
+    tool: mitmproxy-import
+    reference_param: flow-file
+    when:
+      any_of: [large_target_set]
+    add_args: ["--set", "stream_large_bodies=1"]
+    explanation: >-
+      Large API bodies in flow capture; mitmproxy streams to avoid OOM.
