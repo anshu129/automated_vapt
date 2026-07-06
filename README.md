@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # VAPT Platform
 
 Authorized vulnerability assessment, reconnaissance correlation, attack surface mapping, and security hypothesis generation platform.
@@ -71,3 +72,7 @@ See `docs/architecture.md` for full design.
 ```bash
 pytest tests/ -v
 ```
+=======
+# automated_vapt
+fully automatic vapt flow
+>>>>>>> 6644499c511671f97f93d2b8c1e6d1e6c4dbd3fd
