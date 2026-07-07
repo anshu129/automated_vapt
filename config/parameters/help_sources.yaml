@@ -88,6 +88,9 @@ tools:
   tlsx:
     help_argv:
       - ["-h"]
+  nuclei:
+    help_argv:
+      - ["-h"]
   gau:
     help_argv:
       - ["-h"]

@@ -122,11 +122,9 @@ async def test_accepted_gaps_mark_requirements_non_blocking(db_session) -> None:
     await db_session.flush()
 
     completion = await AssessmentCompletionEvaluator(db_session).evaluate(scan.id)
-    assert completion.status in (
-        CompletionStatus.COMPLETE.value,
-        CompletionStatus.COMPLETE_WITH_ACCEPTED_GAPS.value,
-    )
+    assert completion.status == CompletionStatus.INCOMPLETE.value
     assert completion.metrics.get("accepted_gap_count", 0) >= 1
+    assert completion.metrics.get("blocking_test_requirement_count", 0) >= 1
 
 
 @pytest.mark.asyncio

@@ -569,6 +569,48 @@ class CredentialReference(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     status: Mapped[str] = mapped_column(String(32), default="ACTIVE")
 
 
+class CredentialScopeBinding(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "credential_scope_bindings"
+
+    credential_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("credential_references.id"), nullable=False, index=True
+    )
+    scope_rule_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("scope_rules.id"))
+    asset_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("assets.id"))
+    application_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("assets.id"))
+    url_prefix: Mapped[str | None] = mapped_column(String(512))
+    assessment_mode: Mapped[str] = mapped_column(String(32), default="CREDENTIALED")
+
+
+class AuthenticationContext(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "authentication_contexts"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    credential_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("credential_references.id"), nullable=False, index=True
+    )
+    asset_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("assets.id"), nullable=False)
+    auth_method: Mapped[str] = mapped_column(String(64), nullable=False)
+    session_established: Mapped[bool] = mapped_column(Boolean, default=False)
+    session_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_validated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    coverage_dimensions: Mapped[list[str]] = mapped_column(JSON, default=list)
+
+
+class RoleContext(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "role_contexts"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    authentication_context_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("authentication_contexts.id"), nullable=False, index=True
+    )
+    asset_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("assets.id"), nullable=False)
+    role_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    authorized: Mapped[bool] = mapped_column(Boolean, default=True)
+    coverage_status: Mapped[dict[str, str]] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 class AssessmentCompletionRecord(Base, UUIDPrimaryKeyMixin):
     __tablename__ = "assessment_completion_records"
     __table_args__ = (UniqueConstraint("scan_id", name="uq_completion_scan"),)
@@ -592,6 +634,25 @@ class AuditEvent(Base, UUIDPrimaryKeyMixin):
     resource_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
     details: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     correlation_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AIEnrichment(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "ai_enrichments"
+    __table_args__ = (UniqueConstraint("cache_key", name="uq_ai_enrichment_cache_key"),)
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    enrichment_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    target_entity_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    target_entity_id: Mapped[uuid.UUID] = mapped_column(Uuid(), nullable=False)
+    provider: Mapped[str] = mapped_column(String(64), default="mistral")
+    prompt_template_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    model_config: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    input_artifact_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    cache_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    output: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    validation_status: Mapped[str] = mapped_column(String(32), nullable=False)
+    cached: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 

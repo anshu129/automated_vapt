@@ -89,6 +89,37 @@ tools:
         rationale: "Cipher enumeration for weak protocol detection."
         operational_triggers: [capability_TLS_CHARACTERIZATION]
 
+  nuclei:
+    official_docs:
+      - https://docs.projectdiscovery.io/opensource/nuclei/running
+    summary: Bounded template-based assessment with analyst-reviewed findings.
+    parameters:
+      - id: safe-jsonl
+        flags:
+          [
+            "-u",
+            "{url}",
+            "-jsonl",
+            "-silent",
+            "-omit-raw",
+            "-no-interactsh",
+          ]
+        when_to_use: Pre-approved TEMPLATE_BASED_ASSESSMENT plans.
+        rationale: >-
+          JSONL enables deterministic parsing; raw exchanges and out-of-band
+          interaction are disabled for the default low-impact workflow.
+        operational_triggers: [manifest_base]
+      - id: excluded-tags
+        flags: ["-exclude-tags", "dos,fuzz,intrusive"]
+        when_to_use: Every default automated assessment.
+        rationale: Excludes template categories outside the low-impact policy.
+        operational_triggers: [manifest_base]
+      - id: bounded-rate
+        flags: ["-rate-limit", "10", "-concurrency", "5"]
+        when_to_use: Every default automated assessment.
+        rationale: Applies conservative request and template concurrency bounds.
+        operational_triggers: [manifest_base]
+
   webanalyze:
     official_docs:
       - https://github.com/rverton/webanalyze

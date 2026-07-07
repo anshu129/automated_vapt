@@ -163,15 +163,20 @@ def evaluate_rules(
         for output in rule.outputs:
             existing = merged.get(output.class_code)
             if existing is None or STATE_PRIORITY[output.state] > STATE_PRIORITY[existing.state]:
+                rule_ids = list(existing.rule_ids) if existing else []
+                if rule.rule_id not in rule_ids:
+                    rule_ids.append(rule.rule_id)
                 merged[output.class_code] = ClassApplicabilityResult(
                     class_code=output.class_code,
                     state=output.state,
                     confidence=output.confidence,
-                    rule_ids=[rule.rule_id],
+                    rule_ids=rule_ids,
                     explanation=rule.description or f"Matched rule {rule.rule_id}",
                 )
             elif existing is not None and STATE_PRIORITY[output.state] == STATE_PRIORITY[existing.state]:
                 if rule.rule_id not in existing.rule_ids:
                     existing.rule_ids.append(rule.rule_id)
+            elif existing is not None and rule.rule_id not in existing.rule_ids:
+                existing.rule_ids.append(rule.rule_id)
 
     return list(merged.values())

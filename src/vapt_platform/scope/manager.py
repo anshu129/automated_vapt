@@ -131,10 +131,10 @@ class ScopeManager:
         rt = ScopeRuleType(rule.rule_type)
         pattern = rule.pattern.lower()
         if rt == ScopeRuleType.ROOT_DOMAIN:
-            host = (target.hostname or target.domain or "").lower()
+            host = _target_host(target)
             return host == pattern or host.endswith(f".{pattern}")
         if rt == ScopeRuleType.HOSTNAME:
-            return (target.hostname or "").lower() == pattern
+            return _target_host(target) == pattern
         if rt == ScopeRuleType.SUBDOMAIN_PATTERN:
             host = (target.hostname or "").lower()
             regex = pattern.replace("*.", ".*\\.")
@@ -154,7 +154,7 @@ class ScopeManager:
             url = _scope_url(target.url or "")
             return url.startswith(_scope_url(pattern))
         if rt == ScopeRuleType.EXCLUSION:
-            host = (target.hostname or target.domain or "").lower()
+            host = _target_host(target)
             return host == pattern or host.endswith(f".{pattern}")
         return False
 
@@ -181,3 +181,17 @@ def _scope_url(value: str) -> str:
     host = parsed.hostname or parsed.netloc
     netloc = f"{host}:{parsed.port}" if parsed.port else host
     return urlunsplit((parsed.scheme, netloc, parsed.path.rstrip("/"), parsed.query, ""))
+
+
+def _target_host(target: TargetDescriptor) -> str:
+    if target.hostname:
+        return target.hostname.lower()
+    if target.domain:
+        return target.domain.lower()
+    if target.url:
+        try:
+            parsed = urlsplit(target.url)
+        except ValueError:
+            return ""
+        return (parsed.hostname or parsed.netloc or "").lower()
+    return ""

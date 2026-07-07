@@ -27,6 +27,126 @@ rules:
       - class_code: TRANSPORT_SECURITY
         state: APPLICABLE
         confidence: 0.85
+      - class_code: DEFAULT_OR_WEAK_CONFIGURATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: FUNCTION_LEVEL_AUTHORIZATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: OBJECT_LEVEL_AUTHORIZATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: BUSINESS_LOGIC
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+      - class_code: MULTI_STEP_WORKFLOW
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+      - class_code: RATE_CONTROL
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: INFORMATION_DISCLOSURE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.6
+      - class_code: CROSS_ORIGIN_POLICY
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: CACHE_BEHAVIOR
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+      - class_code: HOST_HEADER_HANDLING
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+      - class_code: REDIRECT_HANDLING
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+      - class_code: PATH_HANDLING
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+      - class_code: SERVER_SIDE_REQUEST_BEHAVIOR
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.4
+      - class_code: XML_PROCESSING
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.35
+      - class_code: TEMPLATE_PROCESSING
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.4
+      - class_code: API_SCHEMA_VALIDATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+      - class_code: SECRET_EXPOSURE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+      - class_code: DEPENDENCY_RISK
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: ADMINISTRATIVE_SURFACE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+      - class_code: DEBUG_SURFACE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+      - class_code: HISTORICAL_OR_STALE_SURFACE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.4
+
+  - rule_id: service-baseline
+    description: Network service exposure and configuration review
+    condition:
+      all:
+        - field: asset_type
+          eq: SERVICE
+    outputs:
+      - class_code: EXPOSED_SERVICE
+        state: APPLICABLE
+        confidence: 0.85
+      - class_code: DEFAULT_OR_WEAK_CONFIGURATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.6
+      - class_code: KNOWN_COMPONENT_VULNERABILITY
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+      - class_code: INFORMATION_DISCLOSURE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+
+  - rule_id: endpoint-baseline
+    description: Per-endpoint input, access control, and disclosure review
+    condition:
+      all:
+        - field: asset_type
+          eq: ENDPOINT
+    outputs:
+      - class_code: INPUT_VALIDATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.6
+      - class_code: OBJECT_LEVEL_AUTHORIZATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: FUNCTION_LEVEL_AUTHORIZATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.55
+      - class_code: INFORMATION_DISCLOSURE
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
+      - class_code: RATE_CONTROL
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.45
+
+  - rule_id: host-service-surface
+    description: Hosts with observed ports require exposed service review
+    condition:
+      all:
+        - field: metadata.ports_discovered
+          eq: true
+    outputs:
+      - class_code: EXPOSED_SERVICE
+        state: APPLICABLE
+        confidence: 0.8
+      - class_code: DEFAULT_OR_WEAK_CONFIGURATION
+        state: POSSIBLY_APPLICABLE
+        confidence: 0.5
 
   - rule_id: web-app-tls-class
     description: TLS configuration testing when HTTPS is in use

@@ -36,9 +36,13 @@ dev = [
     "pre-commit>=4.0.0",
     "aiosqlite>=0.20.0",
 ]
+mcp = [
+    "mcp>=1.27,<2",
+]
 
 [project.scripts]
 vapt = "vapt_platform.cli.main:app"
+vapt-mcp = "vapt_platform.mcp.server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/vapt_platform"]

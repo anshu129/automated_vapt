@@ -7,23 +7,33 @@ from ipaddress import ip_address
 from typing import Any
 from urllib.parse import unquote, urlparse, urlunparse
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from vapt_platform.config.settings import get_settings
 from vapt_platform.controller.recon_controller import ReconController
 from vapt_platform.db.tables.models import (
     CapabilityProvider,
+    Event,
     Project,
     RawArtifact,
     Scan,
     ScopeRule,
     ScopeSnapshot,
     Task,
+    TestPlan,
     ValidationResult,
     ValidationTask,
 )
-from vapt_platform.domain.enums import Capability, ScanStatus, ScopeRuleType, TaskStatus
+from vapt_platform.domain.enums import (
+    Capability,
+    ScanStatus,
+    ScopeRuleType,
+    TaskStatus,
+    TestPlanStatus,
+    ValidationOutcome,
+    ValidationTaskStatus,
+)
 from vapt_platform.domain.exceptions import EntityNotFoundError
 from vapt_platform.engines.assessment import VerdictEngine
 from vapt_platform.scope.manager import ScopeManager, ScopeRuleData
@@ -407,18 +417,63 @@ class ValidationService:
         task = await self.session.get(ValidationTask, task_id)
         if not task:
             raise EntityNotFoundError("Validation task not found")
+        try:
+            normalized_outcome = ValidationOutcome(outcome.upper()).value
+        except ValueError as exc:
+            raise ValueError(f"Unsupported validation outcome: {outcome}") from exc
+        if normalized_outcome == ValidationOutcome.CONFIRMED.value and not evidence_ids:
+            raise ValueError("Confirmed validation result requires evidence")
         result = ValidationResult(
             validation_task_id=task_id,
-            outcome=outcome,
+            outcome=normalized_outcome,
             analyst_notes=analyst_notes,
-            evidence_ids=evidence_ids,
+            evidence_ids=list(dict.fromkeys(evidence_ids)),
             recorded_by=recorded_by,
         )
         self.session.add(result)
-        task.status = outcome if outcome != "INCONCLUSIVE" else "INCONCLUSIVE"
+        await self.session.flush()
+        task.status = {
+            ValidationOutcome.CONFIRMED.value: ValidationTaskStatus.VALIDATED.value,
+            ValidationOutcome.REJECTED.value: ValidationTaskStatus.REJECTED.value,
+            ValidationOutcome.INCONCLUSIVE.value: ValidationTaskStatus.INCONCLUSIVE.value,
+        }[normalized_outcome]
+        if task.test_plan_id:
+            plan = await self.session.get(TestPlan, task.test_plan_id)
+            if plan:
+                plan.status = TestPlanStatus.COMPLETED.value
+        self.session.add(
+            Event(
+                scan_id=task.scan_id,
+                event_type="VALIDATION_RESULT_RECORDED",
+                payload={
+                    "validation_task_id": str(task.id),
+                    "validation_result_id": str(result.id),
+                    "hypothesis_id": (
+                        str(task.hypothesis_id) if task.hypothesis_id else None
+                    ),
+                    "outcome": normalized_outcome,
+                },
+                correlation_id=uuid.uuid4(),
+                sequence_number=await self._next_event_sequence(task.scan_id),
+                processed_at=datetime.now(UTC),
+            )
+        )
+        await self.session.flush()
         if task.hypothesis_id:
-            await self.verdict_engine.evaluate_hypothesis(task.hypothesis_id, outcome, evidence_ids)
+            await self.verdict_engine.evaluate_hypothesis(
+                task.hypothesis_id,
+                normalized_outcome,
+                result.evidence_ids,
+                validation_result_id=result.id,
+                test_plan_id=task.test_plan_id,
+                recorded_by=recorded_by,
+            )
         return result
+
+    async def _next_event_sequence(self, scan_id: uuid.UUID) -> int:
+        stmt = select(func.max(Event.sequence_number)).where(Event.scan_id == scan_id)
+        current = (await self.session.execute(stmt)).scalar() or 0
+        return int(current) + 1
 
 
 def infer_scope_rule(target: str) -> dict[str, Any]:

@@ -1,0 +1,367 @@
+"""Optional Mistral advisory enrichment over redacted assessment read models."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import uuid
+from typing import Any
+
+import httpx
+from pydantic import BaseModel, Field
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from vapt_platform.config.settings import Settings, get_settings
+from vapt_platform.db.tables.models import (
+    AIEnrichment,
+    Asset,
+    AssetTestMatrix,
+    TestRequirement,
+    VulnerabilityClass,
+)
+from vapt_platform.domain.enums import TestRequirementCoverageStatus
+
+PROMPT_TEMPLATE_VERSION = "coverage-advisory-v1"
+
+
+class AdvisoryPriority(BaseModel):
+    class_code: str
+    rationale: str = Field(max_length=600)
+    evidence_gap: str = Field(max_length=600)
+    recommended_validation: str = Field(max_length=600)
+
+
+class CrossAssetHypothesisSuggestion(BaseModel):
+    title: str = Field(max_length=300)
+    class_code: str
+    asset_ids: list[str] = Field(default_factory=list, max_length=25)
+    rationale: str = Field(max_length=800)
+    required_evidence: list[str] = Field(default_factory=list, max_length=12)
+    confidence: float = Field(ge=0.0, le=1.0)
+
+
+class VulnerabilityCoverageAdvisory(BaseModel):
+    summary: str = Field(max_length=1500)
+    priority_classes: list[AdvisoryPriority] = Field(default_factory=list, max_length=20)
+    cross_asset_hypotheses: list[CrossAssetHypothesisSuggestion] = Field(
+        default_factory=list, max_length=20
+    )
+    limitations: list[str] = Field(default_factory=list, max_length=12)
+
+
+class MistralEnrichmentService:
+    """Produces advisory records without mutating assessment state."""
+
+    def __init__(
+        self,
+        session: AsyncSession,
+        settings: Settings | None = None,
+    ) -> None:
+        self.session = session
+        self.settings = settings or get_settings()
+
+    async def enrich_vulnerability_coverage(self, scan_id: uuid.UUID) -> AIEnrichment:
+        snapshot, class_codes, asset_ids = await self._coverage_snapshot(scan_id)
+        encoded = json.dumps(snapshot, sort_keys=True, separators=(",", ":"))
+        input_hash = hashlib.sha256(encoded.encode()).hexdigest()
+        model_config = {
+            "model": self.settings.mistral_model,
+            "temperature": 0.1,
+            "max_tokens": self.settings.ai_max_tokens,
+            "safe_prompt": True,
+        }
+        cache_key = hashlib.sha256(
+            (
+                input_hash
+                + PROMPT_TEMPLATE_VERSION
+                + json.dumps(model_config, sort_keys=True)
+            ).encode()
+        ).hexdigest()
+        existing = (
+            await self.session.execute(
+                select(AIEnrichment).where(AIEnrichment.cache_key == cache_key)
+            )
+        ).scalar_one_or_none()
+        if existing:
+            existing.cached = True
+            return existing
+
+        advisory: VulnerabilityCoverageAdvisory
+        validation_status = "VALID"
+        provider = "mistral"
+        error_type: str | None = None
+        if not self.settings.ai_enabled:
+            advisory = self._fallback(snapshot, "AI_ENABLED is false")
+            validation_status = "FALLBACK"
+            provider = "deterministic-fallback"
+        elif not self.settings.mistral_api_key:
+            advisory = self._fallback(snapshot, "MISTRAL_API_KEY is not configured")
+            validation_status = "FALLBACK"
+            provider = "deterministic-fallback"
+        else:
+            try:
+                advisory = await self._call_mistral(snapshot)
+                advisory = self._filter_output(advisory, class_codes, asset_ids)
+            except (httpx.HTTPError, ValueError, KeyError) as exc:
+                error_type = type(exc).__name__
+                advisory = self._fallback(
+                    snapshot,
+                    "Mistral enrichment was unavailable; deterministic summary used.",
+                )
+                validation_status = "FALLBACK"
+                provider = "deterministic-fallback"
+
+        stored_config = dict(model_config)
+        if error_type:
+            stored_config["error_type"] = error_type
+        record = AIEnrichment(
+            scan_id=scan_id,
+            enrichment_type="VULNERABILITY_COVERAGE_ADVISORY",
+            target_entity_type="SCAN",
+            target_entity_id=scan_id,
+            provider=provider,
+            prompt_template_version=PROMPT_TEMPLATE_VERSION,
+            model_config=stored_config,
+            input_artifact_hash=input_hash,
+            cache_key=cache_key,
+            output=advisory.model_dump(mode="json"),
+            validation_status=validation_status,
+            cached=False,
+        )
+        self.session.add(record)
+        await self.session.flush()
+        return record
+
+    async def _call_mistral(
+        self,
+        snapshot: dict[str, Any],
+    ) -> VulnerabilityCoverageAdvisory:
+        api_key = self.settings.mistral_api_key
+        if not api_key:
+            raise ValueError("MISTRAL_API_KEY is not configured")
+        system_prompt = (
+            "You are an advisory security coverage analyst. Use only the supplied "
+            "redacted assessment snapshot. Return JSON matching the requested schema. "
+            "Do not claim a vulnerability is confirmed, provide exploit steps or "
+            "commands, change scope, or recommend destructive testing. Use only "
+            "class_code and asset_id values present in the input. Distinguish possible "
+            "applicability, testing gaps, and evidence-backed confirmation."
+        )
+        user_prompt = (
+            "Analyze cross-asset vulnerability coverage and prioritize validation gaps. "
+            "Return keys summary, priority_classes, cross_asset_hypotheses, limitations. "
+            "Each priority class needs class_code, rationale, evidence_gap, and "
+            "recommended_validation. Each hypothesis needs title, class_code, asset_ids, "
+            "rationale, required_evidence, and confidence. Snapshot: "
+            + json.dumps(snapshot, separators=(",", ":"))
+        )
+        async with httpx.AsyncClient(
+            timeout=float(self.settings.ai_timeout_seconds)
+        ) as client:
+            response = await client.post(
+                f"{self.settings.mistral_base_url.rstrip('/')}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key.get_secret_value()}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": self.settings.mistral_model,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    "temperature": 0.1,
+                    "max_tokens": self.settings.ai_max_tokens,
+                    "safe_prompt": True,
+                    "response_format": {"type": "json_object"},
+                },
+            )
+            response.raise_for_status()
+        payload = response.json()
+        content = payload["choices"][0]["message"]["content"]
+        if isinstance(content, list):
+            content = "".join(
+                str(item.get("text", ""))
+                for item in content
+                if isinstance(item, dict)
+            )
+        if not isinstance(content, str):
+            raise ValueError("Mistral response content is not text")
+        return VulnerabilityCoverageAdvisory.model_validate_json(content)
+
+    async def _coverage_snapshot(
+        self,
+        scan_id: uuid.UUID,
+    ) -> tuple[dict[str, Any], set[str], set[str]]:
+        assets = list(
+            (await self.session.execute(select(Asset).where(Asset.scan_id == scan_id)))
+            .scalars()
+            .all()
+        )
+        matrices = list(
+            (
+                await self.session.execute(
+                    select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id)
+                )
+            )
+            .scalars()
+            .all()
+        )
+        matrix_ids = [matrix.id for matrix in matrices]
+        requirements = (
+            list(
+                (
+                    await self.session.execute(
+                        select(TestRequirement).where(
+                            TestRequirement.matrix_id.in_(matrix_ids)
+                        )
+                    )
+                )
+                .scalars()
+                .all()
+            )
+            if matrix_ids
+            else []
+        )
+        classes = list(
+            (
+                await self.session.execute(
+                    select(VulnerabilityClass).where(VulnerabilityClass.active.is_(True))
+                )
+            )
+            .scalars()
+            .all()
+        )
+        class_map = {item.id: item.class_code for item in classes}
+        matrix_assets = {item.id: item.asset_id for item in matrices}
+        class_summaries: dict[str, dict[str, Any]] = {}
+        open_statuses = {
+            TestRequirementCoverageStatus.NOT_TESTED.value,
+            TestRequirementCoverageStatus.PLANNED.value,
+            TestRequirementCoverageStatus.TESTING.value,
+            TestRequirementCoverageStatus.PARTIALLY_TESTED.value,
+            TestRequirementCoverageStatus.INCONCLUSIVE.value,
+        }
+        for requirement in requirements:
+            class_code = class_map.get(requirement.vulnerability_class_id)
+            if not class_code:
+                continue
+            summary = class_summaries.setdefault(
+                class_code,
+                {
+                    "class_code": class_code,
+                    "applicability_counts": {},
+                    "coverage_counts": {},
+                    "open_asset_ids": [],
+                },
+            )
+            app_counts = summary["applicability_counts"]
+            app_counts[requirement.applicability_state] = (
+                app_counts.get(requirement.applicability_state, 0) + 1
+            )
+            coverage_counts = summary["coverage_counts"]
+            coverage_counts[requirement.coverage_status] = (
+                coverage_counts.get(requirement.coverage_status, 0) + 1
+            )
+            if requirement.coverage_status in open_statuses:
+                summary["open_asset_ids"].append(
+                    str(matrix_assets[requirement.matrix_id])
+                )
+        matrix_asset_ids = set(matrix_assets.values())
+        redacted_assets = []
+        for asset in assets[:100]:
+            metadata = asset.metadata_ or {}
+            redacted_assets.append(
+                {
+                    "asset_id": str(asset.id),
+                    "asset_type": asset.asset_type,
+                    "criticality": asset.criticality,
+                    "technologies": list(metadata.get("technologies", []))[:20],
+                    "scheme": metadata.get("scheme"),
+                    "port": metadata.get("port"),
+                    "method": metadata.get("method"),
+                    "has_test_matrix": asset.id in matrix_asset_ids,
+                }
+            )
+        snapshot = {
+            "scan_id": str(scan_id),
+            "catalog_class_codes": sorted(class_map.values()),
+            "assets": redacted_assets,
+            "class_coverage": sorted(
+                class_summaries.values(), key=lambda item: item["class_code"]
+            ),
+            "redaction": (
+                "Hostnames, URLs, raw artifacts, credentials, secret values, request "
+                "bodies, and response bodies are excluded."
+            ),
+        }
+        return snapshot, set(class_map.values()), {str(item.id) for item in assets}
+
+    @staticmethod
+    def _filter_output(
+        advisory: VulnerabilityCoverageAdvisory,
+        class_codes: set[str],
+        asset_ids: set[str],
+    ) -> VulnerabilityCoverageAdvisory:
+        return advisory.model_copy(
+            update={
+                "priority_classes": [
+                    item
+                    for item in advisory.priority_classes
+                    if item.class_code in class_codes
+                ],
+                "cross_asset_hypotheses": [
+                    item.model_copy(
+                        update={
+                            "asset_ids": [
+                                asset_id
+                                for asset_id in item.asset_ids
+                                if asset_id in asset_ids
+                            ]
+                        }
+                    )
+                    for item in advisory.cross_asset_hypotheses
+                    if item.class_code in class_codes
+                ],
+            }
+        )
+
+    @staticmethod
+    def _fallback(
+        snapshot: dict[str, Any],
+        reason: str,
+    ) -> VulnerabilityCoverageAdvisory:
+        ranked = sorted(
+            snapshot.get("class_coverage", []),
+            key=lambda item: len(item.get("open_asset_ids", [])),
+            reverse=True,
+        )
+        priorities = [
+            AdvisoryPriority(
+                class_code=item["class_code"],
+                rationale=(
+                    f"{len(item.get('open_asset_ids', []))} asset matrix cells remain open."
+                ),
+                evidence_gap="Testing or validation coverage is incomplete.",
+                recommended_validation=(
+                    "Follow the deterministic next_action and collect the required evidence."
+                ),
+            )
+            for item in ranked[:10]
+            if item.get("open_asset_ids")
+        ]
+        return VulnerabilityCoverageAdvisory(
+            summary=(
+                f"Coverage advisory generated from {len(snapshot.get('assets', []))} "
+                f"redacted assets and {len(snapshot.get('catalog_class_codes', []))} "
+                "catalog classes."
+            ),
+            priority_classes=priorities,
+            cross_asset_hypotheses=[],
+            limitations=[
+                reason,
+                "This advisory does not confirm vulnerabilities or replace analyst validation.",
+                "Unknown implementation-specific weaknesses may exist outside the catalog.",
+            ],
+        )

@@ -567,6 +567,36 @@ tools:
     priority: 70
     enabled: true
 
+  nuclei:
+    binary: nuclei
+    capabilities: [TEMPLATE_BASED_ASSESSMENT]
+    capability_group: VULNERABILITY_ASSESSMENT
+    safety_class: LOW_IMPACT
+    cost_tier: FREE
+    output_format: jsonl
+    base_args:
+      [
+        "-u",
+        "{url}",
+        "-jsonl",
+        "-silent",
+        "-omit-raw",
+        "-no-interactsh",
+        "-exclude-tags",
+        "dos,fuzz,intrusive",
+        "-rate-limit",
+        "10",
+        "-concurrency",
+        "5",
+        "-timeout",
+        "10",
+        "-retries",
+        "1",
+        "-disable-update-check",
+      ]
+    priority: 92
+    enabled: true
+
   builtwith:
     binary: curl
     capabilities: [TECHNOLOGY_IDENTIFICATION]

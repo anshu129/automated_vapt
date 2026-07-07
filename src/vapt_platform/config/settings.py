@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,6 +27,13 @@ class Settings(BaseSettings):
     redis_url: str = Field(default="redis://localhost:6379/0", alias="REDIS_URL")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     ai_enabled: bool = Field(default=False, alias="AI_ENABLED")
+    mistral_api_key: SecretStr | None = Field(default=None, alias="MISTRAL_API_KEY")
+    mistral_model: str = Field(default="mistral-small-latest", alias="MISTRAL_MODEL")
+    mistral_base_url: str = Field(
+        default="https://api.mistral.ai/v1", alias="MISTRAL_BASE_URL"
+    )
+    ai_max_tokens: int = Field(default=1200, alias="AI_MAX_TOKENS")
+    ai_timeout_seconds: int = Field(default=45, alias="AI_TIMEOUT_SECONDS")
     mcp_enabled: bool = Field(default=False, alias="MCP_ENABLED")
     mcp_read_only: bool = Field(default=True, alias="MCP_READ_ONLY")
     config_path: Path = Field(default=Path("config/default.yaml"))

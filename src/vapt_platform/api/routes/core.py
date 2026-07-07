@@ -1,6 +1,7 @@
 """Project and scan API routes."""
 
 import uuid
+from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -11,27 +12,37 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from vapt_platform.api.deps import get_session
 from vapt_platform.capabilities.registry import CapabilityRegistry
 from vapt_platform.db.tables.models import (
+    AIEnrichment,
     AssessmentCompletionRecord,
     Asset,
     AssetTestMatrix,
     AssetVulnerabilityApplicability,
     CapabilityProvider,
+    ConfirmedFinding,
+    CredentialReference,
     Event,
+    EvidenceLink,
+    EvidencePackage,
     Hypothesis,
     RawArtifact,
+    Relationship,
     SurfaceCoverageRecord,
     Task,
     TaskRun,
+    TestExecution,
     TestPlan,
     TestRequirement,
+    ValidationResult,
     ValidationTask,
+    Verdict,
     VulnerabilityClass,
 )
 from vapt_platform.domain.enums import CompletionStatus, TestRequirementCoverageStatus
 from vapt_platform.domain.exceptions import EntityNotFoundError
-from vapt_platform.engines.assessment import AssessmentCompletionEvaluator
+from vapt_platform.engines.assessment import AssessmentCompletionEvaluator, TestPlanner
 from vapt_platform.engines.surface_completeness import SurfaceCompletenessEngine
 from vapt_platform.engines.vulnerability_applicability import VulnerabilityApplicabilityEngine
+from vapt_platform.enrichment.mistral import MistralEnrichmentService
 from vapt_platform.parameters.references import (
     flatten_parameters,
     load_parameter_references,
@@ -39,6 +50,13 @@ from vapt_platform.parameters.references import (
     reference_for_tool,
 )
 from vapt_platform.planning.discovery_gain import MarginalDiscoveryGainEngine
+from vapt_platform.services.automated_validation import AutomatedValidationOrchestrator
+from vapt_platform.services.credentials import (
+    CredentialContextService,
+    auth_context_metadata,
+    binding_metadata,
+    credential_metadata,
+)
 from vapt_platform.services.core import ProjectService, ScanService, ValidationService
 from vapt_platform.tools.manifest import load_tool_manifests, resolve_tool_binary
 
@@ -76,6 +94,33 @@ class AcceptGapsInput(BaseModel):
     reason: str = ""
 
 
+class CredentialReferenceInput(BaseModel):
+    project_id: uuid.UUID
+    credential_type: str
+    secret_backend_reference: str
+    label: str | None = None
+    role_name: str | None = None
+    expiry: datetime | None = None
+    allowed_capabilities: list[str] = Field(default_factory=list)
+
+
+class CredentialBindingInput(BaseModel):
+    scope_rule_id: uuid.UUID | None = None
+    asset_id: uuid.UUID | None = None
+    application_id: uuid.UUID | None = None
+    url_prefix: str | None = None
+    assessment_mode: str = "CREDENTIALED"
+
+
+class AuthenticationContextInput(BaseModel):
+    asset_id: uuid.UUID
+    scan_id: uuid.UUID | None = None
+    session_established: bool = True
+    session_expires_at: datetime | None = None
+    coverage_dimensions: list[str] = Field(default_factory=lambda: ["AUTHENTICATED"])
+    coverage_status: dict[str, str] = Field(default_factory=dict)
+
+
 @router.post("/projects")
 async def create_project(
     body: ProjectCreate, session: AsyncSession = Depends(get_session)
@@ -95,6 +140,103 @@ async def get_project(
     except EntityNotFoundError as e:
         raise HTTPException(404, str(e)) from e
     return {"id": str(project.id), "name": project.name, "description": project.description}
+
+
+@router.post("/credentials")
+async def create_credential_reference(
+    body: CredentialReferenceInput,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    service = CredentialContextService(session)
+    try:
+        credential = await service.create_reference(
+            body.project_id,
+            body.credential_type,
+            body.secret_backend_reference,
+            label=body.label,
+            role_name=body.role_name,
+            expiry=body.expiry,
+            allowed_capabilities=body.allowed_capabilities,
+        )
+    except EntityNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    await session.commit()
+    return credential_metadata(credential)
+
+
+@router.get("/projects/{project_id}/credentials")
+async def list_project_credentials(
+    project_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    credentials = await CredentialContextService(session).list_project_references(project_id)
+    return {
+        "items": [credential_metadata(credential) for credential in credentials],
+        "total": len(credentials),
+        "secret_values_excluded": True,
+    }
+
+
+@router.get("/credentials/{credential_id}")
+async def get_credential_reference(
+    credential_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    credential = await session.get(CredentialReference, credential_id)
+    if not credential:
+        raise HTTPException(404, "Credential reference not found")
+    return credential_metadata(credential)
+
+
+@router.post("/credentials/{credential_id}/bindings")
+async def bind_credential_scope(
+    credential_id: uuid.UUID,
+    body: CredentialBindingInput,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    service = CredentialContextService(session)
+    try:
+        binding = await service.create_binding(
+            credential_id,
+            scope_rule_id=body.scope_rule_id,
+            asset_id=body.asset_id,
+            application_id=body.application_id,
+            url_prefix=body.url_prefix,
+            assessment_mode=body.assessment_mode,
+        )
+    except EntityNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    await session.commit()
+    return binding_metadata(binding)
+
+
+@router.post("/credentials/{credential_id}/auth-contexts")
+async def establish_authentication_context(
+    credential_id: uuid.UUID,
+    body: AuthenticationContextInput,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    service = CredentialContextService(session)
+    try:
+        context = await service.bind_session(
+            credential_id,
+            body.asset_id,
+            scan_id=body.scan_id,
+            session_established=body.session_established,
+            session_expires_at=body.session_expires_at,
+            coverage_dimensions=body.coverage_dimensions,
+            coverage_status=body.coverage_status,
+        )
+    except EntityNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    await session.commit()
+    return auth_context_metadata(context)
 
 
 @router.post("/scans")
@@ -232,10 +374,56 @@ async def list_assets(
                 "display_name": a.display_name,
                 "normalized_key": a.normalized_key,
                 "confidence": a.confidence,
+                "metadata": a.metadata_,
+                "first_seen": a.first_seen.isoformat() if a.first_seen else None,
+                "last_seen": a.last_seen.isoformat() if a.last_seen else None,
             }
             for a in assets
         ],
         "total": len(assets),
+    }
+
+
+@router.get("/scans/{scan_id}/relationships")
+async def list_relationships(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    rels = list(
+        (
+            await session.execute(
+                select(Relationship).where(Relationship.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    asset_ids = {rel.source_asset_id for rel in rels} | {rel.target_asset_id for rel in rels}
+    assets = {}
+    if asset_ids:
+        rows = list(
+            (
+                await session.execute(select(Asset).where(Asset.id.in_(asset_ids)))
+            )
+            .scalars()
+            .all()
+        )
+        assets = {asset.id: asset for asset in rows}
+    return {
+        "items": [
+            {
+                "id": str(rel.id),
+                "relationship_type": rel.relationship_type,
+                "source_asset_id": str(rel.source_asset_id),
+                "target_asset_id": str(rel.target_asset_id),
+                "source": _asset_ref(assets.get(rel.source_asset_id)),
+                "target": _asset_ref(assets.get(rel.target_asset_id)),
+                "confidence": rel.confidence,
+                "active": rel.active,
+                "evidence_ids": rel.evidence_ids,
+            }
+            for rel in rels
+        ],
+        "total": len(rels),
     }
 
 
@@ -247,7 +435,14 @@ async def list_events(
     events = list((await session.execute(stmt)).scalars().all())
     return {
         "items": [
-            {"id": str(e.id), "event_type": e.event_type, "sequence_number": e.sequence_number}
+            {
+                "id": str(e.id),
+                "event_type": e.event_type,
+                "sequence_number": e.sequence_number,
+                "payload": e.payload,
+                "correlation_id": str(e.correlation_id),
+                "causation_id": str(e.causation_id) if e.causation_id else None,
+            }
             for e in events
         ],
         "total": len(events),
@@ -388,6 +583,13 @@ async def scan_report(
     assets = list((await session.execute(select(Asset).where(Asset.scan_id == scan_id))).scalars().all())
     tasks = list((await session.execute(select(Task).where(Task.scan_id == scan_id))).scalars().all())
     events = list((await session.execute(select(Event).where(Event.scan_id == scan_id))).scalars().all())
+    relationships = list(
+        (
+            await session.execute(select(Relationship).where(Relationship.scan_id == scan_id))
+        )
+        .scalars()
+        .all()
+    )
     surfaces = list(
         (
             await session.execute(
@@ -415,9 +617,98 @@ async def scan_report(
         .scalars()
         .all()
     )
+    plans = list(
+        (await session.execute(select(TestPlan).where(TestPlan.scan_id == scan_id))).scalars().all()
+    )
+    plan_ids = [plan.id for plan in plans]
+    test_executions = (
+        list(
+            (
+                await session.execute(
+                    select(TestExecution).where(
+                        TestExecution.test_plan_id.in_(plan_ids)
+                    )
+                )
+            )
+            .scalars()
+            .all()
+        )
+        if plan_ids
+        else []
+    )
+    validation_tasks = list(
+        (
+            await session.execute(select(ValidationTask).where(ValidationTask.scan_id == scan_id))
+        )
+        .scalars()
+        .all()
+    )
+    validation_task_ids = [task.id for task in validation_tasks]
+    validation_results = (
+        list(
+            (
+                await session.execute(
+                    select(ValidationResult).where(
+                        ValidationResult.validation_task_id.in_(
+                            validation_task_ids
+                        )
+                    )
+                )
+            )
+            .scalars()
+            .all()
+        )
+        if validation_task_ids
+        else []
+    )
+    evidence_links = list(
+        (
+            await session.execute(
+                select(EvidenceLink).where(EvidenceLink.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    hypotheses = list(
+        (
+            await session.execute(select(Hypothesis).where(Hypothesis.scan_id == scan_id))
+        )
+        .scalars()
+        .all()
+    )
+    verdicts = list(
+        (
+            await session.execute(select(Verdict).where(Verdict.scan_id == scan_id))
+        )
+        .scalars()
+        .all()
+    )
+    findings = list(
+        (
+            await session.execute(
+                select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    ai_enrichments = list(
+        (
+            await session.execute(
+                select(AIEnrichment).where(AIEnrichment.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
     completion = await AssessmentCompletionEvaluator(session).evaluate(scan_id)
+    credential_service = CredentialContextService(session)
+    auth_coverage = await credential_service.get_auth_coverage(scan_id)
+    role_coverage = await credential_service.get_role_coverage(scan_id)
     await session.flush()
 
+    asset_by_id = {asset.id: asset for asset in assets}
     class_map = {
         vc.id: vc.class_code
         for vc in (await session.execute(select(VulnerabilityClass))).scalars().all()
@@ -518,7 +809,23 @@ async def scan_report(
             "assets": len(assets),
             "tasks": len(tasks),
             "events": len(events),
+            "relationships": len(relationships),
             "applicable_requirements": len(applicable_rows),
+            "test_plans": len(plans),
+            "test_executions": len(test_executions),
+            "validation_backlog": len(validation_tasks),
+            "validation_results": len(validation_results),
+            "evidence_links": len(evidence_links),
+            "hypotheses": len(hypotheses),
+            "verdicts": len(verdicts),
+            "confirmed_findings": len(findings),
+            "ai_enrichments": len(ai_enrichments),
+            "authenticated_assets": sum(
+                1
+                for item in auth_coverage["items"]
+                if item["session_established"]
+            ),
+            "authorized_roles": role_coverage["total"],
             "completion_status": completion.status,
             "task_status_counts": task_counts,
         },
@@ -528,6 +835,7 @@ async def scan_report(
                 "type": asset.asset_type,
                 "name": asset.display_name,
                 "key": asset.normalized_key,
+                "metadata": asset.metadata_,
                 "surface_status": (
                     surface_by_asset[str(asset.id)].overall_status
                     if str(asset.id) in surface_by_asset
@@ -535,6 +843,17 @@ async def scan_report(
                 ),
             }
             for asset in assets
+        ],
+        "relationships": [
+            {
+                "id": str(rel.id),
+                "type": rel.relationship_type,
+                "source": _asset_ref(asset_by_id.get(rel.source_asset_id)),
+                "target": _asset_ref(asset_by_id.get(rel.target_asset_id)),
+                "confidence": rel.confidence,
+                "active": rel.active,
+            }
+            for rel in relationships
         ],
         "tasks": [
             {
@@ -587,6 +906,159 @@ async def scan_report(
             for row in applicable_rows
         ],
         "test_matrix": matrix_summaries,
+        "test_plans": [
+            {
+                "id": str(plan.id),
+                "hypothesis_id": (
+                    str(plan.hypothesis_id) if plan.hypothesis_id else None
+                ),
+                "testing_mode": plan.testing_mode,
+                "status": plan.status,
+                "asset_ids": plan.asset_ids,
+                "vulnerability_class_ids": plan.vulnerability_class_ids,
+                "required_capabilities": plan.required_capabilities,
+                "safety_class": plan.safety_class,
+                "authorization_requirement": plan.authorization_requirement,
+            }
+            for plan in plans
+        ],
+        "test_executions": [
+            {
+                "id": str(execution.id),
+                "test_plan_id": str(execution.test_plan_id),
+                "task_run_id": (
+                    str(execution.task_run_id) if execution.task_run_id else None
+                ),
+                "provider_id": (
+                    str(execution.provider_id) if execution.provider_id else None
+                ),
+                "template_id": execution.template_id,
+                "status": execution.status,
+                "result_summary": execution.result_summary,
+                "evidence_ids": execution.evidence_ids,
+                "executed_at": (
+                    execution.executed_at.isoformat()
+                    if execution.executed_at
+                    else None
+                ),
+            }
+            for execution in test_executions
+        ],
+        "validation_backlog": [
+            {
+                "id": str(task.id),
+                "hypothesis_id": (
+                    str(task.hypothesis_id) if task.hypothesis_id else None
+                ),
+                "test_plan_id": str(task.test_plan_id) if task.test_plan_id else None,
+                "evidence_package_id": (
+                    str(task.evidence_package_id) if task.evidence_package_id else None
+                ),
+                "asset_ids": task.asset_ids,
+                "validation_goal": task.validation_goal,
+                "testing_mode": task.testing_mode,
+                "status": task.status,
+            }
+            for task in validation_tasks
+        ],
+        "validation_results": [
+            {
+                "id": str(result.id),
+                "validation_task_id": str(result.validation_task_id),
+                "outcome": result.outcome,
+                "analyst_notes": result.analyst_notes,
+                "evidence_ids": result.evidence_ids,
+                "recorded_by": result.recorded_by,
+                "recorded_at": (
+                    result.recorded_at.isoformat() if result.recorded_at else None
+                ),
+            }
+            for result in validation_results
+        ],
+        "evidence_links": [
+            {
+                "id": str(link.id),
+                "source_type": link.source_type,
+                "source_id": str(link.source_id),
+                "target_type": link.target_type,
+                "target_id": str(link.target_id),
+                "link_type": link.link_type,
+                "weight": link.weight,
+                "provenance": link.provenance,
+                "created_at": (
+                    link.created_at.isoformat() if link.created_at else None
+                ),
+            }
+            for link in evidence_links
+        ],
+        "hypotheses": [
+            {
+                "id": str(hypothesis.id),
+                "title": hypothesis.title,
+                "description": hypothesis.description,
+                "hypothesis_type": hypothesis.hypothesis_type,
+                "affected_asset_ids": hypothesis.affected_asset_ids,
+                "supporting_evidence_ids": hypothesis.supporting_evidence_ids,
+                "contradicting_evidence_ids": hypothesis.contradicting_evidence_ids,
+                "confidence": hypothesis.confidence,
+                "status": hypothesis.status,
+                "test_plan_id": (
+                    str(hypothesis.test_plan_id) if hypothesis.test_plan_id else None
+                ),
+                "verdict_id": (
+                    str(hypothesis.verdict_id) if hypothesis.verdict_id else None
+                ),
+            }
+            for hypothesis in hypotheses
+        ],
+        "verdicts": [
+            {
+                "id": str(verdict.id),
+                "hypothesis_id": str(verdict.hypothesis_id),
+                "test_plan_id": (
+                    str(verdict.test_plan_id) if verdict.test_plan_id else None
+                ),
+                "validation_result_id": (
+                    str(verdict.validation_result_id)
+                    if verdict.validation_result_id
+                    else None
+                ),
+                "status": verdict.status,
+                "confidence": verdict.confidence,
+                "supporting_evidence_ids": verdict.supporting_evidence_ids,
+                "contradicting_evidence_ids": verdict.contradicting_evidence_ids,
+                "rule_ids": verdict.rule_ids,
+                "explanation": verdict.explanation,
+            }
+            for verdict in verdicts
+        ],
+        "confirmed_findings": [
+            {
+                "id": str(finding.id),
+                "hypothesis_id": (
+                    str(finding.hypothesis_id) if finding.hypothesis_id else None
+                ),
+                "validation_result_id": str(finding.validation_result_id),
+                "title": finding.title,
+                "description": finding.description,
+                "affected_asset_ids": finding.affected_asset_ids,
+                "cve_ids": finding.cve_ids,
+                "cwe_ids": finding.cwe_ids,
+                "source_severity": finding.source_severity,
+                "contextual_priority": finding.contextual_priority,
+                "evidence_ids": finding.evidence_ids,
+                "confirmed_by": finding.confirmed_by,
+                "confirmed_at": (
+                    finding.confirmed_at.isoformat() if finding.confirmed_at else None
+                ),
+            }
+            for finding in findings
+        ],
+        "ai_enrichments": [
+            _ai_enrichment_item(enrichment) for enrichment in ai_enrichments
+        ],
+        "auth_coverage": auth_coverage,
+        "role_coverage": role_coverage,
         "completion": {
             "status": completion.status,
             "blocking_items": completion.blocking_items,
@@ -745,6 +1217,167 @@ async def asset_applicability(
     }
 
 
+@router.get("/vulnerability-classes")
+async def vulnerability_classes(
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    classes = list(
+        (
+            await session.execute(
+                select(VulnerabilityClass).where(VulnerabilityClass.active.is_(True))
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return {
+        "taxonomy_version": max(
+            (vulnerability_class.taxonomy_version for vulnerability_class in classes),
+            default="1.0",
+        ),
+        "items": [
+            {
+                "id": str(vulnerability_class.id),
+                "class_code": vulnerability_class.class_code,
+                "name": vulnerability_class.name,
+                "description": vulnerability_class.description,
+                "related_cwe_ids": vulnerability_class.related_cwe_ids,
+                "typical_evidence_types": vulnerability_class.typical_evidence_types,
+                "default_testing_mode": vulnerability_class.default_testing_mode,
+                "taxonomy_version": vulnerability_class.taxonomy_version,
+            }
+            for vulnerability_class in sorted(
+                classes, key=lambda item: item.class_code
+            )
+        ],
+        "total": len(classes),
+        "coverage_note": (
+            "The catalog enumerates test classes; it does not claim that every "
+            "possible implementation-specific vulnerability is knowable in advance."
+        ),
+    }
+
+
+@router.get("/scans/{scan_id}/vulnerability-coverage")
+async def scan_vulnerability_coverage(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    classes = list(
+        (
+            await session.execute(
+                select(VulnerabilityClass).where(VulnerabilityClass.active.is_(True))
+            )
+        )
+        .scalars()
+        .all()
+    )
+    assets = list(
+        (await session.execute(select(Asset).where(Asset.scan_id == scan_id)))
+        .scalars()
+        .all()
+    )
+    matrices = list(
+        (
+            await session.execute(
+                select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    matrix_ids = [matrix.id for matrix in matrices]
+    requirements = (
+        list(
+            (
+                await session.execute(
+                    select(TestRequirement).where(
+                        TestRequirement.matrix_id.in_(matrix_ids)
+                    )
+                )
+            )
+            .scalars()
+            .all()
+        )
+        if matrix_ids
+        else []
+    )
+    matrix_asset = {matrix.id: matrix.asset_id for matrix in matrices}
+    asset_map = {asset.id: asset for asset in assets}
+    closed_statuses = {
+        TestRequirementCoverageStatus.NOT_APPLICABLE.value,
+        TestRequirementCoverageStatus.TESTED_NO_EVIDENCE.value,
+        TestRequirementCoverageStatus.CONFIRMED_ISSUE.value,
+    }
+    class_items = []
+    for vulnerability_class in sorted(classes, key=lambda item: item.class_code):
+        cells = [
+            requirement
+            for requirement in requirements
+            if requirement.vulnerability_class_id == vulnerability_class.id
+        ]
+        applicability_counts: dict[str, int] = {}
+        coverage_counts: dict[str, int] = {}
+        next_action_counts: dict[str, int] = {}
+        open_assets = []
+        for cell in cells:
+            applicability_counts[cell.applicability_state] = (
+                applicability_counts.get(cell.applicability_state, 0) + 1
+            )
+            coverage_counts[cell.coverage_status] = (
+                coverage_counts.get(cell.coverage_status, 0) + 1
+            )
+            next_action_counts[cell.next_action] = (
+                next_action_counts.get(cell.next_action, 0) + 1
+            )
+            if cell.coverage_status not in closed_statuses:
+                asset_id = matrix_asset.get(cell.matrix_id)
+                asset = asset_map.get(asset_id) if asset_id else None
+                open_assets.append(
+                    {
+                        "asset_id": str(asset_id) if asset_id else None,
+                        "asset_type": asset.asset_type if asset else None,
+                        "asset_name": asset.display_name if asset else None,
+                        "applicability_state": cell.applicability_state,
+                        "coverage_status": cell.coverage_status,
+                        "testing_mode": cell.testing_mode,
+                        "next_action": cell.next_action,
+                    }
+                )
+        class_items.append(
+            {
+                "vulnerability_class_id": str(vulnerability_class.id),
+                "class_code": vulnerability_class.class_code,
+                "name": vulnerability_class.name,
+                "default_testing_mode": vulnerability_class.default_testing_mode,
+                "typical_evidence_types": vulnerability_class.typical_evidence_types,
+                "matrix_cells": len(cells),
+                "applicability_counts": applicability_counts,
+                "coverage_counts": coverage_counts,
+                "next_action_counts": next_action_counts,
+                "open_assets": open_assets,
+            }
+        )
+    open_requirements = [
+        requirement
+        for requirement in requirements
+        if requirement.coverage_status not in closed_statuses
+    ]
+    return {
+        "scan_id": str(scan_id),
+        "catalog_classes": len(classes),
+        "assets": len(assets),
+        "assets_with_test_matrix": len(matrices),
+        "matrix_cells": len(requirements),
+        "closed_cells": len(requirements) - len(open_requirements),
+        "open_cells": len(open_requirements),
+        "classes": class_items,
+        "coverage_note": (
+            "Open cells are explicit assessment obligations, not confirmed "
+            "vulnerabilities. Confirmation requires a verdict and evidence."
+        ),
+    }
+
+
 @router.get("/scans/{scan_id}/vulnerability-applicability")
 async def scan_vulnerability_applicability(
     scan_id: uuid.UUID,
@@ -777,6 +1410,22 @@ async def scan_vulnerability_applicability(
         ],
         "total": len(rows),
     }
+
+
+@router.get("/scans/{scan_id}/auth-coverage")
+async def scan_auth_coverage(
+    scan_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    return await CredentialContextService(session).get_auth_coverage(scan_id)
+
+
+@router.get("/scans/{scan_id}/role-coverage")
+async def scan_role_coverage(
+    scan_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    return await CredentialContextService(session).get_role_coverage(scan_id)
 
 
 @router.get("/assets/{asset_id}/test-matrix")
@@ -824,6 +1473,10 @@ async def scan_test_matrix(
 ) -> dict[str, Any]:
     stmt = select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id)
     matrices = list((await session.execute(stmt)).scalars().all())
+    class_map = {
+        vc.id: vc.class_code
+        for vc in (await session.execute(select(VulnerabilityClass))).scalars().all()
+    }
     uncovered_statuses = {
         TestRequirementCoverageStatus.NOT_TESTED.value,
         TestRequirementCoverageStatus.PARTIALLY_TESTED.value,
@@ -852,6 +1505,24 @@ async def scan_test_matrix(
                     1 for req in reqs if req.coverage_status in uncovered_statuses
                 ),
                 "status_counts": status_counts,
+                "requirements": [
+                    {
+                        "id": str(req.id),
+                        "vulnerability_class_id": str(req.vulnerability_class_id),
+                        "class_code": class_map.get(req.vulnerability_class_id),
+                        "applicability_state": req.applicability_state,
+                        "coverage_status": req.coverage_status,
+                        "testing_mode": req.testing_mode,
+                        "next_action": req.next_action,
+                        "eligible_capabilities": req.eligible_capabilities,
+                        "required_evidence": req.required_evidence,
+                        "confidence": req.confidence,
+                    }
+                    for req in sorted(
+                        reqs,
+                        key=lambda row: class_map.get(row.vulnerability_class_id) or "",
+                    )
+                ],
             }
         )
     return {"items": items, "total": len(items)}
@@ -865,8 +1536,135 @@ async def list_test_plans(
     plans = list((await session.execute(stmt)).scalars().all())
     return {
         "items": [
-            {"id": str(p.id), "testing_mode": p.testing_mode, "status": p.status} for p in plans
-        ]
+            {
+                "id": str(p.id),
+                "hypothesis_id": str(p.hypothesis_id) if p.hypothesis_id else None,
+                "testing_mode": p.testing_mode,
+                "status": p.status,
+                "asset_ids": p.asset_ids,
+                "vulnerability_class_ids": p.vulnerability_class_ids,
+                "required_capabilities": p.required_capabilities,
+                "safety_class": p.safety_class,
+                "authorization_requirement": p.authorization_requirement,
+            }
+            for p in plans
+        ],
+        "total": len(plans),
+    }
+
+
+@router.post("/scans/{scan_id}/test-plans/generate")
+async def generate_test_plans(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    planner = TestPlanner(session)
+    plans = await planner.plan_scan(scan_id)
+    await session.commit()
+    return {
+        "scan_id": str(scan_id),
+        "created": len(plans),
+        "items": [
+            {
+                "id": str(plan.id),
+                "hypothesis_id": (
+                    str(plan.hypothesis_id) if plan.hypothesis_id else None
+                ),
+                "testing_mode": plan.testing_mode,
+                "status": plan.status,
+                "safety_class": plan.safety_class,
+                "authorization_requirement": plan.authorization_requirement,
+            }
+            for plan in plans
+        ],
+    }
+
+
+@router.post("/scans/{scan_id}/test-plans/execute-automated")
+async def execute_automated_test_plans(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    try:
+        results = await AutomatedValidationOrchestrator(session).execute_scan(scan_id)
+    except ValueError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    await session.commit()
+    return {
+        "scan_id": str(scan_id),
+        "attempted": len(results),
+        "executed": sum(1 for result in results if result.execution_id),
+        "items": [
+            {
+                "plan_id": str(result.plan_id),
+                "execution_id": (
+                    str(result.execution_id) if result.execution_id else None
+                ),
+                "task_id": str(result.task_id) if result.task_id else None,
+                "task_run_id": (
+                    str(result.task_run_id) if result.task_run_id else None
+                ),
+                "status": result.status,
+                "finding_candidates": result.finding_candidates,
+                "reused_task": result.reused_task,
+                "reason": result.reason,
+            }
+            for result in results
+        ],
+    }
+
+
+@router.get("/scans/{scan_id}/test-executions")
+async def list_test_executions(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    plan_ids = [
+        plan.id
+        for plan in (
+            await session.execute(
+                select(TestPlan).where(TestPlan.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    ]
+    executions = (
+        list(
+            (
+                await session.execute(
+                    select(TestExecution).where(
+                        TestExecution.test_plan_id.in_(plan_ids)
+                    )
+                )
+            )
+            .scalars()
+            .all()
+        )
+        if plan_ids
+        else []
+    )
+    return {
+        "items": [
+            {
+                "id": str(execution.id),
+                "test_plan_id": str(execution.test_plan_id),
+                "task_run_id": (
+                    str(execution.task_run_id) if execution.task_run_id else None
+                ),
+                "provider_id": (
+                    str(execution.provider_id) if execution.provider_id else None
+                ),
+                "template_id": execution.template_id,
+                "status": execution.status,
+                "result_summary": execution.result_summary,
+                "evidence_ids": execution.evidence_ids,
+                "executed_at": (
+                    execution.executed_at.isoformat()
+                    if execution.executed_at
+                    else None
+                ),
+            }
+            for execution in executions
+        ],
+        "total": len(executions),
     }
 
 
@@ -879,10 +1677,16 @@ async def get_test_plan(
         raise HTTPException(404, "Test plan not found")
     return {
         "id": str(plan.id),
+        "hypothesis_id": str(plan.hypothesis_id) if plan.hypothesis_id else None,
         "testing_mode": plan.testing_mode,
         "status": plan.status,
         "safety_class": plan.safety_class,
+        "authorization_requirement": plan.authorization_requirement,
+        "asset_ids": plan.asset_ids,
+        "vulnerability_class_ids": plan.vulnerability_class_ids,
         "required_capabilities": plan.required_capabilities,
+        "evidence_requirements": plan.evidence_requirements,
+        "completion_conditions": plan.completion_conditions,
     }
 
 
@@ -918,9 +1722,22 @@ async def list_hypotheses(
     hyps = list((await session.execute(stmt)).scalars().all())
     return {
         "items": [
-            {"id": str(h.id), "title": h.title, "status": h.status, "confidence": h.confidence}
+            {
+                "id": str(h.id),
+                "title": h.title,
+                "description": h.description,
+                "hypothesis_type": h.hypothesis_type,
+                "affected_asset_ids": h.affected_asset_ids,
+                "supporting_evidence_ids": h.supporting_evidence_ids,
+                "contradicting_evidence_ids": h.contradicting_evidence_ids,
+                "confidence": h.confidence,
+                "status": h.status,
+                "test_plan_id": str(h.test_plan_id) if h.test_plan_id else None,
+                "verdict_id": str(h.verdict_id) if h.verdict_id else None,
+            }
             for h in hyps
-        ]
+        ],
+        "total": len(hyps),
     }
 
 
@@ -935,8 +1752,96 @@ async def get_hypothesis(
         "id": str(hyp.id),
         "title": hyp.title,
         "description": hyp.description,
+        "hypothesis_type": hyp.hypothesis_type,
+        "affected_asset_ids": hyp.affected_asset_ids,
+        "supporting_evidence_ids": hyp.supporting_evidence_ids,
+        "contradicting_evidence_ids": hyp.contradicting_evidence_ids,
+        "correlation_rule_ids": hyp.correlation_rule_ids,
+        "confidence": hyp.confidence,
         "status": hyp.status,
         "validation_requirements": hyp.validation_requirements,
+        "test_plan_id": str(hyp.test_plan_id) if hyp.test_plan_id else None,
+        "verdict_id": str(hyp.verdict_id) if hyp.verdict_id else None,
+    }
+
+
+@router.get("/scans/{scan_id}/verdicts")
+async def list_verdicts(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    verdicts = list(
+        (
+            await session.execute(select(Verdict).where(Verdict.scan_id == scan_id))
+        )
+        .scalars()
+        .all()
+    )
+    return {
+        "items": [
+            {
+                "id": str(verdict.id),
+                "hypothesis_id": str(verdict.hypothesis_id),
+                "test_plan_id": (
+                    str(verdict.test_plan_id) if verdict.test_plan_id else None
+                ),
+                "validation_result_id": (
+                    str(verdict.validation_result_id)
+                    if verdict.validation_result_id
+                    else None
+                ),
+                "status": verdict.status,
+                "confidence": verdict.confidence,
+                "supporting_evidence_ids": verdict.supporting_evidence_ids,
+                "contradicting_evidence_ids": verdict.contradicting_evidence_ids,
+                "rule_ids": verdict.rule_ids,
+                "explanation": verdict.explanation,
+                "issued_at": (
+                    verdict.issued_at.isoformat() if verdict.issued_at else None
+                ),
+            }
+            for verdict in verdicts
+        ],
+        "total": len(verdicts),
+    }
+
+
+@router.get("/scans/{scan_id}/confirmed-findings")
+async def list_confirmed_findings(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    findings = list(
+        (
+            await session.execute(
+                select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return {
+        "items": [
+            {
+                "id": str(finding.id),
+                "hypothesis_id": (
+                    str(finding.hypothesis_id) if finding.hypothesis_id else None
+                ),
+                "validation_result_id": str(finding.validation_result_id),
+                "title": finding.title,
+                "description": finding.description,
+                "affected_asset_ids": finding.affected_asset_ids,
+                "cve_ids": finding.cve_ids,
+                "cwe_ids": finding.cwe_ids,
+                "source_severity": finding.source_severity,
+                "contextual_priority": finding.contextual_priority,
+                "evidence_ids": finding.evidence_ids,
+                "confirmed_by": finding.confirmed_by,
+                "confirmed_at": (
+                    finding.confirmed_at.isoformat() if finding.confirmed_at else None
+                ),
+            }
+            for finding in findings
+        ],
+        "total": len(findings),
     }
 
 
@@ -950,12 +1855,176 @@ async def validation_backlog(
         "items": [
             {
                 "id": str(t.id),
+                "hypothesis_id": (
+                    str(t.hypothesis_id) if t.hypothesis_id else None
+                ),
+                "test_plan_id": str(t.test_plan_id) if t.test_plan_id else None,
+                "evidence_package_id": (
+                    str(t.evidence_package_id) if t.evidence_package_id else None
+                ),
+                "asset_ids": t.asset_ids,
                 "validation_goal": t.validation_goal,
+                "required_evidence": t.required_evidence,
+                "suggested_safe_checks": t.suggested_safe_checks,
                 "status": t.status,
                 "testing_mode": t.testing_mode,
             }
             for t in tasks
         ]
+    }
+
+
+@router.get("/scans/{scan_id}/evidence-packages")
+async def evidence_packages(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    packages = list(
+        (
+            await session.execute(
+                select(EvidencePackage).where(EvidencePackage.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return {
+        "items": [
+            {
+                "id": str(package.id),
+                "hypothesis_id": str(package.hypothesis_id) if package.hypothesis_id else None,
+                "validation_task_id": (
+                    str(package.validation_task_id) if package.validation_task_id else None
+                ),
+                "package_data": package.package_data,
+                "created_at": package.created_at.isoformat() if package.created_at else None,
+            }
+            for package in packages
+        ],
+        "total": len(packages),
+    }
+
+
+@router.get("/scans/{scan_id}/validation-results")
+async def list_validation_results(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    tasks = list(
+        (
+            await session.execute(
+                select(ValidationTask).where(ValidationTask.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    task_ids = [task.id for task in tasks]
+    results = (
+        list(
+            (
+                await session.execute(
+                    select(ValidationResult).where(
+                        ValidationResult.validation_task_id.in_(task_ids)
+                    )
+                )
+            )
+            .scalars()
+            .all()
+        )
+        if task_ids
+        else []
+    )
+    task_by_id = {task.id: task for task in tasks}
+    return {
+        "items": [
+            {
+                "id": str(result.id),
+                "validation_task_id": str(result.validation_task_id),
+                "hypothesis_id": (
+                    str(task_by_id[result.validation_task_id].hypothesis_id)
+                    if task_by_id[result.validation_task_id].hypothesis_id
+                    else None
+                ),
+                "test_plan_id": (
+                    str(task_by_id[result.validation_task_id].test_plan_id)
+                    if task_by_id[result.validation_task_id].test_plan_id
+                    else None
+                ),
+                "outcome": result.outcome,
+                "analyst_notes": result.analyst_notes,
+                "evidence_ids": result.evidence_ids,
+                "recorded_by": result.recorded_by,
+                "recorded_at": (
+                    result.recorded_at.isoformat() if result.recorded_at else None
+                ),
+            }
+            for result in results
+        ],
+        "total": len(results),
+    }
+
+
+@router.get("/scans/{scan_id}/evidence-links")
+async def list_evidence_links(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    links = list(
+        (
+            await session.execute(
+                select(EvidenceLink).where(EvidenceLink.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return {
+        "items": [
+            {
+                "id": str(link.id),
+                "source_type": link.source_type,
+                "source_id": str(link.source_id),
+                "target_type": link.target_type,
+                "target_id": str(link.target_id),
+                "link_type": link.link_type,
+                "weight": link.weight,
+                "provenance": link.provenance,
+                "created_at": (
+                    link.created_at.isoformat() if link.created_at else None
+                ),
+            }
+            for link in links
+        ],
+        "total": len(links),
+    }
+
+
+@router.post("/scans/{scan_id}/ai-enrichments/coverage")
+async def enrich_scan_coverage(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    enrichment = await MistralEnrichmentService(
+        session
+    ).enrich_vulnerability_coverage(scan_id)
+    await session.commit()
+    return _ai_enrichment_item(enrichment)
+
+
+@router.get("/scans/{scan_id}/ai-enrichments")
+async def list_ai_enrichments(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    enrichments = list(
+        (
+            await session.execute(
+                select(AIEnrichment).where(AIEnrichment.scan_id == scan_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return {
+        "items": [_ai_enrichment_item(item) for item in enrichments],
+        "total": len(enrichments),
+        "advisory_only": True,
     }
 
 
@@ -966,9 +2035,12 @@ async def record_validation(
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
     svc = ValidationService(session)
-    result = await svc.record_result(
-        task_id, body.outcome, body.analyst_notes, body.evidence_ids, body.recorded_by
-    )
+    try:
+        result = await svc.record_result(
+            task_id, body.outcome, body.analyst_notes, body.evidence_ids, body.recorded_by
+        )
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
     await session.commit()
     return {"validation_result_id": str(result.id), "outcome": result.outcome}
 
@@ -985,4 +2057,36 @@ async def completion_status(
         "completion_reasons": record.completion_reasons,
         "accepted_gaps": record.accepted_gaps,
         "metrics": record.metrics,
+    }
+
+
+def _asset_ref(asset: Asset | None) -> dict[str, Any] | None:
+    if not asset:
+        return None
+    return {
+        "id": str(asset.id),
+        "asset_type": asset.asset_type,
+        "display_name": asset.display_name,
+        "normalized_key": asset.normalized_key,
+    }
+
+
+def _ai_enrichment_item(enrichment: AIEnrichment) -> dict[str, Any]:
+    return {
+        "id": str(enrichment.id),
+        "scan_id": str(enrichment.scan_id),
+        "enrichment_type": enrichment.enrichment_type,
+        "target_entity_type": enrichment.target_entity_type,
+        "target_entity_id": str(enrichment.target_entity_id),
+        "provider": enrichment.provider,
+        "prompt_template_version": enrichment.prompt_template_version,
+        "model_config": enrichment.model_config,
+        "input_artifact_hash": enrichment.input_artifact_hash,
+        "output": enrichment.output,
+        "validation_status": enrichment.validation_status,
+        "cached": enrichment.cached,
+        "created_at": (
+            enrichment.created_at.isoformat() if enrichment.created_at else None
+        ),
+        "advisory_only": True,
     }

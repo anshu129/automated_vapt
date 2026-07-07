@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import re
 from datetime import datetime
 from ipaddress import ip_address
 from pathlib import Path
@@ -168,6 +169,96 @@ def _write_tool_output_file(data: dict[str, object], output_file: Path) -> Path:
         )
     resolved.write_text("\n".join(lines), encoding="utf-8")
     return resolved
+
+
+def _write_json_file(data: object, output_file: Path) -> Path:
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    resolved = output_file.resolve()
+    resolved.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return resolved
+
+
+def _export_scan_bundle(
+    api_url: str,
+    scan_id: str,
+    output_dir: Path,
+    generate_plans: bool,
+    execute_automated: bool = False,
+    enrich_with_ai: bool = False,
+) -> dict[str, object]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    manifest: dict[str, object] = {
+        "scan_id": scan_id,
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "output_dir": str(output_dir.resolve()),
+        "files": {},
+    }
+    files = manifest["files"]
+    if not isinstance(files, dict):
+        raise RuntimeError("Invalid export manifest")
+
+    if generate_plans:
+        r = _post(api_url, f"/scans/{scan_id}/test-plans/generate", timeout=120.0)
+        _raise_for_status(r)
+        files["generated_plans"] = str(
+            _write_json_file(r.json(), output_dir / "generated-plans.json")
+        )
+    if execute_automated:
+        r = _post(
+            api_url,
+            f"/scans/{scan_id}/test-plans/execute-automated",
+            timeout=None,
+        )
+        _raise_for_status(r)
+        files["automated_executions"] = str(
+            _write_json_file(r.json(), output_dir / "automated-executions.json")
+        )
+    if enrich_with_ai:
+        r = _post(
+            api_url,
+            f"/scans/{scan_id}/ai-enrichments/coverage",
+            timeout=None,
+        )
+        _raise_for_status(r)
+        files["ai_advisory"] = str(
+            _write_json_file(r.json(), output_dir / "ai-advisory.json")
+        )
+
+    endpoints = [
+        ("scan", f"/scans/{scan_id}"),
+        ("assets", f"/scans/{scan_id}/assets"),
+        ("relationships", f"/scans/{scan_id}/relationships"),
+        ("events", f"/scans/{scan_id}/events"),
+        ("tasks", f"/scans/{scan_id}/tasks"),
+        ("surface_coverage", f"/scans/{scan_id}/surface-coverage"),
+        ("vulnerability_catalog", "/vulnerability-classes"),
+        ("vulnerability_coverage", f"/scans/{scan_id}/vulnerability-coverage"),
+        ("vulnerability_applicability", f"/scans/{scan_id}/vulnerability-applicability"),
+        ("auth_coverage", f"/scans/{scan_id}/auth-coverage"),
+        ("role_coverage", f"/scans/{scan_id}/role-coverage"),
+        ("test_matrix", f"/scans/{scan_id}/test-matrix"),
+        ("test_plans", f"/scans/{scan_id}/test-plans"),
+        ("test_executions", f"/scans/{scan_id}/test-executions"),
+        ("hypotheses", f"/scans/{scan_id}/hypotheses"),
+        ("validation_backlog", f"/scans/{scan_id}/validation-backlog"),
+        ("validation_results", f"/scans/{scan_id}/validation-results"),
+        ("evidence_packages", f"/scans/{scan_id}/evidence-packages"),
+        ("evidence_links", f"/scans/{scan_id}/evidence-links"),
+        ("ai_enrichments", f"/scans/{scan_id}/ai-enrichments"),
+        ("verdicts", f"/scans/{scan_id}/verdicts"),
+        ("confirmed_findings", f"/scans/{scan_id}/confirmed-findings"),
+        ("completion_status", f"/scans/{scan_id}/completion-status"),
+        ("discovery_gain", f"/scans/{scan_id}/discovery-gain"),
+        ("report", f"/scans/{scan_id}/report"),
+    ]
+    for name, path in endpoints:
+        r = _get(api_url, path, timeout=120.0)
+        _raise_for_status(r)
+        files[name] = str(_write_json_file(r.json(), output_dir / f"{name}.json"))
+
+    manifest["manifest_file"] = str((output_dir / "manifest.json").resolve())
+    _write_json_file(manifest, output_dir / "manifest.json")
+    return manifest
 
 
 def _tool_item_note(item: dict[str, object]) -> str:
@@ -398,6 +489,142 @@ def scan_report(scan_id: str, api_url: str = API_BASE) -> None:
     typer.echo(json.dumps(r.json(), indent=2))
 
 
+@app.command("scan-generate-plans")
+def scan_generate_plans(scan_id: str, api_url: str = API_BASE) -> None:
+    """Generate vulnerability assessment plans from a scan test matrix."""
+    r = _post(api_url, f"/scans/{scan_id}/test-plans/generate", timeout=120.0)
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("scan-execute-automated")
+def scan_execute_automated(scan_id: str, api_url: str = API_BASE) -> None:
+    """Execute pre-approved PASSIVE/LOW_IMPACT automated test plans."""
+    r = _post(
+        api_url,
+        f"/scans/{scan_id}/test-plans/execute-automated",
+        timeout=None,
+    )
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("scan-ai-enrich")
+def scan_ai_enrich(scan_id: str, api_url: str = API_BASE) -> None:
+    """Generate a cached advisory coverage summary with Mistral or fallback."""
+    r = _post(
+        api_url,
+        f"/scans/{scan_id}/ai-enrichments/coverage",
+        timeout=None,
+    )
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("scan-export")
+def scan_export(
+    scan_id: str,
+    output_dir: Path | None = typer.Option(
+        None,
+        "--output-dir",
+        "-o",
+        help="Directory for JSON assessment artifacts. Defaults to reports/scan-<id>.",
+    ),
+    generate_plans: bool = typer.Option(
+        True,
+        "--generate-plans/--no-generate-plans",
+        help="Generate test plans before exporting the bundle.",
+    ),
+    execute_automated: bool = typer.Option(
+        False,
+        "--execute-automated/--no-execute-automated",
+        help="Execute pre-approved PASSIVE/LOW_IMPACT plans before export.",
+    ),
+    enrich_with_ai: bool = typer.Option(
+        False,
+        "--ai-enrich/--no-ai-enrich",
+        help="Generate advisory Mistral coverage enrichment before export.",
+    ),
+    api_url: str = API_BASE,
+) -> None:
+    """Export assets, graph, coverage, applicability, matrix, plans, and report."""
+    out = output_dir or Path("reports") / f"scan-{scan_id}"
+    manifest = _export_scan_bundle(
+        api_url,
+        scan_id,
+        out,
+        generate_plans,
+        execute_automated=execute_automated,
+        enrich_with_ai=enrich_with_ai,
+    )
+    typer.echo(json.dumps(manifest, indent=2))
+
+
+@app.command("assess-target")
+def assess_target(
+    target: str,
+    name: str | None = typer.Option(None, help="Assessment/project name"),
+    output_dir: Path | None = typer.Option(
+        None,
+        "--output-dir",
+        "-o",
+        help="Directory for JSON assessment artifacts. Defaults to reports/<target>.",
+    ),
+    generate_plans: bool = typer.Option(
+        True,
+        "--generate-plans/--no-generate-plans",
+        help="Generate test plans after reconnaissance completes.",
+    ),
+    execute_automated: bool = typer.Option(
+        True,
+        "--execute-automated/--no-execute-automated",
+        help="Execute pre-approved PASSIVE/LOW_IMPACT automated plans.",
+    ),
+    enrich_with_ai: bool = typer.Option(
+        False,
+        "--ai-enrich/--no-ai-enrich",
+        help="Generate advisory Mistral coverage enrichment.",
+    ),
+    api_url: str = API_BASE,
+) -> None:
+    """Create, run, plan, and export an authorized assessment for one target."""
+    project_name = name or f"Assessment - {target}"
+    project_response = _post(api_url, "/projects", json={"name": project_name}, timeout=60.0)
+    _raise_for_status(project_response)
+    project = project_response.json()
+
+    scan_response = _post(
+        api_url,
+        "/scans",
+        timeout=60.0,
+        params={"project_id": project["id"]},
+        json={
+            "name": f"{target} assessment",
+            "scope_rules": [_infer_scope_rule(target)],
+        },
+    )
+    _raise_for_status(scan_response)
+    scan = scan_response.json()
+
+    start_response = _post(api_url, f"/scans/{scan['id']}/start", timeout=600.0)
+    _raise_for_status(start_response)
+
+    out = output_dir or Path("reports") / _safe_filename(target)
+    manifest = _export_scan_bundle(
+        api_url,
+        scan["id"],
+        out,
+        generate_plans,
+        execute_automated=execute_automated,
+        enrich_with_ai=enrich_with_ai,
+    )
+    manifest["project"] = project
+    manifest["scan"] = scan
+    manifest["start"] = start_response.json()
+    _write_json_file(manifest, out / "manifest.json")
+    typer.echo(json.dumps(manifest, indent=2))
+
+
 def _infer_scope_rule(value: str) -> dict[str, object]:
     target = value.strip()
     if target.startswith(("http://", "https://")):
@@ -418,6 +645,11 @@ def _normalize_url(value: str) -> str:
     if not value.startswith(("http://", "https://")):
         value = f"https://{value}"
     return value.rstrip("/")
+
+
+def _safe_filename(value: str) -> str:
+    slug = re.sub(r"[^a-zA-Z0-9_.-]+", "-", value.strip()).strip("-_.").lower()
+    return slug or "assessment"
 
 
 if __name__ == "__main__":

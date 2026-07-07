@@ -49,8 +49,8 @@ from vapt_platform.engines.assessment import (
     RecursiveCorrelationEngine,
     SurfaceCompletenessEngine,
     TestMatrixEngine,
-    VulnerabilityApplicabilityEngine,
 )
+from vapt_platform.engines.vulnerability_applicability import VulnerabilityApplicabilityEngine
 from vapt_platform.evidence.quality import (
     INCONCLUSIVE_STATUSES,
     EvidenceQualityEvaluator,
@@ -305,7 +305,10 @@ class ReconController:
                 run.error_summary = "No adapter"
                 task.status = TaskStatus.FAILED_TERMINAL.value
                 return run
-            output = adapter.execute(task.target_descriptor, task.execution_profile_id or "STANDARD")
+            output = adapter.execute(
+                task.target_descriptor,
+                task.execution_profile_id or "STANDARD",
+            )
 
         task.target_descriptor = self._merge_operational_observations(
             task.target_descriptor, output.observations
@@ -531,6 +534,9 @@ class ReconController:
         await self._compute_and_emit_applicability(
             event.scan_id, asset.id, event.correlation_id, ApplicabilityTrigger.SURFACE_UPDATED
         )
+        await self._compute_related_http_service_applicability(
+            event.scan_id, normalized, event.correlation_id
+        )
 
         requirements = await self.surface_engine.missing_requirements(asset.id, event.scan_id)
         gap_payload = self.surface_engine.gaps_payload(asset.id, requirements)
@@ -586,6 +592,12 @@ class ReconController:
             event.correlation_id,
             metadata={"method": event.payload.get("method", "GET")},
         )
+        await self._compute_and_emit_applicability(
+            event.scan_id,
+            ep.id,
+            event.correlation_id,
+            ApplicabilityTrigger.ASSET_UPDATED,
+        )
         if app:
             meta = app.metadata_ or {}
             endpoints = set(meta.get("endpoints", []))
@@ -613,6 +625,12 @@ class ReconController:
         meta["last_observed_port"] = event.payload.get("port")
         host_asset.metadata_ = meta
         await self.surface_engine.compute(event.scan_id, host_asset.id)
+        await self._compute_and_emit_applicability(
+            event.scan_id,
+            host_asset.id,
+            event.correlation_id,
+            ApplicabilityTrigger.ASSET_UPDATED,
+        )
 
     async def _on_javascript_discovered(self, event: Event) -> None:
         url = event.payload.get("url", "")
@@ -722,11 +740,14 @@ class ReconController:
                 ApplicabilityState.POSSIBLY_APPLICABLE.value,
             )
         ]
+        asset = await self.session.get(Asset, asset_id)
         await self.emit_event(
             scan_id,
             EventType.APPLICABILITY_COMPUTED,
             {
                 "asset_id": str(asset_id),
+                "asset_type": asset.asset_type if asset else None,
+                "class_count": len(applicable),
                 "trigger": trigger.value,
                 "applicable_count": len(applicable),
                 "items": [
@@ -741,6 +762,30 @@ class ReconController:
             },
             correlation_id,
         )
+
+    async def _compute_related_http_service_applicability(
+        self,
+        scan_id: uuid.UUID,
+        base_url: str,
+        correlation_id: uuid.UUID,
+    ) -> None:
+        parsed = urlparse(base_url)
+        scheme = parsed.scheme or "http"
+        host = (
+            parsed.hostname
+            or base_url.replace("https://", "").replace("http://", "").split("/")[0]
+        )
+        if not host:
+            return
+        port = parsed.port or (443 if scheme == "https" else 80)
+        service = await self._find_asset(scan_id, AssetType.SERVICE, f"{host}:{port}")
+        if service:
+            await self._compute_and_emit_applicability(
+                scan_id,
+                service.id,
+                correlation_id,
+                ApplicabilityTrigger.ASSET_UPDATED,
+            )
 
     async def _asset_for_task(self, task: Task) -> Asset | None:
         td = task.target_descriptor or {}

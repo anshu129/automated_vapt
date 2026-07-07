@@ -303,6 +303,37 @@ def _parse_wafw00f(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[s
     }
 
 
+def _parse_nuclei(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    observations = []
+    for line in stdout.strip().splitlines():
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(record, dict):
+            continue
+        info = record.get("info") if isinstance(record.get("info"), dict) else {}
+        observations.append(
+            {
+                "type": "SCANNER_OBSERVATION",
+                "template_id": (
+                    record.get("template-id")
+                    or record.get("template_id")
+                    or record.get("template")
+                ),
+                "name": info.get("name") or record.get("name"),
+                "severity": info.get("severity") or record.get("severity"),
+                "matched_at": (
+                    record.get("matched-at")
+                    or record.get("matched_at")
+                    or record.get("host")
+                ),
+                "target": target.get("url"),
+            }
+        )
+    return {"events": [], "observations": observations}
+
+
 def _parse_generic(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     if not stdout.strip():
         return {"events": [], "observations": []}
@@ -339,8 +370,10 @@ PARSERS: dict[str, Any] = {
     "trufflehog": _parse_secret_output,
     "gitleaks": _parse_secret_output,
     "wafw00f": _parse_wafw00f,
+    "nuclei": _parse_nuclei,
     "fake-subfinder": _parse_subfinder,
     "fake-dnsx-resolve": _parse_dnsx,
     "fake-httpx": _parse_httpx,
     "fake-katana": _parse_katana,
+    "fake-nuclei": _parse_nuclei,
 }
