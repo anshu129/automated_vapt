@@ -28,9 +28,25 @@ def configure_env() -> None:
     _default("DATABASE_URL", db)
     _default("DATABASE_URL_SYNC", db)
 
-    # Prefer Go-installed security tools (httpx, dnsx, nuclei, katana, ...).
-    go_bin = str(Path(os.environ.get("USERPROFILE", str(Path.home()))) / "go" / "bin")
-    _default("TOOL_SEARCH_PATHS", go_bin)
+    # Security tool locations. Every directory below was verified to contain at
+    # least one installed tool binary; only directories that still exist on disk
+    # are included so the list stays portable across machines.
+    home = Path(os.environ.get("USERPROFILE", str(Path.home())))
+    candidate_tool_dirs = [
+        home / "go" / "bin",
+        home / "anaconda3" / "Scripts",
+        home / "Downloads" / "amass_windows_amd64" / "amass_windows_amd64",
+        home / "Downloads" / "dnsx_1.2.3_windows_amd64",
+        home / "Downloads" / "ffuf_2.1.0_windows_amd64",
+        home / "Downloads" / "gitleaks_8.30.1_windows_x64",
+        home / "Downloads" / "katana_1.6.1_windows_amd64",
+        home / "Downloads" / "trufflehog_3.95.8_windows_amd64",
+        Path(r"C:\ProgramData\chocolatey\bin"),
+        Path(r"C:\Program Files (x86)\Nmap"),
+        Path(r"C:\WINDOWS\system32"),
+    ]
+    existing_tool_dirs = [str(p) for p in candidate_tool_dirs if p.is_dir()]
+    _default("TOOL_SEARCH_PATHS", os.pathsep.join(existing_tool_dirs))
 
     # Real tools, honest results by default; scans run to natural completion.
     _default("USE_FAKE_FALLBACK", "false")
