@@ -32,12 +32,27 @@
             <label>Time budget (minutes)
               <input id="budgetInput" type="number" min="1" max="240" value="30" />
             </label>
+            <label>Username <span class="muted">(optional, HTTP basic)</span>
+              <input id="usernameInput" type="text" placeholder="e.g. natas5" autocomplete="username" />
+            </label>
+            <label>Password <span class="muted">(optional)</span>
+              <input id="passwordInput" type="password" placeholder="Target password" autocomplete="current-password" />
+            </label>
             <label class="checkbox">
               <input id="aiInput" type="checkbox" checked />
-              Run AI + automated validation &amp; assignment
+              Run AI validation &amp; assignment
+            </label>
+            <label class="checkbox">
+              <input id="mcpInput" type="checkbox" checked />
+              Run all tool validators (nuclei, Burp, sqlmap)
+            </label>
+            <label class="checkbox">
+              <input id="mcpActiveInput" type="checkbox" />
+              Allow active sqlmap validation (authorized targets only)
             </label>
             <button type="submit" id="startBtn">Start assessment</button>
           </form>
+          <button id="toolsBtn" class="secondary" style="width:100%;margin-top:8px">Configure tools</button>
           <p class="disclaimer">Only scan systems you are explicitly authorized to test.</p>
         </section>
 
@@ -66,7 +81,10 @@
             </div>
             <div class="scan-actions">
               <span id="scanStatusBadge" class="badge">—</span>
+              <button id="fullValidateBtn" class="secondary">Run full validation</button>
+              <button id="reportBtn" class="secondary">Generate report</button>
               <button id="aiValidateBtn" class="secondary">Run AI validation</button>
+              <button id="cancelBtn" class="secondary">Cancel scan</button>
               <button id="refreshBtn" class="secondary">Refresh</button>
             </div>
           </div>
@@ -83,6 +101,7 @@
             <button class="tab" data-tab="vulns">Vulnerabilities</button>
             <button class="tab" data-tab="hypotheses">Hypotheses</button>
             <button class="tab" data-tab="validation">Validation &amp; assignment</button>
+            <button class="tab" data-tab="mcp">Tool validation</button>
             <button class="tab" data-tab="ai">AI advisory</button>
           </nav>
 
@@ -93,11 +112,32 @@
             <div class="panel" data-panel="vulns"></div>
             <div class="panel" data-panel="hypotheses"></div>
             <div class="panel" data-panel="validation"></div>
+            <div class="panel" data-panel="mcp"></div>
             <div class="panel" data-panel="ai"></div>
           </div>
         </div>
       </section>
     </main>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-head">
+          <h2 id="modalTitle">—</h2>
+          <button id="modalClose" class="secondary">Close</button>
+        </div>
+        <div id="modalBody" class="modal-body"></div>
+      </div>
+    </div>
+
+    <div id="errorOverlay" class="modal-overlay hidden">
+      <div class="modal error-modal">
+        <div class="modal-head">
+          <h2 id="errorTitle">Error</h2>
+          <button id="errorClose" class="secondary">Dismiss</button>
+        </div>
+        <div id="errorBody" class="modal-body"></div>
+      </div>
+    </div>
 
     <script src="/app.js"></script>
   </body>

@@ -14,7 +14,7 @@ import contextlib
 import ipaddress
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import urlparse
 
@@ -22,12 +22,14 @@ from vapt_platform.db.session import session_scope
 from vapt_platform.engines.assessment import TestPlanner
 from vapt_platform.services.ai_validation import AIValidationService
 from vapt_platform.services.core import ProjectService, ScanService
+from vapt_platform.services.mcp_validation import McpValidationService
+from vapt_platform.validators.base import with_auth_url
 
 _JOBS: dict[str, dict[str, Any]] = {}
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def get_job(job_id: str) -> dict[str, Any] | None:
@@ -79,9 +81,16 @@ async def create_and_launch(
     host: str,
     name: str | None = None,
     run_ai: bool = True,
+    run_mcp: bool = True,
+    run_mcp_active: bool = False,
     time_budget_minutes: int = 30,
+    username: str | None = None,
+    password: str | None = None,
 ) -> dict[str, Any]:
-    scope_rules, host_part, url = infer_scope_rules(host)
+    target_host = host.strip()
+    if username and password and target_host.startswith(("http://", "https://")):
+        target_host = with_auth_url(target_host, username, password)
+    scope_rules, host_part, url = infer_scope_rules(target_host)
     scan_name = name or f"{host_part} assessment"
 
     async with session_scope() as session:
@@ -105,16 +114,34 @@ async def create_and_launch(
         "status": "QUEUED",
         "phase": "queued",
         "run_ai": run_ai,
+        "run_mcp": run_mcp,
+        "run_mcp_active": run_mcp_active,
+        "has_credentials": bool(username and password),
         "time_budget_minutes": time_budget_minutes,
         "progress": {},
         "error": None,
         "created_at": _now(),
         "updated_at": _now(),
         "elapsed_seconds": 0,
+        "_username": username,
+        "_password": password,
     }
 
-    asyncio.create_task(_run_job(job_id, uuid.UUID(scan_id), run_ai))
-    return dict(_JOBS[job_id])
+    asyncio.create_task(
+        _run_job(
+            job_id,
+            uuid.UUID(scan_id),
+            run_ai,
+            run_mcp=run_mcp,
+            run_mcp_active=run_mcp_active,
+            username=username,
+            password=password,
+        )
+    )
+    safe = dict(_JOBS[job_id])
+    safe.pop("_username", None)
+    safe.pop("_password", None)
+    return safe
 
 
 async def _heartbeat(job_id: str, started: float) -> None:
@@ -130,7 +157,15 @@ async def _heartbeat(job_id: str, started: float) -> None:
         return
 
 
-async def _run_job(job_id: str, scan_id: uuid.UUID, run_ai: bool) -> None:
+async def _run_job(
+    job_id: str,
+    scan_id: uuid.UUID,
+    run_ai: bool,
+    run_mcp: bool = True,
+    run_mcp_active: bool = False,
+    username: str | None = None,
+    password: str | None = None,
+) -> None:
     started = time.monotonic()
     heartbeat = asyncio.create_task(_heartbeat(job_id, started))
 
@@ -176,6 +211,29 @@ async def _run_job(job_id: str, scan_id: uuid.UUID, run_ai: bool) -> None:
                     "finding_candidates": summary.finding_candidates,
                     "assignments": len(summary.assignments),
                     "advisory_provider": summary.advisory_provider,
+                },
+            )
+        tick()
+
+        if run_mcp:
+            _set(job_id, phase="tool_validation")
+            async with session_scope() as session:
+                mcp_summary = await McpValidationService(session).validate_scan(
+                    scan_id,
+                    active_allowed=run_mcp_active,
+                    username=username,
+                    password=password,
+                )
+                await session.commit()
+            _set(
+                job_id,
+                progress={
+                    **_JOBS[job_id]["progress"],
+                    "tool_validation": "done",
+                    "mcp_connectors": mcp_summary.connectors,
+                    "mcp_corroborated": mcp_summary.corroborated,
+                    "mcp_tasks_created": mcp_summary.tasks_created,
+                    "mcp_skipped": mcp_summary.skipped,
                 },
             )
         tick()

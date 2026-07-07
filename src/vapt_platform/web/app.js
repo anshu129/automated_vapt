@@ -8,19 +8,51 @@ const state = {
 };
 
 /* ---------- helpers ---------- */
-async function api(path, opts = {}) {
-  const res = await fetch(API + path, {
-    headers: { "Content-Type": "application/json" },
-    ...opts,
-  });
-  if (!res.ok) {
-    let detail = res.statusText;
-    try {
-      detail = (await res.json()).detail || detail;
-    } catch (_) {}
-    throw new Error(`${res.status}: ${detail}`);
+function scanCredentials() {
+  const username = document.getElementById("usernameInput")?.value.trim() || null;
+  const password = document.getElementById("passwordInput")?.value || null;
+  return { username: username || null, password: password || null };
+}
+
+function showError(title, message, detail) {
+  document.getElementById("errorTitle").textContent = title || "Error";
+  const body = document.getElementById("errorBody");
+  body.innerHTML = "";
+  body.appendChild(h("p", {}, esc(message)));
+  if (detail) {
+    body.appendChild(h("div", { class: "error-detail" }, esc(detail)));
   }
-  return res.json();
+  document.getElementById("errorOverlay").classList.remove("hidden");
+}
+
+function closeError() {
+  document.getElementById("errorOverlay").classList.add("hidden");
+}
+
+async function api(path, opts = {}, { popupOnError = false } = {}) {
+  try {
+    const res = await fetch(API + path, {
+      headers: { "Content-Type": "application/json" },
+      ...opts,
+    });
+    if (!res.ok) {
+      let detail = res.statusText;
+      try {
+        const body = await res.json();
+        detail = body.detail || body.message || detail;
+        if (typeof detail !== "string") detail = JSON.stringify(detail);
+      } catch (_) {}
+      const err = new Error(`${res.status}: ${detail}`);
+      if (popupOnError) showError("Request failed", err.message);
+      throw err;
+    }
+    return res.json();
+  } catch (err) {
+    if (popupOnError && !(err.message || "").match(/^\d{3}:/)) {
+      showError("Network error", err.message || "Could not reach the API");
+    }
+    throw err;
+  }
 }
 
 function h(tag, attrs = {}, ...children) {
@@ -46,13 +78,43 @@ function esc(s) {
 }
 
 function toast(msg, isErr = false) {
-  const t = h("div", { class: "toast" + (isErr ? " err" : "") }, msg);
+  if (isErr) {
+    showError("Something went wrong", msg);
+    return;
+  }
+  const t = h("div", { class: "toast" }, msg);
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 4000);
 }
 
 function panel(name) {
   return document.querySelector(`.panel[data-panel="${name}"]`);
+}
+
+function openModal(title, node) {
+  document.getElementById("modalTitle").textContent = title;
+  const body = document.getElementById("modalBody");
+  body.innerHTML = "";
+  body.appendChild(node);
+  document.getElementById("modalOverlay").classList.remove("hidden");
+}
+function closeModal() {
+  document.getElementById("modalOverlay").classList.add("hidden");
+}
+
+function detailRow(k, v) {
+  return h("div", { class: "detail-row" }, h("div", { class: "k" }, k), h("div", {}, v ?? "—"));
+}
+
+async function assetMap() {
+  const data = await cached("assets", () => api(`/scans/${state.scanId}/assets`));
+  const map = {};
+  data.items.forEach((a) => (map[a.id] = a));
+  return map;
+}
+function assetLabel(map, id) {
+  const a = map[id];
+  return a ? `${a.asset_type}: ${a.display_name || a.normalized_key}` : id;
 }
 
 /* ---------- boot ---------- */
@@ -141,11 +203,13 @@ function pollJob(jobId) {
           if (state.scanId === job.scan_id) refreshCurrent();
           loadScanHistory();
         } else {
-          toast(`Scan failed: ${job.error || "unknown"}`, true);
+          const msg = `Scan failed: ${job.error || "unknown"}`;
+          toast(msg, true);
         }
       }
     } catch (e) {
       clearInterval(poller.timer);
+      showError("Job polling failed", e.message);
     }
   };
   poller.timer = setInterval(tick, 2500);
@@ -157,7 +221,7 @@ function updateProgress(job) {
   const fill = document.getElementById("progressFill");
   const label = document.getElementById("progressLabel");
   const badge = document.getElementById("scanStatusBadge");
-  const phases = ["queued", "reconnaissance", "planning", "ai_validation", "completed"];
+  const phases = ["queued", "reconnaissance", "planning", "ai_validation", "tool_validation", "completed"];
   if (job.status === "COMPLETED" || job.status === "FAILED") {
     bar.classList.add("hidden");
   } else {
@@ -179,20 +243,25 @@ async function startScan(e) {
   btn.disabled = true;
   btn.textContent = "Starting…";
   try {
+    const creds = scanCredentials();
     const job = await api("/ui/scans", {
       method: "POST",
       body: JSON.stringify({
         host,
         name: document.getElementById("nameInput").value.trim() || null,
         run_ai: document.getElementById("aiInput").checked,
+        run_mcp: document.getElementById("mcpInput").checked,
+        run_mcp_active: document.getElementById("mcpActiveInput").checked,
         time_budget_minutes: parseInt(document.getElementById("budgetInput").value || "30", 10),
+        username: creds.username,
+        password: creds.password,
       }),
     });
     toast(`Assessment queued for ${job.target}`);
     pollJob(job.job_id);
     openScan(job.scan_id);
-  } catch (err) {
-    toast(err.message, true);
+  } catch (e) {
+    toast(e.message, true);
   } finally {
     btn.disabled = false;
     btn.textContent = "Start assessment";
@@ -248,11 +317,13 @@ async function loadTab(name) {
       vulns: loadVulns,
       hypotheses: loadHypotheses,
       validation: loadValidation,
+      mcp: loadMcpValidation,
       ai: loadAI,
     };
     await loaders[name](p);
   } catch (e) {
     p.innerHTML = `<p class="empty-note">${esc(e.message)}</p>`;
+    showError("Failed to load tab", e.message);
   }
 }
 
@@ -424,10 +495,11 @@ async function loadVulns(p) {
   p.innerHTML = "";
   p.appendChild(h("div", { class: "section-title" }, `Confirmed findings (${findings.total})`));
   if (findings.total) {
+    const fmap = await assetMap();
     const fb = h("tbody");
     findings.items.forEach((f) => {
       fb.appendChild(
-        h("tr", {},
+        h("tr", { class: "clickable", onclick: () => showFindingDetail(f, fmap) },
           h("td", {}, f.title),
           h("td", {}, h("span", { class: "pill sev-" + String(f.source_severity || "unknown").toLowerCase() }, f.source_severity || "—")),
           h("td", {}, f.contextual_priority || "—"),
@@ -452,14 +524,14 @@ async function loadVulns(p) {
     const body = h("tbody");
     rows.forEach((r) =>
       body.appendChild(
-        h("tr", {},
+        h("tr", { class: "clickable", onclick: () => showVulnDetail(r) },
           h("td", {}, h("span", { class: "pill state-APPLICABLE" }, r.class_code || "—")),
           h("td", { class: "mono" }, r.asset_id.slice(0, 8)),
           h("td", {}, r.confidence != null ? r.confidence.toFixed(2) : "—"),
           h("td", {}, r.explanation || "—"))
       )
     );
-    p.appendChild(h("div", { class: "section-title" }, "Applicable classes"));
+    p.appendChild(h("div", { class: "section-title" }, "Applicable classes (click a row for detail)"));
     p.appendChild(h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Class"), h("th", {}, "Asset"), h("th", {}, "Conf."), h("th", {}, "Rationale"))), body));
   }
 }
@@ -471,7 +543,7 @@ async function loadHypotheses(p) {
   const body = h("tbody");
   data.items.forEach((hy) => {
     body.appendChild(
-      h("tr", {},
+      h("tr", { class: "clickable", onclick: () => showHypothesisDetail(hy.id) },
         h("td", {}, hy.title),
         h("td", {}, h("span", { class: "pill mode" }, hy.hypothesis_type)),
         h("td", {}, h("span", { class: "pill" }, hy.status)),
@@ -479,6 +551,7 @@ async function loadHypotheses(p) {
         h("td", { class: "mono" }, (hy.affected_asset_ids || []).length + " assets"))
     );
   });
+  p.appendChild(h("p", { class: "muted", style: "font-size:12px;margin:0 0 8px" }, "Click a row for full detail (where + what kind + evidence)."));
   p.appendChild(h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Hypothesis"), h("th", {}, "Type"), h("th", {}, "Status"), h("th", {}, "Conf."), h("th", {}, "Scope"))), body));
 }
 
@@ -516,6 +589,91 @@ async function loadValidation(p) {
   });
 }
 
+async function loadMcpValidation(p) {
+  const [data, connectors, map] = await Promise.all([
+    api(`/scans/${state.scanId}/mcp-validation`),
+    api("/ui/validation-connectors"),
+    assetMap(),
+  ]);
+  p.innerHTML = "";
+  p.appendChild(
+    h("div", { class: "note" },
+      "Tool validation runs all available connectors (nuclei, Burp MCP, sqlmap MCP). Use username/password in the sidebar for authenticated targets. Positive matches open validation tasks — analyst confirmation still required.")
+  );
+  if (connectors.items.length) {
+    const cl = h("ul", { style: "font-size:12px;color:var(--muted);margin:0 0 10px 18px" });
+    connectors.items.forEach((c) =>
+      cl.appendChild(h("li", {}, `${c.name} (${c.safety_class}) \u2014 ${c.available ? "ready" : "not available"}${c.active ? ", active-gated" : ""}`))
+    );
+    p.appendChild(cl);
+  }
+  const activeBox = h("label", { style: "display:flex;align-items:center;gap:8px;font-size:12px;margin:8px 0" },
+    h("input", { type: "checkbox", id: "mcpActiveAllowed" }),
+    "Allow active validation (sqlmap MCP; authorized targets only)"
+  );
+  p.appendChild(activeBox);
+  const btn = h("button", { class: "secondary", style: "margin:8px 0" }, "Run tool validation");
+  btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    btn.textContent = "Running validators\u2026";
+    const activeAllowed = !!document.getElementById("mcpActiveAllowed")?.checked;
+    const creds = scanCredentials();
+    try {
+      const res = await api(`/scans/${state.scanId}/mcp-validate`, {
+        method: "POST",
+        body: JSON.stringify({
+          active_allowed: activeAllowed,
+          username: creds.username,
+          password: creds.password,
+        }),
+      });
+      const skipped = (res.skipped || []).length ? ` · skipped: ${res.skipped.join("; ")}` : "";
+      toast(`All tools: ${res.assets_validated} asset(s) via ${(res.connectors || []).join(", ")} — ${res.corroborated} corroborated, ${res.tasks_created} task(s)${skipped}`);
+      delete state.cache.validation;
+      loadTab("mcp");
+    } catch (e) {
+      toast(e.message, true);
+      btn.disabled = false;
+      btn.textContent = "Run tool validation";
+    }
+  });
+  p.appendChild(btn);
+
+  if (!data.total_runs) {
+    p.appendChild(h("p", { class: "empty-note" }, "No tool-validation runs yet. Enable Burp/sqlmap in .env if needed, then click \u201cRun tool validation\u201d."));
+    return;
+  }
+  const body = h("tbody");
+  data.runs.forEach((r) => {
+    body.appendChild(
+      h("tr", {},
+        h("td", {}, h("span", { class: "pill" }, r.connector || "—")),
+        h("td", {}, h("span", { class: "pill state-" + (r.status === "CORROBORATED" ? "APPLICABLE" : "NOT_APPLICABLE") }, r.status)),
+        h("td", { class: "mono" }, r.asset_id ? assetLabel(map, r.asset_id) : "—"),
+        h("td", {}, (r.class_codes || []).join(", ") || "—"),
+        h("td", {}, String(r.finding_count ?? 0)),
+        h("td", { class: "muted", style: "font-size:12px" }, r.detail || (r.tags || []).join(",")))
+    );
+  });
+  p.appendChild(h("div", { class: "section-title" }, "Validation runs"));
+  p.appendChild(h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Connector"), h("th", {}, "Result"), h("th", {}, "Where"), h("th", {}, "Classes"), h("th", {}, "Findings"), h("th", {}, "Detail"))), body));
+
+  if ((data.findings || []).length) {
+    const fb = h("tbody");
+    data.findings.forEach((f) => {
+      fb.appendChild(
+        h("tr", {},
+          h("td", {}, f.template_id || "—"),
+          h("td", {}, h("span", { class: "pill sev-" + String(f.severity || "unknown").toLowerCase() }, f.severity || "—")),
+          h("td", {}, f.name || "—"),
+          h("td", { class: "mono", style: "font-size:12px" }, f.matched_at || "—"))
+      );
+    });
+    p.appendChild(h("div", { class: "section-title" }, "Corroborating findings"));
+    p.appendChild(h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Template"), h("th", {}, "Severity"), h("th", {}, "Name"), h("th", {}, "Matched at"))), fb));
+  }
+}
+
 async function loadAI(p) {
   const data = await api(`/scans/${state.scanId}/ai-enrichments`);
   p.innerHTML = "";
@@ -547,6 +705,61 @@ async function loadAI(p) {
   });
 }
 
+async function runFullValidation() {
+  if (!state.scanId) return;
+  const btn = document.getElementById("fullValidateBtn");
+  btn.disabled = true;
+  btn.textContent = "Running all validators…";
+  const creds = scanCredentials();
+  const activeAllowed = !!document.getElementById("mcpActiveInput")?.checked;
+  try {
+    const res = await api(`/scans/${state.scanId}/full-validate`, {
+      method: "POST",
+      body: JSON.stringify({
+        active_allowed: activeAllowed,
+        username: creds.username,
+        password: creds.password,
+      }),
+    });
+    const ai = res.ai || {};
+    const mcp = res.mcp || {};
+    toast(
+      `Full validation complete · AI: ${(ai.assignments || []).length} tasks · Tools: ${(mcp.connectors || []).join(", ")} · ${mcp.corroborated || 0} corroborated`
+    );
+    state.cache = {};
+    selectTab("validation");
+  } catch (e) {
+    toast(e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Run full validation";
+  }
+}
+
+async function downloadReport() {
+  if (!state.scanId) return;
+  const btn = document.getElementById("reportBtn");
+  btn.disabled = true;
+  btn.textContent = "Generating…";
+  try {
+    const report = await api(`/scans/${state.scanId}/report`);
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const name = (document.getElementById("scanTitle")?.textContent || state.scanId).replace(/[^\w.-]+/g, "_");
+    a.href = url;
+    a.download = `vapt-report-${name}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast("Assessment report downloaded");
+  } catch (e) {
+    toast(e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Generate report";
+  }
+}
+
 async function runAiValidation() {
   if (!state.scanId) return;
   const btn = document.getElementById("aiValidateBtn");
@@ -565,11 +778,119 @@ async function runAiValidation() {
   }
 }
 
+/* ---------- tool selection ---------- */
+async function openToolsModal() {
+  const wrap = h("div", {}, h("p", { class: "muted", style: "font-size:12px;margin-top:0" }, "Enable or disable tools for automated scans. Greyed rows are not installed. Changes apply to new scans."));
+  openModal("Configure tools", wrap);
+  try {
+    const data = await api("/ui/tools");
+    data.groups.forEach((g) => {
+      const group = h("div", { class: "tool-group" }, h("h3", {}, `${g.capability_group} (${g.tools.length})`));
+      g.tools.forEach((t) => {
+        const input = h("input", { type: "checkbox" });
+        input.checked = t.enabled;
+        input.addEventListener("change", async () => {
+          try {
+            await api("/ui/tools/toggle", { method: "POST", body: JSON.stringify({ tool: t.tool, enabled: input.checked }) });
+          } catch (e) {
+            input.checked = !input.checked;
+            toast(e.message, true);
+          }
+        });
+        group.appendChild(
+          h("div", { class: "tool-row" + (t.available ? "" : " unavailable") },
+            h("div", {},
+              h("strong", {}, t.tool),
+              h("div", { class: "tool-meta" }, `${t.safety_class} · ${(t.capabilities || []).join(", ")}${t.available ? "" : " · not installed"}`)),
+            h("label", { class: "switch" }, input, h("span", { class: "slider" })))
+        );
+      });
+      wrap.appendChild(group);
+    });
+  } catch (e) {
+    wrap.appendChild(h("p", { class: "empty-note" }, e.message));
+  }
+}
+
+async function cancelScan() {
+  if (!state.scanId) return;
+  try {
+    await api(`/scans/${state.scanId}/cancel`, { method: "POST" });
+    toast("Scan cancelled");
+    refreshCurrent();
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+
+/* ---------- drill-down detail ---------- */
+async function showHypothesisDetail(id) {
+  try {
+    const [hy, map] = await Promise.all([api(`/hypotheses/${id}`), assetMap()]);
+    const wrap = h("div", {});
+    wrap.appendChild(detailRow("Title", hy.title));
+    wrap.appendChild(detailRow("Kind", h("span", { class: "pill mode" }, hy.hypothesis_type)));
+    wrap.appendChild(detailRow("Status", h("span", { class: "pill" }, hy.status)));
+    wrap.appendChild(detailRow("Confidence", hy.confidence != null ? hy.confidence.toFixed(2) : "—"));
+    wrap.appendChild(detailRow("Description", hy.description || "—"));
+    const where = (hy.affected_asset_ids || []).map((aid) => h("div", {}, assetLabel(map, aid)));
+    wrap.appendChild(detailRow("Where (assets)", where.length ? h("div", {}, ...where) : "—"));
+    wrap.appendChild(detailRow("Supporting evidence", (hy.supporting_evidence_ids || []).length + " item(s)"));
+    if (hy.validation_requirements && Object.keys(hy.validation_requirements).length) {
+      wrap.appendChild(detailRow("Validation needs", h("pre", { class: "mono", style: "white-space:pre-wrap;margin:0" }, JSON.stringify(hy.validation_requirements, null, 2))));
+    }
+    wrap.appendChild(detailRow("Test plan", hy.test_plan_id || "—"));
+    wrap.appendChild(detailRow("Verdict", hy.verdict_id || "not yet confirmed"));
+    openModal("Hypothesis detail", wrap);
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+
+async function showVulnDetail(row) {
+  const map = await assetMap();
+  const wrap = h("div", {});
+  wrap.appendChild(detailRow("What kind", h("span", { class: "pill state-APPLICABLE" }, row.class_code || "—")));
+  wrap.appendChild(detailRow("State", h("span", { class: "pill state-" + row.state }, row.state)));
+  wrap.appendChild(detailRow("Where (asset)", assetLabel(map, row.asset_id)));
+  wrap.appendChild(detailRow("Confidence", row.confidence != null ? row.confidence.toFixed(2) : "—"));
+  wrap.appendChild(detailRow("Rules applied", (row.rule_ids || []).join(", ") || "—"));
+  wrap.appendChild(detailRow("Rationale", row.explanation || "—"));
+  openModal("Vulnerability detail", wrap);
+}
+
+function showFindingDetail(f, map) {
+  const wrap = h("div", {});
+  wrap.appendChild(detailRow("Title", f.title));
+  wrap.appendChild(detailRow("Severity", h("span", { class: "pill sev-" + String(f.source_severity || "unknown").toLowerCase() }, f.source_severity || "—")));
+  wrap.appendChild(detailRow("Priority", f.contextual_priority || "—"));
+  wrap.appendChild(detailRow("Description", f.description || "—"));
+  const where = (f.affected_asset_ids || []).map((aid) => h("div", {}, assetLabel(map, aid)));
+  wrap.appendChild(detailRow("Where (assets)", where.length ? h("div", {}, ...where) : "—"));
+  wrap.appendChild(detailRow("CWE", (f.cwe_ids || []).join(", ") || "—"));
+  wrap.appendChild(detailRow("CVE", (f.cve_ids || []).join(", ") || "—"));
+  wrap.appendChild(detailRow("Evidence", (f.evidence_ids || []).length + " item(s)"));
+  wrap.appendChild(detailRow("Confirmed by", f.confirmed_by || "—"));
+  openModal("Confirmed finding", wrap);
+}
+
 /* ---------- init ---------- */
 function init() {
   document.getElementById("scanForm").addEventListener("submit", startScan);
   document.getElementById("refreshBtn").addEventListener("click", refreshCurrent);
+  document.getElementById("fullValidateBtn").addEventListener("click", runFullValidation);
+  document.getElementById("reportBtn").addEventListener("click", downloadReport);
   document.getElementById("aiValidateBtn").addEventListener("click", runAiValidation);
+  document.getElementById("toolsBtn").addEventListener("click", openToolsModal);
+  document.getElementById("cancelBtn").addEventListener("click", cancelScan);
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  document.getElementById("errorClose").addEventListener("click", closeError);
+  document.getElementById("modalOverlay").addEventListener("click", (e) => {
+    if (e.target.id === "modalOverlay") closeModal();
+  });
+  document.getElementById("errorOverlay").addEventListener("click", (e) => {
+    if (e.target.id === "errorOverlay") closeError();
+  });
   document.querySelectorAll(".tab").forEach((t) =>
     t.addEventListener("click", () => selectTab(t.dataset.tab))
   );

@@ -237,6 +237,39 @@ rules:
       Proxy ARP on LAN; --send-ip uses IP-level probes instead of ethernet ARP
       per nmap man page send-eth/send-ip options.
 
+  - id: param-nmap-version-light-throttled
+    tool: nmap
+    reference_param: version-light
+    when:
+      any_of: [rate_limited, waf_detected]
+    add_args: ["--version-light"]
+    explanation: >-
+      Rate limiting or WAF throttling observed; --version-light limits service
+      probing to intensity 2 (most likely probes) per nmap version-detection
+      documentation, reducing probe volume against defensive targets.
+
+  - id: param-nmap-max-retries-throttled
+    tool: nmap
+    reference_param: max-retries
+    when:
+      any_of: [rate_limited]
+    add_args: ["--max-retries", "2"]
+    explanation: >-
+      Probe drops/rate limiting observed; --max-retries caps port-scan probe
+      retransmissions per nmap performance documentation, preventing retry
+      storms that amplify load on throttled hosts.
+
+  - id: param-nmap-skip-dns-large-scope
+    tool: nmap
+    reference_param: n
+    when:
+      any_of: [large_target_set, cidr_scope]
+    add_args: ["-n"]
+    explanation: >-
+      Large target set or CIDR scope; -n disables reverse-DNS resolution per
+      nmap host-discovery documentation, which is the documented performance
+      practice for wide sweeps where per-host PTR lookups dominate runtime.
+
   # --- autorecon ---
   - id: param-autorecon-no-aggressive-waf
     tool: autorecon
