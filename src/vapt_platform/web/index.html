@@ -80,9 +80,19 @@
               <p class="muted" id="scanMeta">—</p>
             </div>
             <div class="scan-actions">
-              <span id="scanStatusBadge" class="badge">—</span>
+              <div class="status-badges" title="Job status tracks runtime execution; assessment status tracks coverage conclusion.">
+                <span class="status-group">
+                  <span class="status-label">Job</span>
+                  <span id="jobStatusBadge" class="badge">—</span>
+                </span>
+                <span class="status-group">
+                  <span class="status-label">Assessment</span>
+                  <span id="assessmentStatusBadge" class="badge">—</span>
+                </span>
+              </div>
               <button id="fullValidateBtn" class="secondary">Run full validation</button>
               <button id="reportBtn" class="secondary">Generate report</button>
+              <button id="refreshFreshnessBtn" class="secondary" title="Refresh report freshness without regenerating">Report freshness</button>
               <button id="aiValidateBtn" class="secondary">Run AI validation</button>
               <button id="cancelBtn" class="secondary">Cancel scan</button>
               <button id="refreshBtn" class="secondary">Refresh</button>

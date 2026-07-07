@@ -30,6 +30,7 @@ from vapt_platform.db.tables.models import (
     ValidationTask,
     VulnerabilityClass,
 )
+from vapt_platform.config.settings import get_settings
 from vapt_platform.domain.enums import ValidationTaskStatus
 from vapt_platform.enrichment.mistral import MistralEnrichmentService
 from vapt_platform.services.automated_validation import AutomatedValidationOrchestrator
@@ -97,10 +98,12 @@ class AIValidationService:
     async def run(self, scan_id: uuid.UUID) -> AIValidationSummary:
         summary = AIValidationSummary(scan_id=str(scan_id))
 
-        automated = await AutomatedValidationOrchestrator(self.session).execute_scan(scan_id)
-        summary.automated_attempted = len(automated)
-        summary.automated_executed = sum(1 for item in automated if item.execution_id)
-        summary.finding_candidates = sum(item.finding_candidates for item in automated)
+        settings = get_settings()
+        if not settings.full_assessment_v2:
+            automated = await AutomatedValidationOrchestrator(self.session).execute_scan(scan_id)
+            summary.automated_attempted = len(automated)
+            summary.automated_executed = sum(1 for item in automated if item.execution_id)
+            summary.finding_candidates = sum(item.finding_candidates for item in automated)
 
         enrichment = await MistralEnrichmentService(self.session).enrich_vulnerability_coverage(
             scan_id

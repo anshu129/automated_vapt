@@ -23,8 +23,14 @@ from vapt_platform.db.tables.models import (
     ValidationResult,
     ValidationTask,
     Verdict,
+    VerdictTransition,
     VulnerabilityClass,
 )
+from vapt_platform.config.settings import get_settings
+from vapt_platform.domain.class_capability_registry import get_class_capability_registry
+from vapt_platform.domain.test_plan_uniqueness import PlanUniquenessRelation
+from vapt_platform.domain.test_requirement_uniqueness import ScopeGranularity
+from vapt_platform.services.test_plan_uniqueness_policy import TestPlanUniquenessPolicy
 from vapt_platform.domain.enums import (
     ApplicabilityState,
     AssetType,
@@ -42,7 +48,7 @@ from vapt_platform.domain.enums import (
 )
 from vapt_platform.engines.surface_completeness import SurfaceCompletenessEngine
 
-MATRIX_RULE_VERSION = "1.0"
+MATRIX_RULE_VERSION = "1.1"
 
 _PLAN_CREATED_STATUSES = {
     TestPlanStatus.DRAFT.value,
@@ -223,6 +229,9 @@ class TestMatrixEngine:
         applicabilities = list((await self.session.execute(app_stmt)).scalars().all())
         app_by_class = {app.vulnerability_class_id: app for app in applicabilities}
 
+        asset = await self.session.get(Asset, asset_id)
+        registry = get_class_capability_registry()
+
         for vc in sorted(classes, key=lambda row: row.class_code):
             app = app_by_class.get(vc.id)
             applicability_state = (
@@ -232,8 +241,16 @@ class TestMatrixEngine:
             req_stmt = select(TestRequirement).where(
                 TestRequirement.matrix_id == matrix.id,
                 TestRequirement.vulnerability_class_id == vc.id,
+                TestRequirement.uniqueness_key == "",
             )
             req = (await self.session.execute(req_stmt)).scalar_one_or_none()
+            if not req:
+                req_stmt = select(TestRequirement).where(
+                    TestRequirement.matrix_id == matrix.id,
+                    TestRequirement.vulnerability_class_id == vc.id,
+                    TestRequirement.scope_granularity == ScopeGranularity.SURFACE.value,
+                )
+                req = (await self.session.execute(req_stmt)).scalar_one_or_none()
             if not req:
                 req = TestRequirement(
                     matrix_id=matrix.id,
@@ -243,8 +260,12 @@ class TestMatrixEngine:
                     coverage_status=TestRequirementCoverageStatus.NOT_TESTED.value,
                     required_evidence={},
                     eligible_capabilities=[],
+                    source_rule_ids=[],
+                    reasoning_trace={},
                     confidence=app.confidence if app else 0.1,
                     next_action=TestRequirementNextAction.NONE.value,
+                    uniqueness_key="",
+                    scope_granularity=ScopeGranularity.SURFACE.value,
                 )
                 self.session.add(req)
 
@@ -254,7 +275,11 @@ class TestMatrixEngine:
             req.applicability_state = applicability_state
             req.testing_mode = profile["testing_mode"]
             req.required_evidence = _required_evidence_payload(vc, app, profile)
-            req.eligible_capabilities = list(profile["eligible_capabilities"])
+            req.eligible_capabilities = registry.capabilities_for(
+                vc.class_code,
+                profile_capabilities=list(profile.get("eligible_capabilities") or []),
+            )
+            _enrich_requirement_from_registry(req, vc, app, asset, registry)
             req.confidence = app.confidence if app else 0.1
             req.latest_result_id = latest_execution.id if latest_execution else None
             req.coverage_status = self._coverage_status(
@@ -380,6 +405,63 @@ class TestMatrixEngine:
         return TestRequirementNextAction.NONE.value
 
 
+def _enrich_requirement_from_registry(
+    req: TestRequirement,
+    vc: VulnerabilityClass,
+    app: AssetVulnerabilityApplicability | None,
+    asset: Asset | None,
+    registry: Any,
+) -> None:
+    mapping = registry.resolve(vc.class_code)
+    rule_ids = list(app.rule_ids or []) if app else []
+    req.source_rule_ids = rule_ids
+
+    meta = dict(asset.metadata_ or {}) if asset else {}
+    facts: dict[str, Any] = {
+        "asset_type": asset.asset_type if asset else None,
+        "endpoint_count": len(meta.get("endpoints") or []),
+        "technology_count": len(meta.get("technologies") or []),
+        "uses_https": str(meta.get("base_url", meta.get("url", ""))).lower().startswith("https"),
+        "http_confirmed": bool(meta.get("http_confirmed")),
+        "credentials_available": bool(meta.get("credentials_available")),
+    }
+    req.reasoning_trace = {
+        "class_code": vc.class_code,
+        "applicability_state": req.applicability_state,
+        "source_rule_ids": rule_ids,
+        "explanation": app.explanation if app else "",
+        "facts": facts,
+        "registry_version": registry.version,
+        "why": (
+            f"Test requirement for {vc.class_code} derived from applicability rules "
+            f"{', '.join(rule_ids) if rule_ids else '(none)'} and class-capability registry "
+            f"v{registry.version}."
+        ),
+    }
+
+    if mapping:
+        req.required_capability = mapping.primary_capability
+        if mapping.safety_class:
+            req.safety_class = mapping.safety_class
+        else:
+            req.safety_class = _safety_for_testing_mode(req.testing_mode)
+        req.authorization_requirement = mapping.authorization_requirement
+        req.credential_requirement = mapping.credential_requirement
+    else:
+        req.required_capability = (
+            req.eligible_capabilities[0] if req.eligible_capabilities else None
+        )
+        req.safety_class = _safety_for_testing_mode(req.testing_mode)
+        req.authorization_requirement = "PRE_APPROVED"
+        req.credential_requirement = None
+
+
+def _safety_for_testing_mode(testing_mode: str) -> str:
+    if testing_mode == TestingMode.MANUAL.value:
+        return SafetyClass.PASSIVE.value
+    return SafetyClass.LOW_IMPACT.value
+
+
 def _class_profile(vc: VulnerabilityClass) -> dict[str, Any]:
     profile = _CLASS_TEST_PROFILES.get(vc.class_code)
     if profile:
@@ -432,6 +514,18 @@ class TestPlanner:
         )
         created: list[TestPlan] = []
         touched_matrix_ids: set[uuid.UUID] = set()
+        settings = get_settings()
+        all_plans = list(
+            (await self.session.execute(select(TestPlan).where(TestPlan.scan_id == scan_id)))
+            .scalars()
+            .all()
+        )
+        split_policy = None
+        if settings.phase9_plan_splitting_enabled:
+            from vapt_platform.services.test_plan_split_policy import TestPlanSplitPolicy
+
+            split_policy = TestPlanSplitPolicy()
+
         for matrix in matrices:
             reqs = list(
                 (
@@ -445,13 +539,38 @@ class TestPlanner:
             for req in reqs:
                 if not self._should_plan(req):
                     continue
+                split_decision = None
+                if split_policy:
+                    split_decision = split_policy.evaluate(
+                        scan_id=scan_id,
+                        req=req,
+                        asset_id=matrix.asset_id,
+                        existing_plans=all_plans,
+                    )
+                    if split_decision.action == "MERGE":
+                        existing = await self._existing_plan(
+                            scan_id, matrix.asset_id, req.vulnerability_class_id, req
+                        )
+                        if existing:
+                            continue
+                    elif split_decision.action == "SPLIT":
+                        plan = await self._create_from_requirement(
+                            scan_id, matrix.asset_id, req, split_decision=split_decision
+                        )
+                        created.append(plan)
+                        all_plans.append(plan)
+                        touched_matrix_ids.add(matrix.id)
+                        continue
                 existing = await self._existing_plan(
-                    scan_id, matrix.asset_id, req.vulnerability_class_id
+                    scan_id, matrix.asset_id, req.vulnerability_class_id, req
                 )
                 if existing:
                     continue
-                plan = await self._create_from_requirement(scan_id, matrix.asset_id, req)
+                plan = await self._create_from_requirement(
+                    scan_id, matrix.asset_id, req, split_decision=split_decision
+                )
                 created.append(plan)
+                all_plans.append(plan)
                 touched_matrix_ids.add(matrix.id)
 
         await self.session.flush()
@@ -544,11 +663,18 @@ class TestPlanner:
         scan_id: uuid.UUID,
         asset_id: uuid.UUID,
         vulnerability_class_id: uuid.UUID,
+        req: TestRequirement | None = None,
     ) -> TestPlan | None:
         stmt = select(TestPlan).where(TestPlan.scan_id == scan_id)
         plans = list((await self.session.execute(stmt)).scalars().all())
         asset_ref = str(asset_id)
         class_ref = str(vulnerability_class_id)
+        settings = get_settings()
+        plan_policy = TestPlanUniquenessPolicy()
+        identity = None
+        if req and settings.phase8_testplan_uniqueness_enabled:
+            identity = plan_policy.build_identity(scan_id=scan_id, req=req, asset_id=asset_id)
+
         for plan in plans:
             if plan.status not in _ACTIVE_PLAN_STATUSES:
                 continue
@@ -556,7 +682,26 @@ class TestPlanner:
                 continue
             if class_ref not in (plan.vulnerability_class_ids or []):
                 continue
-            return plan
+            if identity and settings.phase8_testplan_uniqueness_enabled:
+                decision = plan_policy.evaluate_existing(plan, identity)
+                if decision.relation == PlanUniquenessRelation.EQUIVALENT.value:
+                    plan_policy.log_decision(
+                        scan_id=scan_id, plan_id=str(plan.id), decision=decision
+                    )
+                    return plan
+                if decision.relation == PlanUniquenessRelation.DISTINCT.value:
+                    continue
+            elif (
+                settings.phase7_requirement_granularity_enabled
+                and req
+                and req.uniqueness_key
+            ):
+                plan_req = (plan.reasoning_trace or {}).get("requirement_id")
+                if plan_req and plan_req != str(req.id):
+                    continue
+                return plan
+            else:
+                return plan
         return None
 
     async def _create_from_requirement(
@@ -564,6 +709,8 @@ class TestPlanner:
         scan_id: uuid.UUID,
         asset_id: uuid.UUID,
         req: TestRequirement,
+        *,
+        split_decision=None,
     ) -> TestPlan:
         vc = await self.session.get(VulnerabilityClass, req.vulnerability_class_id)
         asset = await self.session.get(Asset, asset_id)
@@ -603,6 +750,9 @@ class TestPlanner:
         await self.session.flush()
         await self._emit_hypothesis_created(hypothesis)
 
+        plan_policy = TestPlanUniquenessPolicy()
+        plan_identity = plan_policy.build_identity(scan_id=scan_id, req=req, asset_id=asset_id)
+
         plan = TestPlan(
             scan_id=scan_id,
             hypothesis_id=hypothesis.id,
@@ -620,11 +770,27 @@ class TestPlanner:
             authorization_requirement=auth_req,
             priority=self._priority_for_requirement(req),
             status=status,
+            uniqueness_key=plan_identity.uniqueness_key,
+            source_requirement_uniqueness_keys=plan_identity.source_requirement_uniqueness_keys,
+            planning_fingerprint=plan_identity.planning_fingerprint,
+            plan_granularity=req.scope_granularity or "SURFACE",
+            split_from_plan_id=(
+                uuid.UUID(split_decision.split_from_plan_id)
+                if split_decision and split_decision.split_from_plan_id
+                else None
+            ),
+            split_reason_codes=list(split_decision.reason_codes) if split_decision else [],
+            split_policy_version=split_decision.policy_version if split_decision else "",
             reasoning_trace={
                 "rule_ids": ["tp-from-test-requirement"],
                 "requirement_id": str(req.id),
+                "uniqueness_key": req.uniqueness_key,
+                "planning_fingerprint": plan_identity.planning_fingerprint,
+                "scope_granularity": req.scope_granularity,
                 "next_action": req.next_action,
                 "applicability_state": req.applicability_state,
+                "split_action": split_decision.action if split_decision else None,
+                "split_reason_codes": list(split_decision.reason_codes) if split_decision else [],
             },
         )
         self.session.add(plan)
@@ -839,6 +1005,12 @@ class VerdictEngine:
         )
         if outcome == "CONFIRMED" and not canonical_evidence_ids:
             raise ValueError("Confirmed verdict requires evidence")
+        from vapt_platform.config.settings import get_settings
+
+        if outcome == "CONFIRMED" and get_settings().full_assessment_v2 and not validation_result_id:
+            raise ValueError(
+                "V2: CONFIRMED verdict requires ValidationResult via confirmation policy or analyst path"
+            )
         status = {
             "CONFIRMED": VerdictStatus.CONFIRMED.value,
             "REJECTED": VerdictStatus.REJECTED.value,
@@ -965,6 +1137,147 @@ class VerdictEngine:
         )
         return verdict
 
+    _ALLOWED_TRANSITIONS: dict[str, set[str]] = {
+        VerdictStatus.UNTESTED.value: {
+            VerdictStatus.TESTING.value,
+            VerdictStatus.PARTIALLY_VALIDATED.value,
+            VerdictStatus.REQUIRES_MANUAL_REVIEW.value,
+            VerdictStatus.INCONCLUSIVE.value,
+        },
+        VerdictStatus.TESTING.value: {
+            VerdictStatus.PARTIALLY_VALIDATED.value,
+            VerdictStatus.CONFIRMED.value,
+            VerdictStatus.REJECTED.value,
+            VerdictStatus.INCONCLUSIVE.value,
+            VerdictStatus.REQUIRES_MANUAL_REVIEW.value,
+        },
+        VerdictStatus.PARTIALLY_VALIDATED.value: {
+            VerdictStatus.CONFIRMED.value,
+            VerdictStatus.REJECTED.value,
+            VerdictStatus.INCONCLUSIVE.value,
+            VerdictStatus.REQUIRES_MANUAL_REVIEW.value,
+        },
+        VerdictStatus.INCONCLUSIVE.value: {VerdictStatus.TESTING.value},
+        VerdictStatus.REQUIRES_MANUAL_REVIEW.value: {VerdictStatus.TESTING.value},
+    }
+
+    async def apply_confirmation_decision(
+        self,
+        *,
+        hypothesis_id: uuid.UUID,
+        decision: Any,
+        test_execution_id: uuid.UUID,
+        test_plan_id: uuid.UUID,
+        evidence_node_ids: list[str],
+    ) -> Verdict | None:
+        from vapt_platform.config.settings import get_settings
+        from vapt_platform.engines.confirmation_policy import ConfirmationDecision
+
+        if not isinstance(decision, ConfirmationDecision):
+            return None
+        hyp = await self.session.get(Hypothesis, hypothesis_id)
+        if not hyp:
+            return None
+
+        previous = VerdictStatus.TESTING.value
+        if hyp.verdict_id:
+            existing = await self.session.get(Verdict, hyp.verdict_id)
+            if existing:
+                previous = existing.status
+        elif hyp.status == HypothesisStatus.READY_FOR_VALIDATION.value:
+            previous = VerdictStatus.UNTESTED.value
+
+        new_state = decision.recommended_verdict
+        if not self._transition_allowed(previous, new_state):
+            new_state = VerdictStatus.INCONCLUSIVE.value
+
+        outcome_map = {
+            VerdictStatus.CONFIRMED.value: "CONFIRMED",
+            VerdictStatus.REJECTED.value: "REJECTED",
+            VerdictStatus.INCONCLUSIVE.value: "INCONCLUSIVE",
+            VerdictStatus.PARTIALLY_VALIDATED.value: "INCONCLUSIVE",
+            VerdictStatus.REQUIRES_MANUAL_REVIEW.value: "INCONCLUSIVE",
+        }
+        outcome = outcome_map.get(new_state, "INCONCLUSIVE")
+
+        validation_result_id: uuid.UUID | None = None
+        if outcome == "CONFIRMED" and decision.requirements_satisfied:
+            task = ValidationTask(
+                scan_id=hyp.scan_id,
+                hypothesis_id=hypothesis_id,
+                test_plan_id=test_plan_id,
+                asset_ids=list(hyp.affected_asset_ids or []),
+                validation_goal="Evidence-gated confirmation (Phase 3)",
+                testing_mode="AUTOMATED",
+                status=ValidationTaskStatus.VALIDATED.value,
+            )
+            self.session.add(task)
+            await self.session.flush()
+            vr = ValidationResult(
+                validation_task_id=task.id,
+                outcome="CONFIRMED",
+                analyst_notes="Evidence-gated automated confirmation (Phase 3)",
+                evidence_ids=evidence_node_ids,
+                recorded_by="confirmation-policy",
+            )
+            self.session.add(vr)
+            await self.session.flush()
+            validation_result_id = vr.id
+
+        if outcome in {"CONFIRMED", "REJECTED"} and (
+            outcome != "CONFIRMED" or validation_result_id
+        ):
+            final_verdict = await self.evaluate_hypothesis(
+                hypothesis_id,
+                outcome,
+                evidence_node_ids,
+                validation_result_id=validation_result_id,
+                test_plan_id=test_plan_id,
+                test_execution_id=test_execution_id,
+                recorded_by="confirmation-policy",
+            )
+        else:
+            hyp.status = {
+                VerdictStatus.PARTIALLY_VALIDATED.value: HypothesisStatus.VALIDATION_IN_PROGRESS.value,
+                VerdictStatus.REQUIRES_MANUAL_REVIEW.value: HypothesisStatus.VALIDATION_IN_PROGRESS.value,
+            }.get(new_state, HypothesisStatus.INCONCLUSIVE.value)
+            final_verdict = Verdict(
+                scan_id=hyp.scan_id,
+                hypothesis_id=hypothesis_id,
+                test_plan_id=test_plan_id,
+                status=new_state,
+                confidence=hyp.confidence,
+                supporting_evidence_ids=decision.supporting_evidence_ids,
+                contradicting_evidence_ids=decision.contradicting_evidence_ids,
+                rule_ids=["verdict-confirmation-policy"],
+                explanation=f"Confirmation policy recommendation: {new_state}",
+            )
+            self.session.add(final_verdict)
+            await self.session.flush()
+            hyp.verdict_id = final_verdict.id
+
+        self.session.add(
+            VerdictTransition(
+                scan_id=hyp.scan_id,
+                hypothesis_id=hypothesis_id,
+                verdict_id=hyp.verdict_id,
+                previous_state=previous,
+                new_state=new_state,
+                confirmation_policy_id=decision.policy_id,
+                confirmation_policy_version=decision.policy_version,
+                evidence_ids=evidence_node_ids,
+                reason_codes=decision.reason_codes,
+            )
+        )
+        await self.session.flush()
+        return final_verdict
+
+    def _transition_allowed(self, previous: str, new_state: str) -> bool:
+        if previous == new_state:
+            return True
+        allowed = self._ALLOWED_TRANSITIONS.get(previous, set())
+        return new_state in allowed
+
     async def _update_applicability(
         self,
         hypothesis: Hypothesis,
@@ -1056,9 +1369,32 @@ class RecursiveCorrelationEngine:
 class AssessmentCompletionEvaluator:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
-        self.surface_engine = SurfaceCompletenessEngine(session)
 
-    async def evaluate(self, scan_id: uuid.UUID) -> AssessmentCompletionRecord:
+    async def evaluate(
+        self, scan_id: uuid.UUID, *, job_id: str | None = None
+    ) -> AssessmentCompletionRecord:
+        from vapt_platform.config.settings import get_settings
+        from vapt_platform.services.assessment_completion_evaluator import (
+            AssessmentCompletionEvaluatorService,
+        )
+
+        settings = get_settings()
+        if settings.assessment_completion_v2 or settings.pending_work_aware_completion:
+            await AssessmentCompletionEvaluatorService(self.session).evaluate(
+                scan_id, job_id=job_id
+            )
+            record = (
+                await self.session.execute(
+                    select(AssessmentCompletionRecord).where(
+                        AssessmentCompletionRecord.scan_id == scan_id
+                    )
+                )
+            ).scalar_one()
+            return record
+        return await self._evaluate_legacy(scan_id)
+
+    async def _evaluate_legacy(self, scan_id: uuid.UUID) -> AssessmentCompletionRecord:
+        self.surface_engine = SurfaceCompletenessEngine(self.session)
         stmt = select(AssessmentCompletionRecord).where(
             AssessmentCompletionRecord.scan_id == scan_id
         )

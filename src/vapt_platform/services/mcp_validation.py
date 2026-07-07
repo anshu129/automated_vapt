@@ -67,6 +67,11 @@ class ScanValidationSummary:
 
 
 class McpValidationService:
+    """Legacy MCP orchestration — deprecated for V2 assessment flow.
+
+    Use ``CapabilityValidationRouter`` when ``FULL_ASSESSMENT_V2=true``.
+    """
+
     def __init__(
         self,
         session: AsyncSession,
@@ -92,6 +97,14 @@ class McpValidationService:
         username: str | None = None,
         password: str | None = None,
     ) -> ScanValidationSummary:
+        settings = get_settings()
+        if settings.full_assessment_v2 and not settings.use_legacy_mcp_validation:
+            return ScanValidationSummary(
+                scan_id=str(scan_id),
+                connectors=[],
+                active_allowed=active_allowed,
+                skipped=["Legacy MCP orchestration disabled; use CapabilityValidationRouter"],
+            )
         connectors = self._active_connectors(active_allowed)
         summary = ScanValidationSummary(
             scan_id=str(scan_id),

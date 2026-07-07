@@ -61,3 +61,10 @@ async def init_db(database_url: str | None = None) -> None:
     _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
     async with _engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(_apply_schema_patches)
+
+
+def _apply_schema_patches(connection) -> None:  # type: ignore[no-untyped-def]
+    from vapt_platform.db.schema_patches import apply_all_patches
+
+    apply_all_patches(connection)

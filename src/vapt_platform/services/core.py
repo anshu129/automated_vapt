@@ -183,8 +183,22 @@ class ScanService:
                 )
 
         if get_settings().scan_start_inline_execution:
-            await controller.run_scan_pipeline(scan_id, correlation_id)
+            await self.run_recon_pipeline(scan_id, correlation_id)
         return scan
+
+    async def run_recon_pipeline(
+        self,
+        scan_id: uuid.UUID,
+        correlation_id: uuid.UUID | None = None,
+    ) -> int:
+        """Run bounded adaptive recon until no READY tasks remain."""
+        scan = await self.get(scan_id)
+        cid = correlation_id or uuid.uuid4()
+        snapshot = await self.session.get(ScopeSnapshot, scan.scope_snapshot_id)
+        rules = [ScopeRuleData(**r) for r in (snapshot.rules if snapshot else [])]
+        controller = ReconController(self.session, ScopeManager(rules))
+        await controller.run_scan_pipeline(scan_id, cid)
+        return controller.max_pipeline_tasks
 
     async def run_ready_tasks(
         self,

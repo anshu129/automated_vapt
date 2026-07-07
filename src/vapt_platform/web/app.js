@@ -5,7 +5,35 @@ const state = {
   jobPollers: {},
   activeTab: "overview",
   cache: {},
+  assessmentState: null,
+  jobStatus: null,
 };
+
+function setStatusBadge(el, status) {
+  if (!el) return;
+  const label = status || "—";
+  el.textContent = label;
+  el.className = "badge " + (status || "");
+}
+
+async function loadAssessmentState(jobStatus) {
+  if (!state.scanId) return null;
+  const qs = jobStatus ? `?job_status=${encodeURIComponent(jobStatus)}` : "";
+  const data = await api(`/scans/${state.scanId}/assessment-state${qs}`);
+  state.assessmentState = data;
+  if (jobStatus) state.jobStatus = jobStatus;
+  return data;
+}
+
+function renderStatusBadges() {
+  const jobBadge = document.getElementById("jobStatusBadge");
+  const assessBadge = document.getElementById("assessmentStatusBadge");
+  const jobStatus = state.jobStatus || state.assessmentState?.job_status || "—";
+  const assessmentStatus =
+    state.assessmentState?.assessment_status || state.assessmentState?.status || "—";
+  setStatusBadge(jobBadge, jobStatus);
+  setStatusBadge(assessBadge, assessmentStatus);
+}
 
 /* ---------- helpers ---------- */
 function scanCredentials() {
@@ -148,7 +176,7 @@ async function loadScanHistory() {
           h(
             "div",
             { class: "muted" },
-            `${s.status} · ${s.created_at ? new Date(s.created_at).toLocaleString() : ""}`
+            `${s.scan_status || s.status}${s.assessment_status ? " · assess " + s.assessment_status : ""} · ${s.created_at ? new Date(s.created_at).toLocaleString() : ""}`
           )
         )
       );
@@ -220,7 +248,6 @@ function updateProgress(job) {
   const bar = document.getElementById("progressBar");
   const fill = document.getElementById("progressFill");
   const label = document.getElementById("progressLabel");
-  const badge = document.getElementById("scanStatusBadge");
   const phases = ["queued", "reconnaissance", "planning", "ai_validation", "tool_validation", "completed"];
   if (job.status === "COMPLETED" || job.status === "FAILED") {
     bar.classList.add("hidden");
@@ -230,8 +257,13 @@ function updateProgress(job) {
     fill.style.width = `${(idx / (phases.length - 1)) * 100}%`;
     label.textContent = `${job.phase} · ${job.elapsed_seconds || 0}s / budget ${job.time_budget_minutes}m`;
   }
-  badge.textContent = job.status;
-  badge.className = "badge " + job.status;
+  state.jobStatus = job.status;
+  if (job.assessment_status) {
+    state.assessmentState = state.assessmentState || {};
+    state.assessmentState.assessment_status = job.assessment_status;
+    state.assessmentState.job_status = job.status;
+  }
+  renderStatusBadges();
 }
 
 /* ---------- scan launch ---------- */
@@ -272,16 +304,24 @@ async function startScan(e) {
 async function openScan(scanId) {
   state.scanId = scanId;
   state.cache = {};
+  state.assessmentState = null;
+  state.jobStatus = null;
   document.getElementById("emptyState").classList.add("hidden");
   document.getElementById("scanView").classList.remove("hidden");
   selectTab(state.activeTab || "overview");
   try {
     const scan = await api(`/scans/${scanId}`);
     document.getElementById("scanTitle").textContent = scan.name || scanId;
-    document.getElementById("scanMeta").textContent = `Scan ${scanId} · status ${scan.status}`;
-    const badge = document.getElementById("scanStatusBadge");
-    badge.textContent = scan.status;
-    badge.className = "badge " + scan.status;
+    const assess = scan.assessment_completion?.assessment_status || scan.assessment_status;
+    document.getElementById("scanMeta").textContent =
+      `Scan ${scanId} · lifecycle ${scan.scan_status || scan.status}` +
+      (assess ? ` · assessment ${assess}` : "");
+    state.assessmentState = scan.assessment_completion || null;
+    state.jobStatus = scan.job_status || null;
+    if (!state.assessmentState) {
+      await loadAssessmentState(state.jobStatus);
+    }
+    renderStatusBadges();
   } catch (e) {
     toast(e.message, true);
   }
@@ -344,16 +384,72 @@ function statBox(num, lbl, cls = "") {
 /* ---------- tab loaders ---------- */
 async function loadOverview(p) {
   const id = state.scanId;
-  const [assets, rels, applic, hyps, backlog, findings] = await Promise.all([
+  const [assets, rels, applic, hyps, backlog, findings, completion] = await Promise.all([
     api(`/scans/${id}/assets`),
     api(`/scans/${id}/relationships`),
     api(`/scans/${id}/vulnerability-applicability`),
     api(`/scans/${id}/hypotheses`),
     api(`/scans/${id}/validation-backlog`),
     api(`/scans/${id}/confirmed-findings`),
+    cached("completion", () => api(`/scans/${id}/assessment-state`)),
   ]);
+  state.assessmentState = completion;
+  renderStatusBadges();
   const applicable = applic.items.filter((i) => i.state === "APPLICABLE").length;
+  const summary = completion.summary || {};
+  const pending = completion.pending_work_summary || completion.pending_work || {};
+  const pendingTotal = pending.total ?? 0;
+  const acceptedCount = Object.values(completion.accepted_gaps || {}).reduce(
+    (n, v) => n + (Array.isArray(v) ? v.length : 0),
+    0
+  );
   p.innerHTML = "";
+  p.appendChild(
+    h("div", { class: "completion-card" },
+      h("h3", {}, summary.headline || "Assessment state"),
+      h("p", { class: "muted" }, summary.one_line_reason || completion.completion_notes || "—"),
+      h("div", { class: "completion-reasons" },
+        ...(completion.reason_codes || []).map((code) =>
+          h("span", { class: "reason-chip" }, code)
+        )
+      ),
+      h("p", {},
+        `Pending work: ${pendingTotal} · Accepted gaps: ${acceptedCount}` +
+        (completion.bound_reached ? ` · Bound reached: ${completion.bound_reached}` : "")
+      ),
+      completion.evaluation_timestamp
+        ? h("p", { class: "muted" }, `Last evaluated: ${new Date(completion.evaluation_timestamp).toLocaleString()}`)
+        : null,
+      completion.latest_transition
+        ? h(
+            "p",
+            { class: "muted" },
+            `Latest transition: ${completion.latest_transition.previous_status || "—"} → ${completion.latest_transition.new_status}`
+          )
+        : null,
+      completion.latest_report_snapshot
+        ? h(
+            "p",
+            { class: "muted" },
+            `Report: ${completion.latest_report_snapshot.report_version} · hash ${completion.latest_report_snapshot.content_hash.slice(0, 12)}` +
+              (completion.latest_report_snapshot.replayable ? " · snapshot-backed" : "") +
+              (completion.latest_report_snapshot.artifact_storage_backend
+                ? ` · ${completion.latest_report_snapshot.artifact_storage_backend}`
+                : "") +
+              (completion.latest_report_snapshot.freshness_status === "STALE" ||
+              completion.latest_report_snapshot.is_stale
+                ? " · stale"
+                : completion.latest_report_snapshot.freshness_status === "UNKNOWN"
+                  ? " · unknown"
+                  : " · fresh") +
+              (completion.latest_report_snapshot.integrity_status &&
+              completion.latest_report_snapshot.integrity_status !== "OK"
+                ? ` · integrity:${completion.latest_report_snapshot.integrity_status}`
+                : "")
+          )
+        : null
+    )
+  );
   p.appendChild(
     h(
       "div",
@@ -367,6 +463,21 @@ async function loadOverview(p) {
       statBox(findings.total, "Confirmed findings", findings.total ? "bad" : "good")
     )
   );
+  const history = completion.history || [];
+  if (history.length) {
+    p.appendChild(h("div", { class: "section-title" }, "Assessment status history"));
+    const list = h("div", { class: "history-list-compact" });
+    history.slice(0, 15).forEach((row) => {
+      list.appendChild(
+        h("div", { class: "history-row" },
+          h("span", {}, row.created_at ? new Date(row.created_at).toLocaleString() : "—"),
+          h("span", {}, `${row.previous_status || "—"} → ${row.new_status}`),
+          h("span", { class: "muted" }, (row.reason_codes || []).join(", ") || row.triggered_by || "")
+        )
+      );
+    });
+    p.appendChild(list);
+  }
   p.appendChild(
     h(
       "div",
@@ -736,13 +847,29 @@ async function runFullValidation() {
   }
 }
 
-async function downloadReport() {
+async function refreshReportFreshness() {
+  if (!state.scanId) return;
+  try {
+    const freshness = await api(`/scans/${state.scanId}/report-freshness?force=true`);
+    const status = freshness.status || "UNKNOWN";
+    toast(`Report freshness: ${status}${freshness.fallback_used ? " (full-hash fallback)" : ""}`);
+    state.cache = {};
+    refreshCurrent();
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+
+async function downloadReport(force = false) {
   if (!state.scanId) return;
   const btn = document.getElementById("reportBtn");
   btn.disabled = true;
   btn.textContent = "Generating…";
   try {
-    const report = await api(`/scans/${state.scanId}/report`);
+    const report = await api(
+      `/scans/${state.scanId}/report${force ? "?force_regenerate=true" : ""}`
+    );
+    const snap = report.report_snapshot;
     const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -751,7 +878,14 @@ async function downloadReport() {
     a.download = `vapt-report-${name}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast("Assessment report downloaded");
+    const delivery = report.report_delivery || {};
+    toast(
+      delivery.source === "snapshot"
+        ? `Snapshot report · ${(delivery.content_hash || snap?.content_hash || "").slice(0, 12)}`
+        : snap
+          ? `Report regenerated · v${snap.report_version} · ${snap.content_hash.slice(0, 12)}`
+          : "Assessment report downloaded"
+    );
   } catch (e) {
     toast(e.message, true);
   } finally {
@@ -879,7 +1013,11 @@ function init() {
   document.getElementById("scanForm").addEventListener("submit", startScan);
   document.getElementById("refreshBtn").addEventListener("click", refreshCurrent);
   document.getElementById("fullValidateBtn").addEventListener("click", runFullValidation);
-  document.getElementById("reportBtn").addEventListener("click", downloadReport);
+  document.getElementById("reportBtn").addEventListener("click", (e) => downloadReport(e.shiftKey));
+  const refreshFreshnessBtn = document.getElementById("refreshFreshnessBtn");
+  if (refreshFreshnessBtn) {
+    refreshFreshnessBtn.addEventListener("click", refreshReportFreshness);
+  }
   document.getElementById("aiValidateBtn").addEventListener("click", runAiValidation);
   document.getElementById("toolsBtn").addEventListener("click", openToolsModal);
   document.getElementById("cancelBtn").addEventListener("click", cancelScan);

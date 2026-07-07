@@ -1,0 +1,50 @@
+version: "1.0"
+rules:
+  CORR-ENDPOINT-001:
+    enabled: true
+    priority: 100
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-AUTH-001:
+    enabled: true
+    priority: 90
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-AUTH-002:
+    enabled: true
+    priority: 85
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-CHANGE-001:
+    enabled: true
+    priority: 80
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-ROOT-001:
+    enabled: true
+    priority: 75
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-TECH-001:
+    enabled: true
+    priority: 70
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-PARAM-001:
+    enabled: true
+    priority: 65
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5
+  CORR-EVIDENCE-001:
+    enabled: true
+    priority: 60
+    version: "1.0"
+    max_generation: 10
+    confidence_threshold: 0.5

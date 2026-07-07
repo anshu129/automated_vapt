@@ -18,10 +18,12 @@ from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import urlparse
 
+from vapt_platform.config.settings import get_settings
 from vapt_platform.db.session import session_scope
 from vapt_platform.engines.assessment import TestPlanner
 from vapt_platform.services.ai_validation import AIValidationService
 from vapt_platform.services.core import ProjectService, ScanService
+from vapt_platform.services.full_assessment import FullAssessmentService
 from vapt_platform.services.mcp_validation import McpValidationService
 from vapt_platform.validators.base import with_auth_url
 
@@ -179,12 +181,15 @@ async def _run_job(
         tick()
 
         async with session_scope() as session:
-            assets = await ScanService(session).get(scan_id)  # touch to ensure scan exists
-            _ = assets
+            refresh = await FullAssessmentService(session).prepare_for_planning(scan_id)
         _set(
             job_id,
             phase="planning",
-            progress={**_JOBS[job_id]["progress"], "recon": "done"},
+            progress={
+                **_JOBS[job_id]["progress"],
+                "recon": "done",
+                "assessment_refresh": refresh.to_dict(),
+            },
         )
         async with session_scope() as session:
             plans = await TestPlanner(session).plan_scan(scan_id)
@@ -196,6 +201,29 @@ async def _run_job(
                 "test_plans": len(plans),
             },
         )
+        tick()
+
+        settings = get_settings()
+        if settings.full_assessment_v2:
+            _set(job_id, phase="capability_routing")
+            async with session_scope() as session:
+                routing = await FullAssessmentService(session).execute_automated_plans(
+                    scan_id,
+                    active_validation_allowed=run_mcp_active,
+                    username=username,
+                    password=password,
+                )
+                await session.commit()
+            _set(
+                job_id,
+                progress={
+                    **_JOBS[job_id]["progress"],
+                    "capability_routing": "done",
+                    "routed_plans_attempted": routing.plans_attempted,
+                    "routed_plans_executed": routing.plans_executed,
+                    "routed_plans_blocked": routing.plans_blocked,
+                },
+            )
         tick()
 
         if run_ai:
@@ -215,7 +243,7 @@ async def _run_job(
             )
         tick()
 
-        if run_mcp:
+        if run_mcp and settings.use_legacy_mcp_validation:
             _set(job_id, phase="tool_validation")
             async with session_scope() as session:
                 mcp_summary = await McpValidationService(session).validate_scan(
@@ -237,9 +265,43 @@ async def _run_job(
                 },
             )
         tick()
-        _set(job_id, status="COMPLETED", phase="completed")
+        async with session_scope() as session:
+            completion = await FullAssessmentService(session).finalize_assessment(
+                scan_id, job_id=job_id
+            )
+            await FullAssessmentService(session).sync_scan_lifecycle_on_job_end(
+                scan_id, job_status="COMPLETED"
+            )
+            await session.commit()
+        _set(
+            job_id,
+            status="COMPLETED",
+            phase="completed",
+            assessment_status=completion.assessment_status,
+            assessment_reason_codes=completion.reason_codes,
+            bound_reached=completion.bound_reached,
+            pending_work_count=completion.pending_work_count,
+        )
     except Exception as exc:  # noqa: BLE001 - surface any failure to the UI
-        _set(job_id, status="FAILED", phase="failed", error=f"{type(exc).__name__}: {exc}")
+        async with session_scope() as session:
+            try:
+                completion = await FullAssessmentService(session).evaluate_completion(
+                    scan_id, job_id=job_id
+                )
+                await session.commit()
+                assessment_status = completion.assessment_status
+                reason_codes = completion.reason_codes
+            except Exception:
+                assessment_status = "INCOMPLETE"
+                reason_codes = []
+        _set(
+            job_id,
+            status="FAILED",
+            phase="failed",
+            error=f"{type(exc).__name__}: {exc}",
+            assessment_status=assessment_status,
+            assessment_reason_codes=reason_codes,
+        )
     finally:
         tick()
         heartbeat.cancel()

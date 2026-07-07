@@ -662,3 +662,73 @@ def _safe_filename(value: str) -> str:
 
 if __name__ == "__main__":
     app()
+
+
+@app.command("schema-check")
+def schema_check(api_url: str = API_BASE) -> None:
+    """Check database schema compatibility."""
+    r = _get(api_url, "/diagnostics/schema")
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("schema-migrate")
+def schema_migrate(
+    dry_run: bool = typer.Option(True, help="Dry-run by default; pass --no-dry-run to execute"),
+    api_url: str = API_BASE,
+) -> None:
+    """Run SQLite test_requirements migration via admin API."""
+    r = _post(api_url, "/admin/schema-migrate", params={"dry_run": dry_run})
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("report-freshness")
+def report_freshness_cmd(
+    scan_id: str,
+    force: bool = typer.Option(False, help="Bypass freshness poll cache"),
+    api_url: str = API_BASE,
+) -> None:
+    """Check report freshness for a scan."""
+    params: dict[str, object] = {}
+    if force:
+        params["force"] = True
+    r = httpx.get(f"{api_url}/scans/{scan_id}/report-freshness", params=params, timeout=60.0)
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("report-retention")
+def report_retention_cmd(
+    scan_id: str,
+    execute: bool = typer.Option(False, help="Execute cleanup (default is dry-run preview)"),
+    api_url: str = API_BASE,
+) -> None:
+    """Preview or execute report artifact retention cleanup."""
+    if execute:
+        r = _post(
+            api_url,
+            f"/scans/{scan_id}/report-retention/cleanup",
+            params={"dry_run": False},
+            timeout=60.0,
+        )
+    else:
+        r = _get(api_url, f"/scans/{scan_id}/report-retention", timeout=60.0)
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("report-integrity")
+def report_integrity_cmd(scan_id: str, api_url: str = API_BASE) -> None:
+    """Audit report artifact integrity for a scan."""
+    r = _get(api_url, f"/scans/{scan_id}/report-integrity", timeout=60.0)
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))
+
+
+@app.command("ops-diagnostics")
+def ops_diagnostics(api_url: str = API_BASE) -> None:
+    """Show operational diagnostics (backend, retention, schema)."""
+    r = _get(api_url, "/diagnostics/operations")
+    _raise_for_status(r)
+    typer.echo(json.dumps(r.json(), indent=2))

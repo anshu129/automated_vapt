@@ -11,9 +11,19 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from vapt_platform.api.deps import get_session
-from vapt_platform.db.tables.models import CapabilityProvider, Observation, Project, Scan
+from vapt_platform.config.settings import get_settings
+from vapt_platform.db.tables.models import (
+    AssessmentCompletionRecord,
+    CapabilityProvider,
+    Observation,
+    Project,
+    Scan,
+)
+from vapt_platform.engines.assessment import TestPlanner
 from vapt_platform.services import scan_jobs
 from vapt_platform.services.ai_validation import AIValidationService
+from vapt_platform.services.completion_serialization import CompletionSerializationService
+from vapt_platform.services.full_assessment import FullAssessmentService
 from vapt_platform.services.mcp_validation import McpValidationService
 from vapt_platform.tools.manifest import load_tool_manifests, resolve_tool_binary
 from vapt_platform.validators.registry import build_validation_connectors
@@ -91,12 +101,30 @@ async def list_ui_scans(session: AsyncSession = Depends(get_session)) -> dict[st
             .all()
         )
         projects = {project.id: project for project in rows}
+    completion_by_scan: dict[uuid.UUID, AssessmentCompletionRecord] = {}
+    if scans and get_settings().phase6_status_sync_enabled:
+        records = list(
+            (
+                await session.execute(
+                    select(AssessmentCompletionRecord).where(
+                        AssessmentCompletionRecord.scan_id.in_([s.id for s in scans])
+                    )
+                )
+            )
+            .scalars()
+            .all()
+        )
+        completion_by_scan = {record.scan_id: record for record in records}
     return {
         "items": [
             {
                 "id": str(scan.id),
                 "name": scan.name,
                 "status": scan.status,
+                "scan_status": scan.status,
+                "assessment_status": (
+                    completion_by_scan[scan.id].status if scan.id in completion_by_scan else None
+                ),
                 "project_id": str(scan.project_id),
                 "project_name": (
                     projects[scan.project_id].name if scan.project_id in projects else None
@@ -202,6 +230,13 @@ async def run_mcp_validation(
     body: McpValidateRequest | None = None,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, Any]:
+    settings = get_settings()
+    if settings.full_assessment_v2 and not settings.use_legacy_mcp_validation:
+        raise HTTPException(
+            400,
+            "Legacy MCP orchestration is disabled. Use the V2 assessment flow "
+            "(prepare → plan → CapabilityValidationRouter).",
+        )
     active_allowed = bool(body.active_allowed) if body else False
     username = body.username if body else None
     password = body.password if body else None
@@ -221,10 +256,38 @@ async def run_full_validation(
     body: FullValidateRequest | None = None,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, Any]:
-    """Run AI advisory + assignment, then all available tool validators (nuclei, Burp, sqlmap)."""
+    """Run AI advisory + V2 capability routing (or legacy MCP when enabled)."""
     active_allowed = bool(body.active_allowed) if body else False
     username = body.username if body else None
     password = body.password if body else None
+    settings = get_settings()
+
+    if settings.full_assessment_v2:
+        await FullAssessmentService(session).prepare_for_planning(scan_id)
+        await TestPlanner(session).plan_scan(scan_id)
+        routing = await FullAssessmentService(session).execute_automated_plans(
+            scan_id,
+            active_validation_allowed=active_allowed,
+            username=username,
+            password=password,
+        )
+        ai_summary = await AIValidationService(session).run(scan_id)
+        await session.commit()
+        return {
+            "scan_id": str(scan_id),
+            "ai": ai_summary.as_dict(),
+            "routing": {
+                "plans_attempted": routing.plans_attempted,
+                "plans_executed": routing.plans_executed,
+                "plans_blocked": routing.plans_blocked,
+                "results": routing.results,
+            },
+            "note": (
+                "Full validation complete: capability-routed automated plans + AI advisory. "
+                "Nothing is auto-confirmed — review validation tasks and generate a report."
+            ),
+        }
+
     ai_summary = await AIValidationService(session).run(scan_id)
     mcp_summary = await McpValidationService(session).validate_scan(
         scan_id,

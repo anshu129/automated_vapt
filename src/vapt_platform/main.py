@@ -41,8 +41,43 @@ async def _startup_seed() -> None:
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     setup_logging(settings.log_level)
+    if settings.incompatible_validation_paths():
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "FULL_ASSESSMENT_V2 and USE_LEGACY_MCP_VALIDATION are both enabled; "
+            "duplicate validator execution may occur."
+        )
     if settings.seed_on_startup:
         await _startup_seed()
+    if settings.phase8_sqlite_migration_hardening_enabled:
+        import logging
+
+        from vapt_platform.db.session import get_engine
+        from vapt_platform.services.schema_compatibility_detector import SchemaCompatibilityDetector
+
+        logger = logging.getLogger(__name__)
+        async with get_engine().connect() as conn:
+            report = await conn.run_sync(
+                lambda sync_conn: SchemaCompatibilityDetector().inspect(sync_conn).to_dict()
+            )
+        if report.get("migration_required"):
+            logger.warning(
+                "legacy_schema_detected schema_version=%s recommended_action=%s warnings=%s",
+                report.get("schema_version"),
+                report.get("recommended_action"),
+                report.get("warnings"),
+            )
+        logger.info(
+            "startup_diagnostics artifact_backend=%s retention_enabled=%s "
+            "staleness_polling=%s plan_splitting=%s integrity_audit=%s schema_version=%s",
+            settings.report_artifact_backend,
+            settings.phase9_artifact_retention_enabled,
+            settings.phase9_staleness_polling_enabled,
+            settings.phase9_plan_splitting_enabled,
+            settings.phase9_integrity_audit_enabled,
+            report.get("schema_version"),
+        )
     yield
 
 

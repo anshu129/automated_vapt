@@ -1,0 +1,126 @@
+# Versioned mapping from vulnerability class codes to required assessment capabilities.
+# A class may map to multiple capabilities (ordered by planning priority).
+# Phase 2 provider routing consumes this registry; Phase 1 uses it for TestRequirement enrichment.
+version: "1.0"
+
+defaults:
+  safety_class: LOW_IMPACT
+  authorization_requirement: PRE_APPROVED
+  credential_requirement: null
+
+mappings:
+  SQL_INJECTION:
+    capabilities:
+      - WEB_PASSIVE_ASSESSMENT
+      - TEMPLATE_BASED_ASSESSMENT
+      - INJECTION_VALIDATION
+    safety_class: STATE_CHANGING
+    authorization_requirement: PRE_APPROVED
+
+  XSS_REFLECTED:
+    capabilities:
+      - WEB_PASSIVE_ASSESSMENT
+      - TEMPLATE_BASED_ASSESSMENT
+      - WEB_ACTIVE_ASSESSMENT
+    safety_class: LOW_IMPACT
+
+  XSS_STORED:
+    capabilities:
+      - WEB_PASSIVE_ASSESSMENT
+      - TEMPLATE_BASED_ASSESSMENT
+      - WEB_ACTIVE_ASSESSMENT
+    safety_class: STATE_CHANGING
+
+  SECURITY_HEADERS:
+    capabilities:
+      - WEB_PASSIVE_ASSESSMENT
+      - TEMPLATE_BASED_ASSESSMENT
+    safety_class: PASSIVE
+
+  TLS_CONFIGURATION:
+    capabilities:
+      - TLS_CHARACTERIZATION
+      - TEMPLATE_BASED_ASSESSMENT
+      - NETWORK_VULNERABILITY_ASSESSMENT
+    safety_class: PASSIVE
+
+  TRANSPORT_SECURITY:
+    capabilities:
+      - TLS_CHARACTERIZATION
+      - WEB_PASSIVE_ASSESSMENT
+    safety_class: PASSIVE
+
+  KNOWN_COMPONENT_VULNERABILITY:
+    capabilities:
+      - TECHNOLOGY_IDENTIFICATION
+      - TEMPLATE_BASED_ASSESSMENT
+      - VULNERABILITY_FINDING_IMPORT
+    safety_class: LOW_IMPACT
+
+  INPUT_VALIDATION:
+    capabilities:
+      - PARAMETER_DISCOVERY
+      - WEB_ACTIVE_ASSESSMENT
+      - TEMPLATE_BASED_ASSESSMENT
+    safety_class: LOW_IMPACT
+
+  INJECTION_CLASS:
+    capabilities:
+      - PARAMETER_DISCOVERY
+      - WEB_PASSIVE_ASSESSMENT
+      - TEMPLATE_BASED_ASSESSMENT
+      - INJECTION_VALIDATION
+    safety_class: STATE_CHANGING
+
+  OBJECT_LEVEL_AUTHORIZATION:
+    capabilities:
+      - AUTHORIZATION_SURFACE_ANALYSIS
+      - ASSISTED_VALIDATION
+      - MANUAL_VALIDATION
+    safety_class: LOW_IMPACT
+    credential_requirement: AUTHENTICATED
+
+  AUTHORIZATION:
+    capabilities:
+      - AUTHORIZATION_SURFACE_ANALYSIS
+      - ASSISTED_VALIDATION
+      - MANUAL_VALIDATION
+    safety_class: LOW_IMPACT
+    credential_requirement: AUTHENTICATED
+
+  FUNCTION_LEVEL_AUTHORIZATION:
+    capabilities:
+      - AUTHORIZATION_SURFACE_ANALYSIS
+      - ASSISTED_VALIDATION
+      - MANUAL_VALIDATION
+    safety_class: LOW_IMPACT
+    credential_requirement: AUTHENTICATED
+
+  AUTHENTICATION:
+    capabilities:
+      - WEB_PASSIVE_ASSESSMENT
+      - ASSISTED_VALIDATION
+      - MANUAL_VALIDATION
+    safety_class: LOW_IMPACT
+    credential_requirement: AUTHENTICATED
+
+  SESSION_MANAGEMENT:
+    capabilities:
+      - WEB_PASSIVE_ASSESSMENT
+      - ASSISTED_VALIDATION
+      - MANUAL_VALIDATION
+    safety_class: LOW_IMPACT
+    credential_requirement: AUTHENTICATED
+
+  BUSINESS_LOGIC:
+    capabilities:
+      - ASSISTED_VALIDATION
+      - MANUAL_VALIDATION
+    safety_class: LOW_IMPACT
+
+  GRAPHQL_SECURITY:
+    capabilities:
+      - GRAPHQL_SCHEMA_INVENTORY
+      - WEB_PASSIVE_ASSESSMENT
+      - ASSISTED_VALIDATION
+    safety_class: LOW_IMPACT

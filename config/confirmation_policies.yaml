@@ -1,0 +1,27 @@
+version: "1.0"
+policies:
+  INJECTION_CLASS:
+    required_evidence_types:
+      - input_surface_evidence
+      - validation_evidence
+    contradiction_rules:
+      decisive_negative_validation: REJECTED
+    default_insufficient: PARTIALLY_VALIDATED
+  SECURITY_HEADERS:
+    required_evidence_types:
+      - positive_validation_or_scanner_evidence
+    default_insufficient: REQUIRES_MANUAL_REVIEW
+  KNOWN_COMPONENT_VULNERABILITY:
+    required_evidence_types:
+      - product_identity_evidence
+      - positive_validation_or_scanner_evidence
+    default_insufficient: PARTIALLY_VALIDATED
+  AUTHORIZATION:
+    required_evidence_types:
+      - authenticated_context
+      - analyst_or_structured_validation_evidence
+    default_insufficient: REQUIRES_MANUAL_REVIEW
+  DEFAULT:
+    required_evidence_types:
+      - validation_evidence
+    default_insufficient: PARTIALLY_VALIDATED

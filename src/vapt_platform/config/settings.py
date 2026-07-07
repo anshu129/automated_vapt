@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     scan_pipeline_max_iterations: int = Field(default=10, alias="SCAN_PIPELINE_MAX_ITERATIONS")
     scan_pipeline_max_tasks: int = Field(default=30, alias="SCAN_PIPELINE_MAX_TASKS")
     scan_start_inline_execution: bool = Field(default=False, alias="SCAN_START_INLINE_EXECUTION")
+    ui_scan_inline_recon: bool = Field(default=True, alias="UI_SCAN_INLINE_RECON")
     tool_search_paths: str = Field(default="", alias="TOOL_SEARCH_PATHS")
     use_fake_fallback: bool = Field(default=True, alias="USE_FAKE_FALLBACK")
     seed_on_startup: bool = Field(default=False, alias="SEED_ON_STARTUP")
@@ -58,6 +59,105 @@ class Settings(BaseSettings):
     sqlmap_mcp_server_path: str = Field(default="", alias="SQLMAP_MCP_SERVER_PATH")
     sqlmap_mcp_command: str = Field(default="python", alias="SQLMAP_MCP_COMMAND")
     sqlmap_mcp_extra_args: str = Field(default="", alias="SQLMAP_MCP_EXTRA_ARGS")
+    full_assessment_v2: bool = Field(default=True, alias="FULL_ASSESSMENT_V2")
+    use_legacy_mcp_validation: bool = Field(default=False, alias="USE_LEGACY_MCP_VALIDATION")
+    recursive_correlation_enabled: bool = Field(default=True, alias="RECURSIVE_CORRELATION_ENABLED")
+    correlation_max_generations: int = Field(default=5, alias="CORRELATION_MAX_GENERATIONS")
+    correlation_max_events_per_scan: int = Field(default=200, alias="CORRELATION_MAX_EVENTS_PER_SCAN")
+    correlation_max_rule_executions_per_scan: int = Field(
+        default=500, alias="CORRELATION_MAX_RULE_EXECUTIONS_PER_SCAN"
+    )
+    correlation_max_new_hypotheses_per_scan: int = Field(
+        default=100, alias="CORRELATION_MAX_NEW_HYPOTHESES_PER_SCAN"
+    )
+    correlation_max_new_test_requirements_per_scan: int = Field(
+        default=200, alias="CORRELATION_MAX_NEW_TEST_REQUIREMENTS_PER_SCAN"
+    )
+    correlation_max_automated_executions_per_scan: int = Field(
+        default=50, alias="CORRELATION_MAX_AUTOMATED_EXECUTIONS_PER_SCAN"
+    )
+    assessment_completion_v2: bool = Field(default=True, alias="ASSESSMENT_COMPLETION_V2")
+    pending_work_aware_completion: bool = Field(default=True, alias="PENDING_WORK_AWARE_COMPLETION")
+    bind_job_status_to_assessment: bool = Field(default=False, alias="BIND_JOB_STATUS_TO_ASSESSMENT")
+    phase6_status_sync_enabled: bool = Field(default=True, alias="PHASE6_STATUS_SYNC_ENABLED")
+    phase6_completion_history_enabled: bool = Field(
+        default=True, alias="PHASE6_COMPLETION_HISTORY_ENABLED"
+    )
+    phase6_report_completion_payload: bool = Field(
+        default=True, alias="PHASE6_REPORT_COMPLETION_PAYLOAD"
+    )
+    phase7_requirement_granularity_enabled: bool = Field(
+        default=True, alias="PHASE7_REQUIREMENT_GRANULARITY_ENABLED"
+    )
+    phase7_report_snapshots_enabled: bool = Field(
+        default=True, alias="PHASE7_REPORT_SNAPSHOTS_ENABLED"
+    )
+    phase7_latest_transition_denormalized: bool = Field(
+        default=True, alias="PHASE7_LATEST_TRANSITION_DENORMALIZED"
+    )
+    phase7_legacy_requirement_merge_only: bool = Field(
+        default=False, alias="PHASE7_LEGACY_REQUIREMENT_MERGE_ONLY"
+    )
+    phase8_report_artifact_storage_enabled: bool = Field(
+        default=True, alias="PHASE8_REPORT_ARTIFACT_STORAGE_ENABLED"
+    )
+    phase8_report_staleness_detection_enabled: bool = Field(
+        default=True, alias="PHASE8_REPORT_STALENESS_DETECTION_ENABLED"
+    )
+    phase8_testplan_uniqueness_enabled: bool = Field(
+        default=True, alias="PHASE8_TESTPLAN_UNIQUENESS_ENABLED"
+    )
+    phase8_sqlite_migration_hardening_enabled: bool = Field(
+        default=True, alias="PHASE8_SQLITE_MIGRATION_HARDENING_ENABLED"
+    )
+    report_artifact_root: str = Field(
+        default="data/report_artifacts", alias="REPORT_ARTIFACT_ROOT"
+    )
+    report_artifact_backend: str = Field(
+        default="filesystem", alias="REPORT_ARTIFACT_BACKEND"
+    )
+    report_artifact_object_bucket: str = Field(
+        default="vapt-reports", alias="REPORT_ARTIFACT_OBJECT_BUCKET"
+    )
+    report_artifact_object_prefix: str = Field(
+        default="report-artifacts", alias="REPORT_ARTIFACT_OBJECT_PREFIX"
+    )
+    report_artifact_max_versions_per_scan: int = Field(
+        default=10, alias="REPORT_ARTIFACT_MAX_VERSIONS_PER_SCAN"
+    )
+    report_artifact_ttl_days: int = Field(default=90, alias="REPORT_ARTIFACT_TTL_DAYS")
+    report_artifact_keep_latest: bool = Field(default=True, alias="REPORT_ARTIFACT_KEEP_LATEST")
+    report_artifact_keep_terminal: bool = Field(
+        default=True, alias="REPORT_ARTIFACT_KEEP_TERMINAL"
+    )
+    report_staleness_poll_interval_seconds: int = Field(
+        default=30, alias="REPORT_STALENESS_POLL_INTERVAL_SECONDS"
+    )
+    phase9_artifact_backend_enabled: bool = Field(
+        default=True, alias="PHASE9_ARTIFACT_BACKEND_ENABLED"
+    )
+    phase9_artifact_retention_enabled: bool = Field(
+        default=True, alias="PHASE9_ARTIFACT_RETENTION_ENABLED"
+    )
+    phase9_staleness_polling_enabled: bool = Field(
+        default=True, alias="PHASE9_STALENESS_POLLING_ENABLED"
+    )
+    phase9_staleness_full_hash_fallback_enabled: bool = Field(
+        default=True, alias="PHASE9_STALENESS_FULL_HASH_FALLBACK_ENABLED"
+    )
+    phase9_plan_splitting_enabled: bool = Field(
+        default=True, alias="PHASE9_PLAN_SPLITTING_ENABLED"
+    )
+    phase9_integrity_audit_enabled: bool = Field(
+        default=True, alias="PHASE9_INTEGRITY_AUDIT_ENABLED"
+    )
+    phase9_sqlite_migration_command_enabled: bool = Field(
+        default=True, alias="PHASE9_SQLITE_MIGRATION_COMMAND_ENABLED"
+    )
+
+    def incompatible_validation_paths(self) -> bool:
+        """True when V2 routing and legacy MCP orchestration would both run."""
+        return self.full_assessment_v2 and self.use_legacy_mcp_validation
 
     def sqlmap_mcp_extra_args_list(self) -> list[str]:
         raw = self.sqlmap_mcp_extra_args.strip()

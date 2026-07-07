@@ -366,7 +366,8 @@ class TestRequirement(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         UniqueConstraint(
             "matrix_id",
             "vulnerability_class_id",
-            name="uq_test_requirement_matrix_class",
+            "uniqueness_key",
+            name="uq_test_requirement_matrix_class_key",
         ),
     )
 
@@ -383,9 +384,23 @@ class TestRequirement(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     coverage_status: Mapped[str] = mapped_column(String(32), nullable=False, default="NOT_TESTED")
     required_evidence: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     eligible_capabilities: Mapped[list[str]] = mapped_column(JSON, default=list)
+    required_capability: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    source_rule_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    reasoning_trace: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    safety_class: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    authorization_requirement: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    credential_requirement: Mapped[str | None] = mapped_column(String(32), nullable=True)
     latest_result_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
     confidence: Mapped[float] = mapped_column(Float, default=0.5)
     next_action: Mapped[str] = mapped_column(String(64), nullable=False, default="NONE")
+    uniqueness_key: Mapped[str] = mapped_column(String(64), default="", index=True)
+    scope_granularity: Mapped[str] = mapped_column(String(32), default="SURFACE")
+    scope_dimensions: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    is_legacy_merged: Mapped[bool] = mapped_column(Boolean, default=False)
+    source_event_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    source_hypothesis_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    source_coverage_gap_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    source_change_event_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
 
 
 class TestPlan(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -407,6 +422,13 @@ class TestPlan(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     priority: Mapped[int] = mapped_column(Integer, default=100)
     status: Mapped[str] = mapped_column(String(32), default="DRAFT")
     reasoning_trace: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    uniqueness_key: Mapped[str] = mapped_column(String(64), default="", index=True)
+    source_requirement_uniqueness_keys: Mapped[list[str]] = mapped_column(JSON, default=list)
+    planning_fingerprint: Mapped[str] = mapped_column(String(64), default="", index=True)
+    plan_granularity: Mapped[str] = mapped_column(String(32), default="SURFACE")
+    split_from_plan_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(), nullable=True)
+    split_reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    split_policy_version: Mapped[str] = mapped_column(String(32), default="")
 
 
 class TestExecution(Base, UUIDPrimaryKeyMixin):
@@ -415,11 +437,201 @@ class TestExecution(Base, UUIDPrimaryKeyMixin):
     test_plan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("test_plans.id"), nullable=False)
     task_run_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("task_runs.id"))
     provider_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("capability_providers.id"))
+    selected_provider_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    executed_capability: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    provider_selection_decision_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    normalizer_version: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    raw_result_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
     template_id: Mapped[str | None] = mapped_column(String(256))
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     result_summary: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     evidence_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
     executed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ProviderSelectionDecision(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "provider_selection_decisions"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    test_plan_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("test_plans.id"), nullable=False, index=True
+    )
+    required_capability: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    eligible_providers: Mapped[list[str]] = mapped_column(JSON, default=list)
+    rejected_providers: Mapped[list[str]] = mapped_column(JSON, default=list)
+    rejection_reasons: Mapped[dict[str, list[str]]] = mapped_column(JSON, default=dict)
+    selected_provider: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    selection_rule: Mapped[str] = mapped_column(String(64), default="CAPABILITY_MATCH_THEN_POLICY")
+    decision_context: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ScannerFinding(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "scanner_findings"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    asset_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("assets.id"))
+    surface_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    endpoint_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    parameter_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    test_requirement_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("test_requirements.id")
+    )
+    test_plan_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("test_plans.id"))
+    test_execution_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("test_executions.id"))
+    provider_id: Mapped[str | None] = mapped_column(String(128))
+    executed_capability: Mapped[str | None] = mapped_column(String(64))
+    vulnerability_class: Mapped[str | None] = mapped_column(String(64))
+    source_rule_or_check_id: Mapped[str | None] = mapped_column(String(256))
+    title: Mapped[str] = mapped_column(String(512), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    source_severity: Mapped[str | None] = mapped_column(String(32))
+    source_confidence: Mapped[float] = mapped_column(Float, default=0.5)
+    status: Mapped[str] = mapped_column(String(32), default="OPEN")
+    first_seen: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    last_seen: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    raw_result_reference: Mapped[str | None] = mapped_column(String(128))
+    safe_metadata: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    idempotency_key: Mapped[str | None] = mapped_column(String(64), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class EvidenceNode(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "evidence_nodes"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    node_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    entity_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    entity_id: Mapped[uuid.UUID] = mapped_column(Uuid(), nullable=False)
+    test_execution_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("test_executions.id"))
+    provenance: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    idempotency_key: Mapped[str | None] = mapped_column(String(64), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ProviderRawResult(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "provider_raw_results"
+
+    test_execution_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("test_executions.id"), nullable=False, index=True
+    )
+    provider_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    content_type: Mapped[str] = mapped_column(String(64), default="text/plain")
+    redacted_content: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ConfirmationDecisionRecord(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "confirmation_decisions"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    hypothesis_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("hypotheses.id"), nullable=False)
+    test_execution_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("test_executions.id"))
+    policy_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    policy_version: Mapped[str] = mapped_column(String(16), nullable=False)
+    recommended_verdict: Mapped[str] = mapped_column(String(32), nullable=False)
+    requirements_satisfied: Mapped[bool] = mapped_column(Boolean, default=False)
+    missing_evidence_types: Mapped[list[str]] = mapped_column(JSON, default=list)
+    supporting_evidence_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    contradicting_evidence_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    decision_context: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class VerdictTransition(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "verdict_transitions"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    hypothesis_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("hypotheses.id"), nullable=False)
+    verdict_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("verdicts.id"))
+    previous_state: Mapped[str] = mapped_column(String(32), nullable=False)
+    new_state: Mapped[str] = mapped_column(String(32), nullable=False)
+    confirmation_policy_id: Mapped[str | None] = mapped_column(String(64))
+    confirmation_policy_version: Mapped[str | None] = mapped_column(String(16))
+    evidence_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class CorrelationEvent(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "correlation_events"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    event_type: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    source_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    source_id: Mapped[uuid.UUID] = mapped_column(Uuid(), nullable=False)
+    asset_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    surface_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    relationship_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    hypothesis_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    vulnerability_classes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    safe_context: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    causation_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    correlation_id: Mapped[uuid.UUID] = mapped_column(Uuid(), nullable=False)
+    generation: Mapped[int] = mapped_column(Integer, default=0)
+    idempotency_key: Mapped[str | None] = mapped_column(String(64), index=True)
+    status: Mapped[str] = mapped_column(String(32), default="PENDING")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CorrelationExecution(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "correlation_executions"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    event_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("correlation_events.id"), nullable=False)
+    rule_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    rule_version: Mapped[str] = mapped_column(String(16), nullable=False)
+    input_fingerprint: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    result_fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_relationship_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    created_hypothesis_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    updated_hypothesis_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    created_coverage_gap_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    created_test_requirement_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CoverageGap(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "coverage_gaps"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    gap_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    asset_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("assets.id"))
+    surface_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    endpoint_ref: Mapped[str | None] = mapped_column(String(512))
+    parameter_name: Mapped[str | None] = mapped_column(String(256))
+    parameter_location: Mapped[str | None] = mapped_column(String(64))
+    vulnerability_class: Mapped[str | None] = mapped_column(String(64))
+    auth_context_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    role_name: Mapped[str | None] = mapped_column(String(128))
+    status: Mapped[str] = mapped_column(String(32), default="OPEN")
+    uniqueness_key: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    source_rule_id: Mapped[str | None] = mapped_column(String(64))
+    source_event_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("correlation_events.id"))
+    reasoning_trace: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class CorrelationScanState(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "correlation_scan_states"
+    __table_args__ = (UniqueConstraint("scan_id", name="uq_correlation_scan_state"),)
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False)
+    generation: Mapped[int] = mapped_column(Integer, default=0)
+    events_processed: Mapped[int] = mapped_column(Integer, default=0)
+    rules_executed: Mapped[int] = mapped_column(Integer, default=0)
+    hypotheses_created: Mapped[int] = mapped_column(Integer, default=0)
+    requirements_created: Mapped[int] = mapped_column(Integer, default=0)
+    automated_executions: Mapped[int] = mapped_column(Integer, default=0)
+    bound_reached: Mapped[str | None] = mapped_column(String(64))
+    bound_context: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
 class EvidencePackage(Base, UUIDPrimaryKeyMixin):
@@ -463,6 +675,9 @@ class Hypothesis(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     status: Mapped[str] = mapped_column(String(32), default="PROPOSED")
     verdict_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
     test_plan_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())
+    uniqueness_key: Mapped[str | None] = mapped_column(String(64), index=True)
+    scope_dimensions: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    explanation_data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
 
 
 class ValidationTask(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -614,13 +829,71 @@ class AssessmentCompletionRecord(Base, UUIDPrimaryKeyMixin):
     __table_args__ = (UniqueConstraint("scan_id", name="uq_completion_scan"),)
 
     scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False)
+    job_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     status: Mapped[str] = mapped_column(String(32), nullable=False)
+    reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    pending_work_summary: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    bound_reached: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    evaluation_version: Mapped[str] = mapped_column(String(32), default="1.0")
     completion_reasons: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     blocking_items: Mapped[list[str]] = mapped_column(JSON, default=list)
     accepted_gaps: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     metrics: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     evaluated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     evaluated_by: Mapped[str] = mapped_column(String(256), default="system")
+    latest_transition_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    latest_transition_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(), nullable=True)
+    latest_transition_summary: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+
+
+class AssessmentCompletionHistory(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "assessment_completion_history"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    job_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    previous_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    new_status: Mapped[str] = mapped_column(String(32), nullable=False)
+    reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    pending_work_summary: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    accepted_gaps: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    bound_reached: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    evaluation_version: Mapped[str] = mapped_column(String(32), default="1.0")
+    triggered_by: Mapped[str] = mapped_column(String(64), default="system")
+    transition_fingerprint: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    report_snapshot_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ReportSnapshot(Base, UUIDPrimaryKeyMixin):
+    __tablename__ = "report_snapshots"
+
+    scan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scans.id"), nullable=False, index=True)
+    report_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    completion_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    generation_version: Mapped[str] = mapped_column(String(32), default="phase7-v1")
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    fingerprint_hash: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    assessment_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    job_status: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    reason_codes: Mapped[list[str]] = mapped_column(JSON, default=list)
+    bound_reached: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    accepted_gaps_count: Mapped[int] = mapped_column(Integer, default=0)
+    pending_work_count: Mapped[int] = mapped_column(Integer, default=0)
+    generated_by: Mapped[str] = mapped_column(String(64), default="system")
+    content_summary: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    artifact_reference: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    artifact_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    artifact_content_type: Mapped[str] = mapped_column(String(64), default="application/json")
+    artifact_size: Mapped[int] = mapped_column(Integer, default=0)
+    artifact_storage_backend: Mapped[str] = mapped_column(String(32), default="filesystem")
+    replayable: Mapped[bool] = mapped_column(Boolean, default=False)
+    live_hash_at_generation: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    stale: Mapped[bool] = mapped_column(Boolean, default=False)
+    artifact_retention_status: Mapped[str] = mapped_column(String(32), default="active")
+    integrity_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
 class AuditEvent(Base, UUIDPrimaryKeyMixin):

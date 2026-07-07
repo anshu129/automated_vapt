@@ -43,6 +43,13 @@ from vapt_platform.engines.assessment import AssessmentCompletionEvaluator, Test
 from vapt_platform.engines.surface_completeness import SurfaceCompletenessEngine
 from vapt_platform.engines.vulnerability_applicability import VulnerabilityApplicabilityEngine
 from vapt_platform.enrichment.mistral import MistralEnrichmentService
+from vapt_platform.config.settings import get_settings
+from vapt_platform.services.completion_serialization import CompletionSerializationService
+from vapt_platform.services.report_snapshot_service import ReportSnapshotService
+from vapt_platform.services.report_staleness_polling_service import ReportStalenessPollingService
+from vapt_platform.services.report_staleness_service import ReportStalenessService
+from vapt_platform.services.schema_compatibility_detector import SchemaCompatibilityDetector
+from vapt_platform.services.test_plan_uniqueness_policy import TestPlanUniquenessPolicy
 from vapt_platform.parameters.references import (
     flatten_parameters,
     load_parameter_references,
@@ -263,12 +270,25 @@ async def get_scan(
         scan = await ScanService(session).get(scan_id)
     except EntityNotFoundError as e:
         raise HTTPException(404, str(e)) from e
-    return {
+    settings = get_settings()
+    payload: dict[str, Any] = {
         "id": str(scan.id),
         "status": scan.status,
+        "scan_status": scan.status,
         "name": scan.name,
         "started_at": scan.started_at.isoformat() if scan.started_at else None,
     }
+    if settings.phase6_status_sync_enabled:
+        completion_payload = await CompletionSerializationService(session).build_payload(scan_id)
+        payload["job_status"] = completion_payload.get("job_status")
+        payload["assessment_status"] = completion_payload.get("assessment_status")
+        payload["assessment_completion"] = completion_payload
+        payload["latest_transition"] = completion_payload.get("latest_transition")
+    if settings.phase7_report_snapshots_enabled:
+        latest = await ReportSnapshotService(session).latest_snapshot(scan_id)
+        if latest:
+            payload["latest_report_snapshot"] = latest.to_dict()
+    return payload
 
 
 @router.post("/scans/{scan_id}/start")
@@ -570,8 +590,58 @@ async def get_tool_parameter_reference(tool_name: str) -> dict[str, Any]:
 
 @router.get("/scans/{scan_id}/report")
 async def scan_report(
-    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+    scan_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+    *,
+    snapshot_id: uuid.UUID | None = Query(None),
+    force_regenerate: bool = Query(False),
 ) -> dict[str, Any]:
+    settings = get_settings()
+    snapshot_svc = ReportSnapshotService(session)
+    regenerate = force_regenerate if isinstance(force_regenerate, bool) else False
+
+    if isinstance(snapshot_id, uuid.UUID):
+        snap = await snapshot_svc.fetch_snapshot(snapshot_id)
+        if not snap or snap.scan_id != scan_id:
+            raise HTTPException(404, "Snapshot not found")
+        try:
+            report = await snapshot_svc.load_artifact(snap)
+        except FileNotFoundError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        report["report_delivery"] = {
+            "source": "snapshot",
+            "snapshot_id": str(snapshot_id),
+            "replayable": True,
+            "content_hash": snap.content_hash,
+        }
+        return report
+
+    if (
+        not regenerate
+        and settings.phase8_report_artifact_storage_enabled
+        and settings.phase8_report_staleness_detection_enabled
+    ):
+        latest_meta = await snapshot_svc.latest_snapshot(scan_id)
+        if (
+            latest_meta
+            and latest_meta.replayable
+            and latest_meta.freshness_status == "FRESH"
+            and latest_meta.artifact_reference
+        ):
+            snap = await snapshot_svc.fetch_snapshot(uuid.UUID(latest_meta.id))
+            if snap:
+                try:
+                    report = await snapshot_svc.load_artifact(snap)
+                    report["report_delivery"] = {
+                        "source": "snapshot",
+                        "snapshot_id": latest_meta.id,
+                        "replayable": True,
+                        "content_hash": latest_meta.content_hash,
+                    }
+                    return report
+                except FileNotFoundError:
+                    pass
+
     assets = list(
         (await session.execute(select(Asset).where(Asset.scan_id == scan_id))).scalars().all()
     )
@@ -673,6 +743,12 @@ async def scan_report(
         .all()
     )
     completion = await AssessmentCompletionEvaluator(session).evaluate(scan_id)
+    settings = get_settings()
+    completion_sections: dict[str, Any] = {}
+    if settings.phase6_report_completion_payload:
+        completion_sections = await CompletionSerializationService(session).build_report_sections(
+            scan_id
+        )
     credential_service = CredentialContextService(session)
     auth_coverage = await credential_service.get_auth_coverage(scan_id)
     role_coverage = await credential_service.get_role_coverage(scan_id)
@@ -760,10 +836,17 @@ async def scan_report(
                 "asset_id": str(matrix.asset_id),
                 "requirements": [
                     {
+                        "id": str(req.id),
                         "class_code": class_map.get(req.vulnerability_class_id),
                         "coverage_status": req.coverage_status,
                         "testing_mode": req.testing_mode,
                         "next_action": req.next_action,
+                        "scope_granularity": req.scope_granularity,
+                        "is_legacy_merged": req.is_legacy_merged,
+                        "parameter_scopes": (req.reasoning_trace or {}).get(
+                            "parameter_scopes", []
+                        ),
+                        "scope_dimensions": req.scope_dimensions or {},
                     }
                     for req in reqs
                     if req.applicability_state in {"APPLICABLE", "POSSIBLY_APPLICABLE"}
@@ -771,7 +854,7 @@ async def scan_report(
             }
         )
 
-    return {
+    report_body = {
         "scan_id": str(scan_id),
         "summary": {
             "assets": len(assets),
@@ -998,7 +1081,31 @@ async def scan_report(
             "blocking_items": completion.blocking_items,
             "metrics": completion.metrics,
         },
+        **completion_sections,
     }
+    snapshot_row = await snapshot_svc.create_snapshot(
+        scan_id, report_body, generated_by="scan_report"
+    )
+    if snapshot_row:
+        report_body["report_snapshot"] = {
+            "id": str(snapshot_row.id),
+            "report_version": snapshot_row.report_version,
+            "content_hash": snapshot_row.content_hash,
+            "completion_version": snapshot_row.completion_version,
+            "artifact_reference": snapshot_row.artifact_reference,
+            "replayable": snapshot_row.replayable,
+            "created_at": (
+                snapshot_row.created_at.isoformat() if snapshot_row.created_at else None
+            ),
+        }
+    report_body["report_delivery"] = {
+        "source": "regenerated",
+        "snapshot_id": str(snapshot_row.id) if snapshot_row else None,
+        "replayable": bool(snapshot_row and snapshot_row.replayable),
+        "force_regenerate": regenerate,
+    }
+    await session.commit()
+    return report_body
 
 
 @router.get("/scans/{scan_id}/discovery-gain")
@@ -1442,6 +1549,26 @@ async def scan_test_matrix(
     return {"items": items, "total": len(items)}
 
 
+def _test_plan_item(p: TestPlan) -> dict[str, Any]:
+    return {
+        "id": str(p.id),
+        "hypothesis_id": str(p.hypothesis_id) if p.hypothesis_id else None,
+        "testing_mode": p.testing_mode,
+        "status": p.status,
+        "asset_ids": p.asset_ids,
+        "vulnerability_class_ids": p.vulnerability_class_ids,
+        "required_capabilities": p.required_capabilities,
+        "safety_class": p.safety_class,
+        "authorization_requirement": p.authorization_requirement,
+        "uniqueness_key": p.uniqueness_key,
+        "planning_fingerprint": p.planning_fingerprint,
+        "plan_granularity": p.plan_granularity,
+        "split_from_plan_id": str(p.split_from_plan_id) if p.split_from_plan_id else None,
+        "split_reason_codes": list(p.split_reason_codes or []),
+        "split_policy_version": p.split_policy_version,
+    }
+
+
 @router.get("/scans/{scan_id}/test-plans")
 async def list_test_plans(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
@@ -1449,20 +1576,7 @@ async def list_test_plans(
     stmt = select(TestPlan).where(TestPlan.scan_id == scan_id)
     plans = list((await session.execute(stmt)).scalars().all())
     return {
-        "items": [
-            {
-                "id": str(p.id),
-                "hypothesis_id": str(p.hypothesis_id) if p.hypothesis_id else None,
-                "testing_mode": p.testing_mode,
-                "status": p.status,
-                "asset_ids": p.asset_ids,
-                "vulnerability_class_ids": p.vulnerability_class_ids,
-                "required_capabilities": p.required_capabilities,
-                "safety_class": p.safety_class,
-                "authorization_requirement": p.authorization_requirement,
-            }
-            for p in plans
-        ],
+        "items": [_test_plan_item(p) for p in plans],
         "total": len(plans),
     }
 
@@ -1477,17 +1591,7 @@ async def generate_test_plans(
     return {
         "scan_id": str(scan_id),
         "created": len(plans),
-        "items": [
-            {
-                "id": str(plan.id),
-                "hypothesis_id": (str(plan.hypothesis_id) if plan.hypothesis_id else None),
-                "testing_mode": plan.testing_mode,
-                "status": plan.status,
-                "safety_class": plan.safety_class,
-                "authorization_requirement": plan.authorization_requirement,
-            }
-            for plan in plans
-        ],
+        "items": [_test_plan_item(plan) for plan in plans],
     }
 
 
@@ -1907,12 +2011,189 @@ async def completion_status(
 ) -> dict[str, Any]:
     record = await AssessmentCompletionEvaluator(session).evaluate(scan_id)
     await session.commit()
+    payload = await CompletionSerializationService(session).build_payload(scan_id)
     return {
         "status": record.status,
+        "assessment_status": record.status,
+        "job_status": payload.get("job_status"),
+        "scan_status": payload.get("scan_status"),
         "blocking_items": record.blocking_items,
         "completion_reasons": record.completion_reasons,
         "accepted_gaps": record.accepted_gaps,
         "metrics": record.metrics,
+        "reason_codes": record.reason_codes,
+        "pending_work_summary": record.pending_work_summary,
+        "bound_reached": record.bound_reached,
+        "evaluation_version": record.evaluation_version,
+        "assessment_completion": payload,
+        "assessment_completion_history": payload.get("history", []),
+        "summary": payload.get("summary"),
+    }
+
+
+@router.get("/scans/{scan_id}/assessment-state")
+async def assessment_state(
+    scan_id: uuid.UUID,
+    job_status: str | None = Query(None),
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    """Normalized assessment completion payload for UI and report consumers."""
+    payload = await CompletionSerializationService(session).build_payload(
+        scan_id, job_status=job_status
+    )
+    settings = get_settings()
+    if settings.phase7_report_snapshots_enabled:
+        latest = await ReportSnapshotService(session).latest_snapshot(scan_id)
+        if latest:
+            payload["latest_report_snapshot"] = latest.to_dict()
+    return payload
+
+
+@router.get("/scans/{scan_id}/report-freshness")
+async def report_freshness(
+    scan_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+    *,
+    force: bool = Query(False),
+    allow_full_hash: bool = Query(False),
+) -> dict[str, Any]:
+    from vapt_platform.config.settings import get_settings
+
+    settings = get_settings()
+    if settings.phase9_staleness_polling_enabled:
+        result = await ReportStalenessPollingService(session).poll(
+            scan_id, force=force, allow_full_hash=allow_full_hash
+        )
+    else:
+        result = await ReportStalenessService(session).evaluate(
+            scan_id, allow_full_hash=allow_full_hash
+        )
+    latest = await ReportSnapshotService(session).latest_snapshot(scan_id)
+    payload = result.to_dict()
+    payload["polling_enabled"] = settings.phase9_staleness_polling_enabled
+    if latest:
+        payload["latest_report_snapshot"] = latest.to_dict()
+    return payload
+
+
+@router.get("/scans/{scan_id}/report-snapshots/{snapshot_id}/artifact")
+async def replay_report_snapshot(
+    scan_id: uuid.UUID,
+    snapshot_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    svc = ReportSnapshotService(session)
+    snap = await svc.fetch_snapshot(snapshot_id)
+    if not snap or snap.scan_id != scan_id:
+        raise HTTPException(404, "Snapshot not found")
+    try:
+        report = await svc.load_artifact(snap)
+    except FileNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    report["report_delivery"] = {
+        "source": "snapshot",
+        "snapshot_id": str(snapshot_id),
+        "replayable": snap.replayable,
+        "content_hash": snap.content_hash,
+    }
+    return report
+
+
+@router.get("/scans/{scan_id}/report-snapshots")
+async def list_report_snapshots(
+    scan_id: uuid.UUID,
+    limit: int = Query(20, ge=1, le=100),
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, Any]:
+    items = await ReportSnapshotService(session).list_snapshots(scan_id, limit=limit)
+    return {"items": [item.to_dict() for item in items], "total": len(items)}
+
+
+@router.get("/scans/{scan_id}/report-retention")
+async def report_retention_candidates(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    from vapt_platform.services.report_artifact_retention_service import (
+        ReportArtifactRetentionService,
+    )
+
+    candidates = await ReportArtifactRetentionService(session).list_candidates(scan_id)
+    return {"scan_id": str(scan_id), "candidates": [c.to_dict() for c in candidates]}
+
+
+@router.post("/scans/{scan_id}/report-retention/cleanup")
+async def report_retention_cleanup(
+    scan_id: uuid.UUID,
+    session: AsyncSession = Depends(get_session),
+    *,
+    dry_run: bool = Query(True),
+) -> dict[str, Any]:
+    from vapt_platform.services.report_artifact_retention_service import (
+        ReportArtifactRetentionService,
+    )
+
+    result = await ReportArtifactRetentionService(session).cleanup(scan_id, dry_run=dry_run)
+    if not dry_run:
+        await session.commit()
+    return result.to_dict()
+
+
+@router.get("/scans/{scan_id}/report-integrity")
+async def report_integrity_audit(
+    scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+) -> dict[str, Any]:
+    from vapt_platform.services.report_artifact_integrity_service import (
+        ReportArtifactIntegrityService,
+    )
+
+    summary = await ReportArtifactIntegrityService(session).audit_scan(scan_id)
+    await session.commit()
+    return summary.to_dict()
+
+
+@router.post("/admin/schema-migrate")
+async def admin_schema_migrate(
+    session: AsyncSession = Depends(get_session),
+    *,
+    dry_run: bool = Query(True),
+) -> dict[str, Any]:
+    from vapt_platform.services.sqlite_migration_command import SqliteMigrationCommand
+
+    connection = await session.connection()
+    result = await connection.run_sync(
+        lambda sync_conn: SqliteMigrationCommand()
+        .migrate_test_requirements(sync_conn, dry_run=dry_run)
+        .to_dict()
+    )
+    if not dry_run:
+        await session.commit()
+    return result
+
+
+@router.get("/diagnostics/operations")
+async def operations_diagnostics(session: AsyncSession = Depends(get_session)) -> dict[str, Any]:
+    from vapt_platform.config.settings import get_settings
+    from vapt_platform.services.schema_compatibility_detector import SchemaCompatibilityDetector
+
+    settings = get_settings()
+    connection = await session.connection()
+    schema = await connection.run_sync(
+        lambda sync_conn: SchemaCompatibilityDetector().inspect(sync_conn).to_dict()
+    )
+    return {
+        "artifact_backend": settings.report_artifact_backend,
+        "phase9_artifact_backend_enabled": settings.phase9_artifact_backend_enabled,
+        "phase9_artifact_retention_enabled": settings.phase9_artifact_retention_enabled,
+        "phase9_staleness_polling_enabled": settings.phase9_staleness_polling_enabled,
+        "phase9_plan_splitting_enabled": settings.phase9_plan_splitting_enabled,
+        "phase9_integrity_audit_enabled": settings.phase9_integrity_audit_enabled,
+        "retention_policy": {
+            "max_versions_per_scan": settings.report_artifact_max_versions_per_scan,
+            "ttl_days": settings.report_artifact_ttl_days,
+            "keep_latest": settings.report_artifact_keep_latest,
+            "keep_terminal": settings.report_artifact_keep_terminal,
+        },
+        "schema": schema,
     }
 
 
