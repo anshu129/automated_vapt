@@ -520,10 +520,7 @@ def default_safety_for(cap: Capability) -> SafetyClass:
         Capability.EXTERNAL_ASSET_ENRICHMENT,
     ):
         return SafetyClass.PASSIVE
-    if any(
-        x in name
-        for x in ("BRUTEFORCE", "ACTIVE", "MASS", "HIGH_VOLUME", "DESTRUCTIVE")
-    ):
+    if any(x in name for x in ("BRUTEFORCE", "ACTIVE", "MASS", "HIGH_VOLUME", "DESTRUCTIVE")):
         return SafetyClass.STATE_CHANGING
     return SafetyClass.LOW_IMPACT
 

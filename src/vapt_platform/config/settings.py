@@ -29,9 +29,7 @@ class Settings(BaseSettings):
     ai_enabled: bool = Field(default=False, alias="AI_ENABLED")
     mistral_api_key: SecretStr | None = Field(default=None, alias="MISTRAL_API_KEY")
     mistral_model: str = Field(default="mistral-small-latest", alias="MISTRAL_MODEL")
-    mistral_base_url: str = Field(
-        default="https://api.mistral.ai/v1", alias="MISTRAL_BASE_URL"
-    )
+    mistral_base_url: str = Field(default="https://api.mistral.ai/v1", alias="MISTRAL_BASE_URL")
     ai_max_tokens: int = Field(default=1200, alias="AI_MAX_TOKENS")
     ai_timeout_seconds: int = Field(default=45, alias="AI_TIMEOUT_SECONDS")
     mcp_enabled: bool = Field(default=False, alias="MCP_ENABLED")
@@ -45,6 +43,8 @@ class Settings(BaseSettings):
     scan_pipeline_max_tasks: int = Field(default=30, alias="SCAN_PIPELINE_MAX_TASKS")
     scan_start_inline_execution: bool = Field(default=False, alias="SCAN_START_INLINE_EXECUTION")
     tool_search_paths: str = Field(default="", alias="TOOL_SEARCH_PATHS")
+    use_fake_fallback: bool = Field(default=True, alias="USE_FAKE_FALLBACK")
+    seed_on_startup: bool = Field(default=False, alias="SEED_ON_STARTUP")
 
 
 def load_yaml_config(path: Path) -> dict[str, Any]:

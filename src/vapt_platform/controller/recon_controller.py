@@ -79,6 +79,21 @@ def _looks_like_ip(value: str | None) -> bool:
     return all(part.isdigit() and 0 <= int(part) <= 255 for part in parts)
 
 
+def _merge_runtime_target(
+    target: dict[str, Any],
+    overrides: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if not overrides:
+        return dict(target)
+    merged = {**target, **overrides}
+    if target.get("operational_context") or overrides.get("operational_context"):
+        merged["operational_context"] = {
+            **dict(target.get("operational_context") or {}),
+            **dict(overrides.get("operational_context") or {}),
+        }
+    return merged
+
+
 class ReconController:
     def __init__(
         self,
@@ -100,7 +115,7 @@ class ReconController:
         settings = get_settings()
         self.cli_executor = CliToolExecutor(
             timeout_seconds=settings.tool_timeout_seconds,
-            use_fake_fallback=True,
+            use_fake_fallback=settings.use_fake_fallback,
         )
         self.max_pipeline_iterations = settings.scan_pipeline_max_iterations
         self.max_pipeline_tasks = settings.scan_pipeline_max_tasks
@@ -170,9 +185,7 @@ class ReconController:
                 profile=item.execution_profile,
             )
 
-    async def _should_schedule_capability(
-        self, scan_id: uuid.UUID, capability: Capability
-    ) -> bool:
+    async def _should_schedule_capability(self, scan_id: uuid.UUID, capability: Capability) -> bool:
         """Skip provider chain when marginal gain exhausted (Phase B)."""
         metrics = await self.gain_engine.get_metrics(scan_id)
         cap_metrics = [m for m in metrics if m.capability_code == capability.value]
@@ -256,12 +269,19 @@ class ReconController:
         await self.session.flush()
         return task
 
-    async def execute_task(self, task_id: uuid.UUID, correlation_id: uuid.UUID) -> TaskRun:
+    async def execute_task(
+        self,
+        task_id: uuid.UUID,
+        correlation_id: uuid.UUID,
+        runtime_target_overrides: dict[str, Any] | None = None,
+    ) -> TaskRun:
         task = await self.session.get(Task, task_id)
         if not task:
             raise ValueError("Task not found")
         task.status = TaskStatus.RUNNING.value
         provider = await self.session.get(CapabilityProvider, task.capability_provider_id)
+        stored_target = task.target_descriptor or {}
+        effective_target = _merge_runtime_target(stored_target, runtime_target_overrides)
 
         run = TaskRun(task_id=task.id, attempt_number=task.retry_count + 1)
         self.session.add(run)
@@ -282,7 +302,7 @@ class ReconController:
                 self.cli_executor.execute,
                 manifest_spec,
                 provider.provider_name,
-                task.target_descriptor,
+                effective_target,
                 task.execution_profile_id or "STANDARD",
                 capability=task.capability,
                 fake_behavior=provider.fake_behavior,
@@ -306,12 +326,12 @@ class ReconController:
                 task.status = TaskStatus.FAILED_TERMINAL.value
                 return run
             output = adapter.execute(
-                task.target_descriptor,
+                effective_target,
                 task.execution_profile_id or "STANDARD",
             )
 
         task.target_descriptor = self._merge_operational_observations(
-            task.target_descriptor, output.observations
+            stored_target, output.observations
         )
 
         artifact = RawArtifact(
@@ -362,7 +382,7 @@ class ReconController:
             Capability(task.capability),
             TaskRunResult(output.exit_code, output.observations),
             TargetContext(
-                hostname=task.target_descriptor.get("hostname"),
+                hostname=effective_target.get("hostname"),
                 capability=Capability(task.capability),
                 execution_profile=task.execution_profile_id or "STANDARD",
             ),
@@ -696,9 +716,7 @@ class ReconController:
         correlation_id: uuid.UUID,
         trigger: ApplicabilityTrigger,
     ) -> None:
-        rows = await self.applicability_engine.reevaluate(
-            asset_id, scan_id, trigger=trigger
-        )
+        rows = await self.applicability_engine.reevaluate(asset_id, scan_id, trigger=trigger)
         matrix = await self.matrix_engine.build(scan_id, asset_id)
         reqs = list(
             (
@@ -772,8 +790,7 @@ class ReconController:
         parsed = urlparse(base_url)
         scheme = parsed.scheme or "http"
         host = (
-            parsed.hostname
-            or base_url.replace("https://", "").replace("http://", "").split("/")[0]
+            parsed.hostname or base_url.replace("https://", "").replace("http://", "").split("/")[0]
         )
         if not host:
             return

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VAPT Platform</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">◈</span>
+        <div>
+          <h1>VAPT Platform</h1>
+          <p class="tagline">Authorized assessment &middot; recon correlation &middot; AI-assisted validation</p>
+        </div>
+      </div>
+      <div class="topbar-status" id="apiStatus">checking API…</div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="card">
+          <h2>New scan</h2>
+          <form id="scanForm">
+            <label>Target host / URL
+              <input id="hostInput" type="text" placeholder="example.com or https://example.com" required />
+            </label>
+            <label>Scan name <span class="muted">(optional)</span>
+              <input id="nameInput" type="text" placeholder="Auto-generated if blank" />
+            </label>
+            <label>Time budget (minutes)
+              <input id="budgetInput" type="number" min="1" max="240" value="30" />
+            </label>
+            <label class="checkbox">
+              <input id="aiInput" type="checkbox" checked />
+              Run AI + automated validation &amp; assignment
+            </label>
+            <button type="submit" id="startBtn">Start assessment</button>
+          </form>
+          <p class="disclaimer">Only scan systems you are explicitly authorized to test.</p>
+        </section>
+
+        <section class="card">
+          <h2>Jobs</h2>
+          <div id="jobsList" class="jobs-list"><p class="muted">No active jobs.</p></div>
+        </section>
+
+        <section class="card">
+          <h2>Scan history</h2>
+          <div id="scanHistory" class="history-list"><p class="muted">Loading…</p></div>
+        </section>
+      </aside>
+
+      <section class="content">
+        <div id="emptyState" class="empty-state">
+          <h2>Select or start a scan</h2>
+          <p>Enter a target on the left to launch a background assessment. Assets, the attack surface graph, vulnerabilities, hypotheses and AI-assigned validation tasks will appear here.</p>
+        </div>
+
+        <div id="scanView" class="scan-view hidden">
+          <div class="scan-header">
+            <div>
+              <h2 id="scanTitle">—</h2>
+              <p class="muted" id="scanMeta">—</p>
+            </div>
+            <div class="scan-actions">
+              <span id="scanStatusBadge" class="badge">—</span>
+              <button id="aiValidateBtn" class="secondary">Run AI validation</button>
+              <button id="refreshBtn" class="secondary">Refresh</button>
+            </div>
+          </div>
+
+          <div id="progressBar" class="progress hidden">
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <span id="progressLabel" class="muted"></span>
+          </div>
+
+          <nav class="tabs" id="tabs">
+            <button class="tab active" data-tab="overview">Overview</button>
+            <button class="tab" data-tab="assets">Assets</button>
+            <button class="tab" data-tab="graph">Attack surface</button>
+            <button class="tab" data-tab="vulns">Vulnerabilities</button>
+            <button class="tab" data-tab="hypotheses">Hypotheses</button>
+            <button class="tab" data-tab="validation">Validation &amp; assignment</button>
+            <button class="tab" data-tab="ai">AI advisory</button>
+          </nav>
+
+          <div class="tab-panels">
+            <div class="panel active" data-panel="overview"></div>
+            <div class="panel" data-panel="assets"></div>
+            <div class="panel" data-panel="graph"></div>
+            <div class="panel" data-panel="vulns"></div>
+            <div class="panel" data-panel="hypotheses"></div>
+            <div class="panel" data-panel="validation"></div>
+            <div class="panel" data-panel="ai"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -87,10 +87,15 @@ class CliToolExecutor:
         cmd = [binary_source, *decision.final_args]
         timeout = None if self.timeout_seconds <= 0 else self.timeout_seconds
         started = time.perf_counter()
+        stdin_input = None
+        if manifest.stdin:
+            stdin_input = target.get("stdin") or (
+                target.get("hostname") or target.get("domain") or target.get("ip")
+            )
         try:
             proc = subprocess.run(
                 cmd,
-                input=target.get("stdin") if manifest.stdin else None,
+                input=stdin_input,
                 capture_output=True,
                 text=True,
                 timeout=timeout,
@@ -164,6 +169,10 @@ class CliToolExecutor:
         if fake_behavior:
             from vapt_platform.domain.enums import Capability
 
-            cap = Capability(manifest.capabilities[0]) if manifest.capabilities else Capability.DNS_RESOLUTION
+            cap = (
+                Capability(manifest.capabilities[0])
+                if manifest.capabilities
+                else Capability.DNS_RESOLUTION
+            )
             return FakeAdapter(cap, provider_name, fake_behavior)
         return None

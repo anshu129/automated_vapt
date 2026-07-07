@@ -1,0 +1,716 @@
+{
+  "items": [
+    {
+      "id": "f7aac8b5-815d-414e-856b-27c2b8f70e07",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in/uploads",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a68c3f0b-6d2a-4341-a849-487a9f5ad4d0",
+      "verdict_id": null
+    },
+    {
+      "id": "5ac34b80-a6c0-4866-babd-5e7a4c81a642",
+      "title": "Validate INFORMATION_DISCLOSURE on https://sahaj.sakra.co.in/uploads",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "312d9862-3db9-4288-9011-42f4384fe46e",
+      "verdict_id": null
+    },
+    {
+      "id": "a4096302-e9c4-4ecd-a85b-634ebfe7f966",
+      "title": "Validate INPUT_VALIDATION on https://sahaj.sakra.co.in/uploads",
+      "description": "INPUT_VALIDATION is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "aa188882-1cc8-4d23-8bd3-66434a58aced",
+      "verdict_id": null
+    },
+    {
+      "id": "352e08d1-a992-4050-a5f6-faa36f26b1b7",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in/uploads",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "3a86e82b-6c6f-4317-85af-0a5f724f9430",
+      "verdict_id": null
+    },
+    {
+      "id": "586cbd4d-d265-4040-8611-496d68168037",
+      "title": "Validate RATE_CONTROL on https://sahaj.sakra.co.in/uploads",
+      "description": "RATE_CONTROL is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5c15f096-fe56-42e4-a127-f7fa54f4af4b",
+      "verdict_id": null
+    },
+    {
+      "id": "04eba954-02cb-4f70-bf3a-4d18282af1d0",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on https-sahaj.sakra.co.in:443",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "375dd0ee-bb3d-464e-b567-0c6bf54c98ec",
+      "verdict_id": null
+    },
+    {
+      "id": "7c1fab02-21e1-469b-bfa7-beec3d98e44e",
+      "title": "Validate EXPOSED_SERVICE on https-sahaj.sakra.co.in:443",
+      "description": "EXPOSED_SERVICE is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "EXPOSED_SERVICE",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "6cdd4d93-4144-4e27-9418-6bc80fba01bc",
+      "verdict_id": null
+    },
+    {
+      "id": "0a045ffa-9437-4488-aacb-10aee6b3d6d8",
+      "title": "Validate INFORMATION_DISCLOSURE on https-sahaj.sakra.co.in:443",
+      "description": "INFORMATION_DISCLOSURE is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e2cd66a7-85ae-44e5-9480-506e4f687109",
+      "verdict_id": null
+    },
+    {
+      "id": "a129d061-f62e-406b-97ea-7ca119d47c96",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on https-sahaj.sakra.co.in:443",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "166c229f-d561-484e-bde0-6c9661329c0a",
+      "verdict_id": null
+    },
+    {
+      "id": "e662a4b9-9a35-4c8b-97f0-8076dc144e67",
+      "title": "Validate ADMINISTRATIVE_SURFACE on https://sahaj.sakra.co.in",
+      "description": "ADMINISTRATIVE_SURFACE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "ADMINISTRATIVE_SURFACE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "b93f300f-d44b-45f6-9e87-cbdbd4bc2fa3",
+      "verdict_id": null
+    },
+    {
+      "id": "fb44ecb7-12fd-4011-a02b-18601a5ee43c",
+      "title": "Validate API_SCHEMA_VALIDATION on https://sahaj.sakra.co.in",
+      "description": "API_SCHEMA_VALIDATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "API_SCHEMA_VALIDATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "ae3a2fb6-2765-4ca6-8a45-a6ce72b7460a",
+      "verdict_id": null
+    },
+    {
+      "id": "01432324-091f-4434-9ddc-1686e005adba",
+      "title": "Validate AUTHENTICATION on https://sahaj.sakra.co.in",
+      "description": "AUTHENTICATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHENTICATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a4dcf9da-5c5a-40b2-8736-a4451523cba6",
+      "verdict_id": null
+    },
+    {
+      "id": "dd30db57-4fc2-43e1-9a2f-64a9c894aed4",
+      "title": "Validate AUTHORIZATION on https://sahaj.sakra.co.in",
+      "description": "AUTHORIZATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHORIZATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2ccca84f-01ad-4354-b4a4-871b6c397f8d",
+      "verdict_id": null
+    },
+    {
+      "id": "5b7987ef-20a7-4f55-8bfe-a9a18654e6c8",
+      "title": "Validate BUSINESS_LOGIC on https://sahaj.sakra.co.in",
+      "description": "BUSINESS_LOGIC is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "BUSINESS_LOGIC",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8c6772b1-5b15-4a8a-9f66-81eabac7954d",
+      "verdict_id": null
+    },
+    {
+      "id": "ce87b096-da78-417f-9e45-999ab0eff314",
+      "title": "Validate CACHE_BEHAVIOR on https://sahaj.sakra.co.in",
+      "description": "CACHE_BEHAVIOR is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CACHE_BEHAVIOR",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "18ce5686-2397-49ca-a254-ae8b07db1295",
+      "verdict_id": null
+    },
+    {
+      "id": "cf1a2138-cdce-41d3-8127-32f81d143a08",
+      "title": "Validate CROSS_ORIGIN_POLICY on https://sahaj.sakra.co.in",
+      "description": "CROSS_ORIGIN_POLICY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CROSS_ORIGIN_POLICY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "67d5482d-1bdf-4780-be16-07d05092cbce",
+      "verdict_id": null
+    },
+    {
+      "id": "2e414fee-7b10-49d0-bbba-230c8d512dda",
+      "title": "Validate DEBUG_SURFACE on https://sahaj.sakra.co.in",
+      "description": "DEBUG_SURFACE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEBUG_SURFACE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "19c762d2-7bd7-4146-801a-57db2bb93f4c",
+      "verdict_id": null
+    },
+    {
+      "id": "5954eb10-128b-48e4-a1cf-f2047d5a25d7",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on https://sahaj.sakra.co.in",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "c2738902-8fa8-4ec1-98c2-15615c6af30e",
+      "verdict_id": null
+    },
+    {
+      "id": "99c65213-dc37-43b5-b5f0-d56bf3f1a9a9",
+      "title": "Validate DEPENDENCY_RISK on https://sahaj.sakra.co.in",
+      "description": "DEPENDENCY_RISK is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEPENDENCY_RISK",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2178f1df-b2d7-4da7-93a3-70430ce330dd",
+      "verdict_id": null
+    },
+    {
+      "id": "2495657e-7d15-41e2-96ba-ac8f347a4eb1",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e1e7986e-179a-4e02-816d-63e738f25d14",
+      "verdict_id": null
+    },
+    {
+      "id": "589bdbad-4e66-425e-bc8b-639875844c4e",
+      "title": "Validate HISTORICAL_OR_STALE_SURFACE on https://sahaj.sakra.co.in",
+      "description": "HISTORICAL_OR_STALE_SURFACE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HISTORICAL_OR_STALE_SURFACE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "cbdd8a4b-9cec-49e8-9fb5-d5a84a9c801d",
+      "verdict_id": null
+    },
+    {
+      "id": "c34482e0-01e0-447b-945a-693f58c0811e",
+      "title": "Validate HOST_HEADER_HANDLING on https://sahaj.sakra.co.in",
+      "description": "HOST_HEADER_HANDLING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HOST_HEADER_HANDLING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e45dd55d-9bef-43e0-9aa2-556ce45092f6",
+      "verdict_id": null
+    },
+    {
+      "id": "843a0775-7ed9-4364-b886-95a66254962b",
+      "title": "Validate INFORMATION_DISCLOSURE on https://sahaj.sakra.co.in",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9fe990d4-fc41-418c-a676-2de539220bb9",
+      "verdict_id": null
+    },
+    {
+      "id": "0a5533aa-5dac-4fc6-b17e-9ed31c65a967",
+      "title": "Validate INJECTION_CLASS on https://sahaj.sakra.co.in",
+      "description": "INJECTION_CLASS is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INJECTION_CLASS",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5194a5b1-1f80-49b9-a5f6-4cb3df5e7400",
+      "verdict_id": null
+    },
+    {
+      "id": "fc6e689e-10cb-4a74-8653-14d06595c3de",
+      "title": "Validate INPUT_VALIDATION on https://sahaj.sakra.co.in",
+      "description": "INPUT_VALIDATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "00c931ad-a4e9-48df-bfa8-884549626f24",
+      "verdict_id": null
+    },
+    {
+      "id": "da1e2ba2-4c43-4c8a-bfcc-f85b2567310c",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on https://sahaj.sakra.co.in",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "97120604-9bb5-4785-a53c-b5e5606ca5d1",
+      "verdict_id": null
+    },
+    {
+      "id": "7e2dc50c-eb7b-45d5-b675-3e7cc0ce3e1d",
+      "title": "Validate MULTI_STEP_WORKFLOW on https://sahaj.sakra.co.in",
+      "description": "MULTI_STEP_WORKFLOW is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "MULTI_STEP_WORKFLOW",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2463b7bf-72c1-4f3f-835d-8a6af2f179b6",
+      "verdict_id": null
+    },
+    {
+      "id": "7a48e6d9-deed-42c3-8f17-fdb38ea508ee",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "53d5969b-9e48-40af-bbbc-5c4177b65a22",
+      "verdict_id": null
+    },
+    {
+      "id": "d5bc03a8-e2ba-46e4-95a5-5b79538b05d1",
+      "title": "Validate PATH_HANDLING on https://sahaj.sakra.co.in",
+      "description": "PATH_HANDLING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "PATH_HANDLING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a2025a5f-ec0f-456d-bba3-abe13d5bcd64",
+      "verdict_id": null
+    },
+    {
+      "id": "b0c28b45-7592-4223-ab79-c479131a2e03",
+      "title": "Validate RATE_CONTROL on https://sahaj.sakra.co.in",
+      "description": "RATE_CONTROL is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "222949c6-861c-4065-81c7-994f5a4cbcb8",
+      "verdict_id": null
+    },
+    {
+      "id": "87413e8e-2eec-40f6-8f72-6ddceeb50233",
+      "title": "Validate REDIRECT_HANDLING on https://sahaj.sakra.co.in",
+      "description": "REDIRECT_HANDLING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "REDIRECT_HANDLING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "98f071d3-fe12-4c88-8959-957932abef79",
+      "verdict_id": null
+    },
+    {
+      "id": "6a56559f-28e2-4b2a-9667-35fa1be4d5d3",
+      "title": "Validate SECRET_EXPOSURE on https://sahaj.sakra.co.in",
+      "description": "SECRET_EXPOSURE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECRET_EXPOSURE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5e78fde2-1186-413b-a0a5-f5920d9e9d7b",
+      "verdict_id": null
+    },
+    {
+      "id": "7dcf2acc-0106-465b-889a-ffdd56248e96",
+      "title": "Validate SECURITY_HEADERS on https://sahaj.sakra.co.in",
+      "description": "SECURITY_HEADERS is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECURITY_HEADERS",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "b5d76bb5-a500-487b-9002-378b149e7eea",
+      "verdict_id": null
+    },
+    {
+      "id": "311049f0-6375-4dfa-9b07-24877aa5ec1f",
+      "title": "Validate SERVER_SIDE_REQUEST_BEHAVIOR on https://sahaj.sakra.co.in",
+      "description": "SERVER_SIDE_REQUEST_BEHAVIOR is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SERVER_SIDE_REQUEST_BEHAVIOR",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "1d48e0ba-3e6e-449a-a101-307029b4810f",
+      "verdict_id": null
+    },
+    {
+      "id": "af47b4ac-5626-40b7-9beb-3426aaedd5ba",
+      "title": "Validate SESSION_MANAGEMENT on https://sahaj.sakra.co.in",
+      "description": "SESSION_MANAGEMENT is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SESSION_MANAGEMENT",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9db5169e-a535-4d2d-8bf9-6c181f2f7032",
+      "verdict_id": null
+    },
+    {
+      "id": "dbec30fc-42fe-45d2-8c72-dc9be9e132a0",
+      "title": "Validate TEMPLATE_PROCESSING on https://sahaj.sakra.co.in",
+      "description": "TEMPLATE_PROCESSING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TEMPLATE_PROCESSING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "daecdfec-2841-471e-864a-3ab43b443b64",
+      "verdict_id": null
+    },
+    {
+      "id": "504d399c-96e9-4af5-8d63-bfb722d756d8",
+      "title": "Validate TLS_CONFIGURATION on https://sahaj.sakra.co.in",
+      "description": "TLS_CONFIGURATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TLS_CONFIGURATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.8,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2bc53794-74dd-41cd-941e-a74012db9136",
+      "verdict_id": null
+    },
+    {
+      "id": "34c70542-0ec3-47d5-8d03-f370951ce0cd",
+      "title": "Validate TRANSPORT_SECURITY on https://sahaj.sakra.co.in",
+      "description": "TRANSPORT_SECURITY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TRANSPORT_SECURITY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8a576574-5ee5-4948-9d3c-cdb590bdae94",
+      "verdict_id": null
+    },
+    {
+      "id": "4cbe6a75-4822-4e60-b9fa-fc5b5ed7298a",
+      "title": "Validate UPLOAD_SECURITY on https://sahaj.sakra.co.in",
+      "description": "UPLOAD_SECURITY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "UPLOAD_SECURITY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.7,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "084926dc-58d9-4495-805e-81dc93a44ba2",
+      "verdict_id": null
+    },
+    {
+      "id": "473e9064-b2c0-4ff3-95e9-755c2b0f08b0",
+      "title": "Validate XML_PROCESSING on https://sahaj.sakra.co.in",
+      "description": "XML_PROCESSING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "XML_PROCESSING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.35,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "ac93744a-b7ef-42f7-9574-bccd59ec4548",
+      "verdict_id": null
+    }
+  ],
+  "total": 40
+}

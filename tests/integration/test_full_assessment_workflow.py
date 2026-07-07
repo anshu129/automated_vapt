@@ -39,13 +39,17 @@ async def test_full_assessment_workflow_outputs(db_session) -> None:
     await db_session.flush()
 
     validation_task = (
-        await db_session.execute(
-            select(ValidationTask).where(
-                ValidationTask.scan_id == scan.id,
-                ValidationTask.testing_mode == "MANUAL",
+        (
+            await db_session.execute(
+                select(ValidationTask).where(
+                    ValidationTask.scan_id == scan.id,
+                    ValidationTask.testing_mode == "MANUAL",
+                )
             )
         )
-    ).scalars().first()
+        .scalars()
+        .first()
+    )
     assert validation_task is not None
     assert validation_task.hypothesis_id is not None
     with pytest.raises(ValueError, match="requires evidence"):
@@ -67,9 +71,7 @@ async def test_full_assessment_workflow_outputs(db_session) -> None:
     assets = await list_assets(scan.id, db_session)
     relationships = await list_relationships(scan.id, db_session)
     surface = await scan_surface_coverage(scan.id, asset_type=None, session=db_session)
-    applicability = await scan_vulnerability_applicability(
-        scan.id, state=None, session=db_session
-    )
+    applicability = await scan_vulnerability_applicability(scan.id, state=None, session=db_session)
     matrix = await scan_test_matrix(scan.id, db_session)
     plans = await list_test_plans(scan.id, db_session)
     hypotheses = await list_hypotheses(scan.id, db_session)
@@ -93,9 +95,7 @@ async def test_full_assessment_workflow_outputs(db_session) -> None:
     assert all("metadata" in item for item in assets["items"])
 
     assert relationships["total"] >= 4
-    relationship_types = {
-        item["relationship_type"] for item in relationships["items"]
-    }
+    relationship_types = {item["relationship_type"] for item in relationships["items"]}
     assert {"HAS_SUBDOMAIN", "RESOLVES_TO", "CONTAINS"} <= relationship_types
     assert all(item["source"] and item["target"] for item in relationships["items"])
 

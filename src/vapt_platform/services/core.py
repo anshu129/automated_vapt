@@ -230,18 +230,21 @@ class ScanService:
         executed_items: list[dict[str, Any]] = []
         correlation_id = uuid.uuid4()
         for task in tasks:
-            if username is not None or password is not None:
-                task.target_descriptor = _with_credentials(
-                    task.target_descriptor or {},
-                    username=username,
-                    password=password,
-                )
+            runtime_overrides = _credential_runtime_overrides(
+                task.target_descriptor or {},
+                username=username,
+                password=password,
+            )
             provider = (
                 await self.session.get(CapabilityProvider, task.capability_provider_id)
                 if task.capability_provider_id
                 else None
             )
-            run = await controller.execute_task(task.id, correlation_id)
+            run = await controller.execute_task(
+                task.id,
+                correlation_id,
+                runtime_target_overrides=runtime_overrides,
+            )
             executed_items.append(await self._task_run_summary(task, run, provider, verbose))
         await controller.completion_evaluator.evaluate(scan_id)
 
@@ -279,20 +282,22 @@ class ScanService:
         if timeout_seconds is not None:
             controller.cli_executor.timeout_seconds = timeout_seconds
 
-        target_descriptor = build_target_descriptor(
+        target_descriptor = build_target_descriptor(target)
+        runtime_overrides = _credential_runtime_overrides_from_value(
             target,
             username=username,
             password=password,
         )
+        selection_target = {**target_descriptor, **runtime_overrides}
         manifests = load_tool_manifests()
-        selected_names = _select_tool_names(tool_names, manifests, target_descriptor)
+        selected_names = _select_tool_names(tool_names, manifests, selection_target)
         correlation_id = uuid.uuid4()
         items: list[dict[str, Any]] = []
         await _seed_direct_target_events(controller, scan_id, target_descriptor, correlation_id)
 
         for name in selected_names:
             spec = manifests[name]
-            capability = _capability_for_target(spec, target_descriptor)
+            capability = _capability_for_target(spec, selection_target)
             if not capability:
                 items.append(
                     {
@@ -303,14 +308,18 @@ class ScanService:
                 )
                 continue
             provider = (
-                await self.session.execute(
-                    select(CapabilityProvider).where(
-                        CapabilityProvider.provider_name == name,
-                        CapabilityProvider.capability_code == capability.value,
-                        CapabilityProvider.enabled.is_(True),
+                (
+                    await self.session.execute(
+                        select(CapabilityProvider).where(
+                            CapabilityProvider.provider_name == name,
+                            CapabilityProvider.capability_code == capability.value,
+                            CapabilityProvider.enabled.is_(True),
+                        )
                     )
                 )
-            ).scalars().first()
+                .scalars()
+                .first()
+            )
             if not provider:
                 items.append(
                     {
@@ -339,7 +348,11 @@ class ScanService:
                     }
                 )
                 continue
-            run = await controller.execute_task(task.id, correlation_id)
+            run = await controller.execute_task(
+                task.id,
+                correlation_id,
+                runtime_target_overrides=runtime_overrides,
+            )
             items.append(await self._task_run_summary(task, run, provider, verbose))
 
         await controller.completion_evaluator.evaluate(scan_id)
@@ -448,9 +461,7 @@ class ValidationService:
                 payload={
                     "validation_task_id": str(task.id),
                     "validation_result_id": str(result.id),
-                    "hypothesis_id": (
-                        str(task.hypothesis_id) if task.hypothesis_id else None
-                    ),
+                    "hypothesis_id": (str(task.hypothesis_id) if task.hypothesis_id else None),
                     "outcome": normalized_outcome,
                 },
                 correlation_id=uuid.uuid4(),
@@ -507,7 +518,7 @@ def _base_url(value: str) -> str:
 def _task_matches_filter(task: Task, needle: str) -> bool:
     haystacks = [task.normalized_target or ""]
     for value in (task.target_descriptor or {}).values():
-        if isinstance(value, (str, int, float)):
+        if isinstance(value, str | int | float):
             haystacks.append(str(value))
     return any(needle in value.lower() for value in haystacks)
 
@@ -564,10 +575,8 @@ def build_target_descriptor(
         parsed = urlparse(target)
         host = parsed.hostname or ""
         port = parsed.port
-        if parsed.username and username is None:
-            username = unquote(parsed.username)
-        if parsed.password and password is None:
-            password = unquote(parsed.password)
+        user_supplied = username is not None or password is not None
+        embedded_userinfo = parsed.username is not None or parsed.password is not None
         netloc = host
         if port:
             netloc = f"{netloc}:{port}"
@@ -592,14 +601,16 @@ def build_target_descriptor(
             descriptor["ip"] = host
         elif host:
             descriptor["domain"] = host
-        return _with_credentials(descriptor, username=username, password=password)
+        return _with_auth_context(
+            descriptor,
+            auth_required=user_supplied or embedded_userinfo,
+        )
 
     try:
         ip_address(target)
-        return _with_credentials(
+        return _with_auth_context(
             {"ip": target, "target": target},
-            username=username,
-            password=password,
+            auth_required=username is not None or password is not None,
         )
     except ValueError:
         pass
@@ -611,30 +622,64 @@ def build_target_descriptor(
         "url": f"https://{target}",
         "target": target,
     }
-    return _with_credentials(descriptor, username=username, password=password)
+    return _with_auth_context(
+        descriptor,
+        auth_required=username is not None or password is not None,
+    )
 
 
-def _with_credentials(
+def _with_auth_context(
     target: dict[str, Any],
-    username: str | None = None,
-    password: str | None = None,
+    auth_required: bool = False,
 ) -> dict[str, Any]:
     descriptor = dict(target)
-    if username is None or password is None:
-        parsed = urlparse(str(descriptor.get("url") or ""))
-        if parsed.username and username is None:
-            username = unquote(parsed.username)
-        if parsed.password and password is None:
-            password = unquote(parsed.password)
-    if username is not None:
-        descriptor["username"] = username
-    if password is not None:
-        descriptor["password"] = password
-    if username is not None or password is not None:
+    if auth_required:
         op = dict(descriptor.get("operational_context") or {})
         op["auth_required"] = True
         descriptor["operational_context"] = op
     return descriptor
+
+
+def _credential_runtime_overrides_from_value(
+    value: str,
+    username: str | None = None,
+    password: str | None = None,
+) -> dict[str, Any]:
+    target = value.strip()
+    parse_value = target
+    if parse_value and not parse_value.startswith(("http://", "https://")) and "/" in parse_value:
+        parse_value = f"https://{parse_value}"
+    parsed = urlparse(parse_value) if "://" in parse_value else None
+    if parsed and parsed.username and username is None:
+        username = unquote(parsed.username)
+    if parsed and parsed.password and password is None:
+        password = unquote(parsed.password)
+    return _credential_runtime_overrides(
+        build_target_descriptor(value),
+        username=username,
+        password=password,
+    )
+
+
+def _credential_runtime_overrides(
+    target: dict[str, Any],
+    username: str | None = None,
+    password: str | None = None,
+) -> dict[str, Any]:
+    if username is None or password is None:
+        parsed = urlparse(str(target.get("url") or ""))
+        if parsed.username and username is None:
+            username = unquote(parsed.username)
+        if parsed.password and password is None:
+            password = unquote(parsed.password)
+    if username is None and password is None:
+        return {}
+    overrides: dict[str, Any] = {"operational_context": {"auth_required": True}}
+    if username is not None:
+        overrides["username"] = username
+    if password is not None:
+        overrides["password"] = password
+    return overrides
 
 
 def _select_tool_names(
@@ -668,7 +713,12 @@ def _tool_target_compatible(spec: ToolManifestSpec, target: dict[str, Any]) -> b
         "domain": target.get("domain"),
         "hostname": target.get("hostname"),
         "url": target.get("url"),
-        "target": target.get("target") or target.get("ip") or target.get("hostname") or target.get("domain"),
+        "target": (
+            target.get("target")
+            or target.get("ip")
+            or target.get("hostname")
+            or target.get("domain")
+        ),
         "ip": target.get("ip"),
         "wordlist": target.get("wordlist", "config/wordlists/common.txt"),
         "resolvers": target.get("resolvers", "config/resolvers.txt"),
@@ -681,9 +731,7 @@ def _tool_target_compatible(spec: ToolManifestSpec, target: dict[str, Any]) -> b
         "token": target.get("token"),
     }
     placeholders = {
-        match.group(1)
-        for arg in spec.base_args
-        for match in re.finditer(r"{([^}]+)}", arg)
+        match.group(1) for arg in spec.base_args for match in re.finditer(r"{([^}]+)}", arg)
     }
     for placeholder in placeholders:
         if placeholder in blocked_without_explicit_value and not target.get(placeholder):

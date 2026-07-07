@@ -53,6 +53,7 @@ _CREDENTIAL_GATED = {
     "AUTHORIZATION_COVERAGE",
 }
 
+
 @dataclass
 class SurfaceRequirement:
     dimension: str
@@ -142,9 +143,7 @@ class SurfaceCompletenessEngine:
         for dim, status in (record.dimensions or {}).items():
             if status not in _INCOMPLETE:
                 continue
-            caps = [
-                c.value for c in self._matcher.capabilities_for_gaps({dim: status})
-            ]
+            caps = [c.value for c in self._matcher.capabilities_for_gaps({dim: status})]
             blocking = self._is_blocking(dim, status, asset.metadata_ or {}, accepted)
             requirements.append(
                 SurfaceRequirement(
@@ -181,9 +180,7 @@ class SurfaceCompletenessEngine:
             ],
         }
 
-    async def _completed_capabilities(
-        self, scan_id: uuid.UUID, asset: Asset
-    ) -> set[str]:
+    async def _completed_capabilities(self, scan_id: uuid.UUID, asset: Asset) -> set[str]:
         stmt = select(Task).where(
             Task.scan_id == scan_id,
             Task.status == TaskStatus.COMPLETED.value,
@@ -200,15 +197,18 @@ class SurfaceCompletenessEngine:
                 (td.get("base_url") or "").lower().rstrip("/"),
             }
             keys.discard("")
-            if asset_key in keys or any(asset_key in k for k in keys if k):
-                caps.add(task.capability)
-            elif asset.asset_type == AssetType.HOSTNAME.value and td.get("hostname", "").lower() == asset_key:
+            if (
+                asset_key in keys
+                or any(asset_key in k for k in keys if k)
+                or (
+                    asset.asset_type == AssetType.HOSTNAME.value
+                    and td.get("hostname", "").lower() == asset_key
+                )
+            ):
                 caps.add(task.capability)
         return caps
 
-    async def _endpoint_urls_for_web_app(
-        self, scan_id: uuid.UUID, asset: Asset
-    ) -> list[str]:
+    async def _endpoint_urls_for_web_app(self, scan_id: uuid.UUID, asset: Asset) -> list[str]:
         base = asset.normalized_key.lower().rstrip("/")
         stmt = select(Asset).where(
             Asset.scan_id == scan_id,
@@ -234,9 +234,7 @@ class SurfaceCompletenessEngine:
             return self._hostname_dimensions(effective_meta, completed_caps)
         return {}
 
-    def _web_app_dimensions(
-        self, meta: dict[str, Any], completed_caps: set[str]
-    ) -> dict[str, str]:
+    def _web_app_dimensions(self, meta: dict[str, Any], completed_caps: set[str]) -> dict[str, str]:
         dimensions: dict[str, str] = {}
         endpoints: list[str] = meta.get("endpoints", [])
         js_urls: list[str] = meta.get("js_urls", [])
@@ -273,9 +271,7 @@ class SurfaceCompletenessEngine:
         dimensions["PARAMETER_INVENTORY"] = _capability_dimension_status(
             "PARAMETER_DISCOVERY", completed_caps, endpoints
         )
-        dimensions["JAVASCRIPT_COLLECTION"] = _js_collection_status(
-            meta, completed_caps, js_urls
-        )
+        dimensions["JAVASCRIPT_COLLECTION"] = _js_collection_status(meta, completed_caps, js_urls)
 
         api_eps = [e for e in endpoints if "/api" in e]
         if api_eps:
@@ -306,12 +302,8 @@ class SurfaceCompletenessEngine:
                 else SurfaceDimensionStatus.NOT_STARTED.value
             )
         else:
-            dimensions["AUTHENTICATED_AREA_COVERAGE"] = (
-                SurfaceDimensionStatus.NOT_APPLICABLE.value
-            )
-            dimensions["AUTHORIZATION_COVERAGE"] = (
-                SurfaceDimensionStatus.NOT_APPLICABLE.value
-            )
+            dimensions["AUTHENTICATED_AREA_COVERAGE"] = SurfaceDimensionStatus.NOT_APPLICABLE.value
+            dimensions["AUTHORIZATION_COVERAGE"] = SurfaceDimensionStatus.NOT_APPLICABLE.value
 
         return dimensions
 
@@ -338,9 +330,7 @@ class SurfaceCompletenessEngine:
         if not dimensions:
             return SurfaceDimensionStatus.NOT_STARTED.value
         applicable = [
-            v
-            for k, v in dimensions.items()
-            if v != SurfaceDimensionStatus.NOT_APPLICABLE.value
+            v for k, v in dimensions.items() if v != SurfaceDimensionStatus.NOT_APPLICABLE.value
         ]
         if not applicable:
             return SurfaceDimensionStatus.NOT_APPLICABLE.value

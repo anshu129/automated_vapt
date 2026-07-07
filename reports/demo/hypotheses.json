@@ -1,0 +1,1634 @@
+{
+  "items": [
+    {
+      "id": "fe58daed-da37-4726-a22c-0698718f6a8f",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on api.example.com",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to api.example.com and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "1fcd1983-d642-4190-8562-cbaed244398f"
+      ],
+      "supporting_evidence_ids": [
+        "1fcd1983-d642-4190-8562-cbaed244398f",
+        "715285a4-32c9-474b-af37-62ad6ef1f0ba"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "41887912-1485-4313-958b-4c12fad4da38",
+      "verdict_id": null
+    },
+    {
+      "id": "e113e941-6988-4187-a5f5-ca53d483e583",
+      "title": "Validate EXPOSED_SERVICE on api.example.com",
+      "description": "EXPOSED_SERVICE is applicable to api.example.com and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "EXPOSED_SERVICE",
+      "affected_asset_ids": [
+        "1fcd1983-d642-4190-8562-cbaed244398f"
+      ],
+      "supporting_evidence_ids": [
+        "1fcd1983-d642-4190-8562-cbaed244398f",
+        "715285a4-32c9-474b-af37-62ad6ef1f0ba"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.8,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "ca5a4866-1a82-42ab-90ff-6d2ebaa0b0d1",
+      "verdict_id": null
+    },
+    {
+      "id": "be986d45-90ca-4935-a545-8fecdbaa9840",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://api.example.com/login",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://api.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "supporting_evidence_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b",
+        "evidence-manual-review-1"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "CONFIRMED",
+      "test_plan_id": "021c6add-87b2-443a-820b-1ad641c794d8",
+      "verdict_id": "1632f332-0780-4ee8-9e76-fd8e8593b712"
+    },
+    {
+      "id": "f61df16f-224b-4aac-beab-e75b24de6dc4",
+      "title": "Validate INFORMATION_DISCLOSURE on https://api.example.com/login",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://api.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "supporting_evidence_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "b3ed1278-3229-4ac5-91af-8c6d35cc72cc",
+      "verdict_id": null
+    },
+    {
+      "id": "533f8b55-ecc9-4a55-b149-4f7983da39ef",
+      "title": "Validate INPUT_VALIDATION on https://api.example.com/login",
+      "description": "INPUT_VALIDATION is applicable to https://api.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "supporting_evidence_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "526136fb-82ad-4184-b345-131f98d3e60c",
+      "verdict_id": null
+    },
+    {
+      "id": "70880cf1-8d06-4bf0-a88f-a4250c94f40f",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://api.example.com/login",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://api.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "supporting_evidence_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "09cf77f0-fbb8-4054-a2bc-59dafdce6eab",
+      "verdict_id": null
+    },
+    {
+      "id": "aed8cd0f-65c7-4282-b4c4-583b4b271f8d",
+      "title": "Validate RATE_CONTROL on https://api.example.com/login",
+      "description": "RATE_CONTROL is applicable to https://api.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "supporting_evidence_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "861c9f02-34ec-42b3-b806-831cb93af3e5",
+      "verdict_id": null
+    },
+    {
+      "id": "4b32759b-34c7-4a33-a6fe-d68af5442996",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on https-www.example.com:443",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to https-www.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "supporting_evidence_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "3d256a22-9c72-4df0-bb25-10829eeb1a95",
+      "verdict_id": null
+    },
+    {
+      "id": "19a9c58d-1934-41fe-9f41-6ed8e673361c",
+      "title": "Validate EXPOSED_SERVICE on https-www.example.com:443",
+      "description": "EXPOSED_SERVICE is applicable to https-www.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "EXPOSED_SERVICE",
+      "affected_asset_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "supporting_evidence_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "f6ac27f5-a811-4cd5-bfe6-5e599a1e5eaa",
+      "verdict_id": null
+    },
+    {
+      "id": "1af044fc-dfe7-4f16-b995-88a9cf74aefb",
+      "title": "Validate INFORMATION_DISCLOSURE on https-www.example.com:443",
+      "description": "INFORMATION_DISCLOSURE is applicable to https-www.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "supporting_evidence_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "bc582f5e-9d82-422b-be9c-fa79640ffec1",
+      "verdict_id": null
+    },
+    {
+      "id": "68ebb97e-cd19-484e-afa0-d27d61ce0660",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on https-www.example.com:443",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to https-www.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "supporting_evidence_ids": [
+        "50228091-75fc-4c8e-91d2-49e1015f75b6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "534d4dcb-1e18-4c88-bab6-1a610d3edf4a",
+      "verdict_id": null
+    },
+    {
+      "id": "4867ab8d-ae5f-448d-b702-4f3d92c7ace8",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://api.example.com/api/users",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://api.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "supporting_evidence_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "0e86d931-5705-4364-ba70-42d058fb22c7",
+      "verdict_id": null
+    },
+    {
+      "id": "21ca5cc6-a028-401b-80aa-fd9f62d30cef",
+      "title": "Validate INFORMATION_DISCLOSURE on https://api.example.com/api/users",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://api.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "supporting_evidence_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8be36d98-82c0-47ef-9e56-819a80390c35",
+      "verdict_id": null
+    },
+    {
+      "id": "d7b532a7-7ab2-4d1e-b4cd-b057bc8d16c6",
+      "title": "Validate INPUT_VALIDATION on https://api.example.com/api/users",
+      "description": "INPUT_VALIDATION is applicable to https://api.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "supporting_evidence_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "08b9acbc-bbcf-4eb0-a91c-ef0815d874f1",
+      "verdict_id": null
+    },
+    {
+      "id": "2882c83c-31f3-48fc-a728-f6b9e8d4a958",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://api.example.com/api/users",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://api.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "supporting_evidence_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "3655c7ee-faae-4b89-bd6d-933cbf4ea5c3",
+      "verdict_id": null
+    },
+    {
+      "id": "d8474252-bdb2-4d14-99fd-27fed844cf11",
+      "title": "Validate RATE_CONTROL on https://api.example.com/api/users",
+      "description": "RATE_CONTROL is applicable to https://api.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "supporting_evidence_ids": [
+        "591cd1c2-6821-4a41-9756-c6e4fd444285"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "c77ccf0f-2818-4845-81c8-11809b3fdb16",
+      "verdict_id": null
+    },
+    {
+      "id": "23b8a0be-65cf-4c62-a2bc-7d77bd1aee81",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://www.example.com/login",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://www.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "supporting_evidence_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "4cf8ffbe-c282-407d-8123-d2da4d6f5345",
+      "verdict_id": null
+    },
+    {
+      "id": "98ef5f21-85dc-410a-a51f-c307975e1a2c",
+      "title": "Validate INFORMATION_DISCLOSURE on https://www.example.com/login",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://www.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "supporting_evidence_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "41d86eb4-9e4e-4a63-8f78-6bd07cb7dc88",
+      "verdict_id": null
+    },
+    {
+      "id": "9959126d-8957-45b8-bf60-626e066eda1e",
+      "title": "Validate INPUT_VALIDATION on https://www.example.com/login",
+      "description": "INPUT_VALIDATION is applicable to https://www.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "supporting_evidence_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "347421bc-6eff-4252-a130-0f5fc9e097ff",
+      "verdict_id": null
+    },
+    {
+      "id": "83cfc863-41f6-45ed-8d2c-490574484036",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://www.example.com/login",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://www.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "supporting_evidence_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "115fc07f-a06b-48d2-a79a-4ad969d7c568",
+      "verdict_id": null
+    },
+    {
+      "id": "21861370-3619-439d-a51c-8358669ef341",
+      "title": "Validate RATE_CONTROL on https://www.example.com/login",
+      "description": "RATE_CONTROL is applicable to https://www.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "supporting_evidence_ids": [
+        "6e974594-5b94-49d9-845a-6070289d995a"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "7e344a1f-1e13-49bb-b402-078d6b44e656",
+      "verdict_id": null
+    },
+    {
+      "id": "41ba0269-e9b2-4980-9d4e-56b3db270d23",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://www.example.com/api/users",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://www.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "supporting_evidence_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "22d2695f-a614-4925-9e00-b8c426544174",
+      "verdict_id": null
+    },
+    {
+      "id": "416941da-a311-4e82-a869-cdae2547cff2",
+      "title": "Validate INFORMATION_DISCLOSURE on https://www.example.com/api/users",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://www.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "supporting_evidence_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "eb3f1ed1-052c-4e77-9350-cfba068ca812",
+      "verdict_id": null
+    },
+    {
+      "id": "38aabf05-6ea5-4b7f-aed0-bf01abc410ad",
+      "title": "Validate INPUT_VALIDATION on https://www.example.com/api/users",
+      "description": "INPUT_VALIDATION is applicable to https://www.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "supporting_evidence_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "4e6bb6fc-3c59-4a84-a4b8-f9019014d5c2",
+      "verdict_id": null
+    },
+    {
+      "id": "1f9f6999-e772-4c11-a70c-eba8ba34a449",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://www.example.com/api/users",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://www.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "supporting_evidence_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9c995a63-b03d-4c76-a67f-972d223d719a",
+      "verdict_id": null
+    },
+    {
+      "id": "f489f8c1-326b-4b9e-85eb-1506d7420b38",
+      "title": "Validate RATE_CONTROL on https://www.example.com/api/users",
+      "description": "RATE_CONTROL is applicable to https://www.example.com/api/users and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "supporting_evidence_ids": [
+        "75ebd235-132c-4bf8-befd-59519987a143"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "ee036520-ca6d-4f28-aad7-e2a957a6aeb4",
+      "verdict_id": null
+    },
+    {
+      "id": "e345921e-d8fb-4285-b976-0faccbde5a9d",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on www.example.com",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to www.example.com and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "84e57697-db54-433a-a87f-b8843290c283"
+      ],
+      "supporting_evidence_ids": [
+        "84e57697-db54-433a-a87f-b8843290c283",
+        "62c9e207-953f-4694-a833-9efd21a6cc5b"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "bbf2d85c-fb64-4529-8dcf-86cd59694a05",
+      "verdict_id": null
+    },
+    {
+      "id": "4c051e7f-8a97-4d87-b279-747b569826b5",
+      "title": "Validate EXPOSED_SERVICE on www.example.com",
+      "description": "EXPOSED_SERVICE is applicable to www.example.com and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "EXPOSED_SERVICE",
+      "affected_asset_ids": [
+        "84e57697-db54-433a-a87f-b8843290c283"
+      ],
+      "supporting_evidence_ids": [
+        "84e57697-db54-433a-a87f-b8843290c283",
+        "62c9e207-953f-4694-a833-9efd21a6cc5b"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.8,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "0ce44508-3ca6-4990-bac4-5e640ca96e2a",
+      "verdict_id": null
+    },
+    {
+      "id": "71e5ef94-1bed-4a40-8752-26c607250da7",
+      "title": "Validate ADMINISTRATIVE_SURFACE on Example App",
+      "description": "ADMINISTRATIVE_SURFACE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "ADMINISTRATIVE_SURFACE",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "4c2e15f6-15af-4f93-a76b-44ea3c3a3ede",
+      "verdict_id": null
+    },
+    {
+      "id": "423e1761-7e86-42a4-9437-4758e001f924",
+      "title": "Validate API_SCHEMA_VALIDATION on Example App",
+      "description": "API_SCHEMA_VALIDATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "API_SCHEMA_VALIDATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2b579041-a072-42ae-b400-c8b48979d595",
+      "verdict_id": null
+    },
+    {
+      "id": "35ae2234-38b9-4fc2-9ef4-afdf8fa1f3f1",
+      "title": "Validate AUTHENTICATION on Example App",
+      "description": "AUTHENTICATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHENTICATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2c41cee4-ee30-4c62-88d2-b41456e69604",
+      "verdict_id": null
+    },
+    {
+      "id": "a58f679c-a42f-4ef7-93be-aa566274f60a",
+      "title": "Validate AUTHORIZATION on Example App",
+      "description": "AUTHORIZATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHORIZATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "560548be-bde0-4ce9-a7fd-ac46eedabf2f",
+      "verdict_id": null
+    },
+    {
+      "id": "2db0fa34-ec93-4406-8d01-9a8274b3bf38",
+      "title": "Validate BUSINESS_LOGIC on Example App",
+      "description": "BUSINESS_LOGIC is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "BUSINESS_LOGIC",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2bdf5484-8d80-4afe-9af2-feec2f67052e",
+      "verdict_id": null
+    },
+    {
+      "id": "13dfe655-8eb4-4945-877a-48c307f7996e",
+      "title": "Validate CACHE_BEHAVIOR on Example App",
+      "description": "CACHE_BEHAVIOR is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CACHE_BEHAVIOR",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "33a4f212-c229-41e5-adf6-bfd7d58a9ee1",
+      "verdict_id": null
+    },
+    {
+      "id": "9b96dd72-8630-489c-8c6a-a757050bad12",
+      "title": "Validate CROSS_ORIGIN_POLICY on Example App",
+      "description": "CROSS_ORIGIN_POLICY is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CROSS_ORIGIN_POLICY",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "1d61e98d-c567-4186-9d63-4add442bfde3",
+      "verdict_id": null
+    },
+    {
+      "id": "668ae8d5-8310-4bc4-aed2-4c7a6bdb860a",
+      "title": "Validate DEBUG_SURFACE on Example App",
+      "description": "DEBUG_SURFACE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEBUG_SURFACE",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "da40764d-5659-4651-9734-7c5d1b54e4ab",
+      "verdict_id": null
+    },
+    {
+      "id": "8f9ce390-470a-49fb-b1f3-56ef3a59989c",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on Example App",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "f9e90beb-bc73-44fa-a6c3-18f52447bef5",
+      "verdict_id": null
+    },
+    {
+      "id": "c4421b36-a065-4a43-9107-11feca6b376e",
+      "title": "Validate DEPENDENCY_RISK on Example App",
+      "description": "DEPENDENCY_RISK is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEPENDENCY_RISK",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "aeec3888-2106-46ae-8051-bbf8117e97c6",
+      "verdict_id": null
+    },
+    {
+      "id": "c0851506-898b-4d7d-ae15-25d912694c49",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on Example App",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "d0cd91ed-10f7-4b8f-80a0-124cee614aeb",
+      "verdict_id": null
+    },
+    {
+      "id": "71ffe43e-e280-451f-a660-7ca40f1c6788",
+      "title": "Validate HISTORICAL_OR_STALE_SURFACE on Example App",
+      "description": "HISTORICAL_OR_STALE_SURFACE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HISTORICAL_OR_STALE_SURFACE",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "4c2240a1-042a-4800-9c04-d4701afb7d83",
+      "verdict_id": null
+    },
+    {
+      "id": "ba9741f4-bfb0-4089-bf0a-5a202a59d92f",
+      "title": "Validate HOST_HEADER_HANDLING on Example App",
+      "description": "HOST_HEADER_HANDLING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HOST_HEADER_HANDLING",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "58709afb-8419-48d1-881b-c15c5e39d074",
+      "verdict_id": null
+    },
+    {
+      "id": "9d50e5a7-04ae-4e85-a53a-21a89577399e",
+      "title": "Validate INFORMATION_DISCLOSURE on Example App",
+      "description": "INFORMATION_DISCLOSURE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "c7509cda-ebeb-48a9-9b33-4e15058aa7d3",
+      "verdict_id": null
+    },
+    {
+      "id": "417b01ea-775b-4cbc-9818-54f0db0318a5",
+      "title": "Validate INJECTION_CLASS on Example App",
+      "description": "INJECTION_CLASS is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INJECTION_CLASS",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2d5f7592-5d4f-4903-afa4-0b8adf4072e7",
+      "verdict_id": null
+    },
+    {
+      "id": "30a5fc6f-0133-4c47-bda0-6aab7e25f4e0",
+      "title": "Validate INPUT_VALIDATION on Example App",
+      "description": "INPUT_VALIDATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "c82f36c8-aaa3-4180-83e5-a8a4b46152db",
+      "verdict_id": null
+    },
+    {
+      "id": "f4076714-2f04-49fe-813d-b2affb1d434e",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on Example App",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "6a7c6146-8368-41a8-a0e0-f9628cfe72f6",
+      "verdict_id": null
+    },
+    {
+      "id": "1651ac3e-ea29-4a73-b547-876accee3cbb",
+      "title": "Validate MULTI_STEP_WORKFLOW on Example App",
+      "description": "MULTI_STEP_WORKFLOW is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "MULTI_STEP_WORKFLOW",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "0c716695-5ca5-431e-b84b-2a10a757d264",
+      "verdict_id": null
+    },
+    {
+      "id": "40972996-4864-41d8-927f-69cd33e8de8e",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on Example App",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.75,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "0b5b99bd-590d-49e9-8605-fc27cc4b6be2",
+      "verdict_id": null
+    },
+    {
+      "id": "e12afa3f-764d-4757-b5b6-2dfe31b8b33c",
+      "title": "Validate PATH_HANDLING on Example App",
+      "description": "PATH_HANDLING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "PATH_HANDLING",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "c7c277fd-e7d9-4523-82c7-1d8f44c5971e",
+      "verdict_id": null
+    },
+    {
+      "id": "b11eca58-9c1f-4c88-9b0c-9c2bc9ad3d4a",
+      "title": "Validate RATE_CONTROL on Example App",
+      "description": "RATE_CONTROL is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "7132a2c0-9026-43a7-83e0-0737df360604",
+      "verdict_id": null
+    },
+    {
+      "id": "05dfc2d4-2412-467b-a996-c0d9c2cff245",
+      "title": "Validate REDIRECT_HANDLING on Example App",
+      "description": "REDIRECT_HANDLING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "REDIRECT_HANDLING",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e7bfee7e-5522-4960-b0c2-a628a97d34d3",
+      "verdict_id": null
+    },
+    {
+      "id": "733e7f68-9d5d-4b06-9b28-d6a9b44d03aa",
+      "title": "Validate SECRET_EXPOSURE on Example App",
+      "description": "SECRET_EXPOSURE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECRET_EXPOSURE",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "74d8125d-691e-4a5e-9f0c-639c93873034",
+      "verdict_id": null
+    },
+    {
+      "id": "6b9a03ce-7e0f-4c1d-a8be-4fe31bb681f3",
+      "title": "Validate SECURITY_HEADERS on Example App",
+      "description": "SECURITY_HEADERS is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECURITY_HEADERS",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2e86decf-642f-485d-8669-68f2fedaa52b",
+      "verdict_id": null
+    },
+    {
+      "id": "f9f0c9f5-adce-4d74-bd0d-be5844568411",
+      "title": "Validate SERVER_SIDE_REQUEST_BEHAVIOR on Example App",
+      "description": "SERVER_SIDE_REQUEST_BEHAVIOR is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SERVER_SIDE_REQUEST_BEHAVIOR",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "4875dfbb-ffa7-4c4f-b3b3-b4329950f2ee",
+      "verdict_id": null
+    },
+    {
+      "id": "80e6dc74-df8a-478a-ac2d-d3ab7a0bf78b",
+      "title": "Validate SESSION_MANAGEMENT on Example App",
+      "description": "SESSION_MANAGEMENT is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SESSION_MANAGEMENT",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "7b83d30d-c3db-4d9f-bbb1-6f14dbe53820",
+      "verdict_id": null
+    },
+    {
+      "id": "6e9fcf65-3f10-400e-8508-8a00b750c5aa",
+      "title": "Validate TEMPLATE_PROCESSING on Example App",
+      "description": "TEMPLATE_PROCESSING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TEMPLATE_PROCESSING",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "62649e5f-e597-4057-86d5-8c97ac7d25ef",
+      "verdict_id": null
+    },
+    {
+      "id": "43d8e14a-d7f7-42fe-a6b9-0654b8e503ab",
+      "title": "Validate TLS_CONFIGURATION on Example App",
+      "description": "TLS_CONFIGURATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TLS_CONFIGURATION",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.8,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "f7d15e8a-f38a-4e23-bf0a-036e350980f6",
+      "verdict_id": null
+    },
+    {
+      "id": "81fc90a0-9fb3-4af9-baf2-79de374d18f9",
+      "title": "Validate TRANSPORT_SECURITY on Example App",
+      "description": "TRANSPORT_SECURITY is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TRANSPORT_SECURITY",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e8590315-6df4-4a65-bee9-e59affc918a5",
+      "verdict_id": null
+    },
+    {
+      "id": "beec27b6-1c5f-46bd-9443-5dc9d3e6fc90",
+      "title": "Validate XML_PROCESSING on Example App",
+      "description": "XML_PROCESSING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "XML_PROCESSING",
+      "affected_asset_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3"
+      ],
+      "supporting_evidence_ids": [
+        "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "1df016c8-5013-4e00-985e-6b403444160c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.35,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "f419fbef-1881-48c5-8401-9145a0b88b71",
+      "verdict_id": null
+    },
+    {
+      "id": "71b913d2-7441-4aa8-8ecb-0bd1809adb07",
+      "title": "Validate ADMINISTRATIVE_SURFACE on Example App",
+      "description": "ADMINISTRATIVE_SURFACE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "ADMINISTRATIVE_SURFACE",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "3454eb01-5b56-4f28-8e29-9f87809bcf72",
+      "verdict_id": null
+    },
+    {
+      "id": "3ac1cdc8-a0d1-4e42-8b23-554df3bd5054",
+      "title": "Validate API_SCHEMA_VALIDATION on Example App",
+      "description": "API_SCHEMA_VALIDATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "API_SCHEMA_VALIDATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "3e482792-5456-419b-bb10-f83548a2a746",
+      "verdict_id": null
+    },
+    {
+      "id": "ca16abb5-d826-4b7f-8b86-6e590b6b0598",
+      "title": "Validate AUTHENTICATION on Example App",
+      "description": "AUTHENTICATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHENTICATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a713b7aa-8542-48d9-999f-84e9940dd96d",
+      "verdict_id": null
+    },
+    {
+      "id": "0a58dc6c-7583-48fc-a59e-0960a8d54bd1",
+      "title": "Validate AUTHORIZATION on Example App",
+      "description": "AUTHORIZATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHORIZATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a16e2cef-6429-44a5-8bc9-710cfa7fbb52",
+      "verdict_id": null
+    },
+    {
+      "id": "977a00af-4eef-4e98-b8f4-6802212b2165",
+      "title": "Validate BUSINESS_LOGIC on Example App",
+      "description": "BUSINESS_LOGIC is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "BUSINESS_LOGIC",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "4093318b-b1bb-465a-99ac-c1697e7d0b0f",
+      "verdict_id": null
+    },
+    {
+      "id": "cd4058b0-a631-43fc-b821-ca64587d1920",
+      "title": "Validate CACHE_BEHAVIOR on Example App",
+      "description": "CACHE_BEHAVIOR is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CACHE_BEHAVIOR",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a910af50-481a-4e74-ac9e-15e8cd3f26fa",
+      "verdict_id": null
+    },
+    {
+      "id": "acef66b5-7ea5-453c-9753-494280aaf25b",
+      "title": "Validate CROSS_ORIGIN_POLICY on Example App",
+      "description": "CROSS_ORIGIN_POLICY is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CROSS_ORIGIN_POLICY",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "26cc636c-34b2-4981-803f-319a8516b03b",
+      "verdict_id": null
+    },
+    {
+      "id": "1427f5a2-cd15-4f13-b0c5-d087e6bdfab1",
+      "title": "Validate DEBUG_SURFACE on Example App",
+      "description": "DEBUG_SURFACE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEBUG_SURFACE",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8a282969-2613-473e-877f-932546a84c25",
+      "verdict_id": null
+    },
+    {
+      "id": "21b8672f-91ca-40ff-9887-8535e8bead6a",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on Example App",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "51213eda-3613-48ad-9577-d20e99282450",
+      "verdict_id": null
+    },
+    {
+      "id": "15f431a0-b7e4-4842-b2ac-f8a131730bcc",
+      "title": "Validate DEPENDENCY_RISK on Example App",
+      "description": "DEPENDENCY_RISK is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEPENDENCY_RISK",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e494fa2a-3391-4e42-811a-d0cd61a94702",
+      "verdict_id": null
+    },
+    {
+      "id": "6a65940b-7030-4d69-859d-f00296f39148",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on Example App",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "df797356-4394-4345-8300-671a1d6b960c",
+      "verdict_id": null
+    },
+    {
+      "id": "385dbd90-f732-4113-bd0e-de7978417538",
+      "title": "Validate HISTORICAL_OR_STALE_SURFACE on Example App",
+      "description": "HISTORICAL_OR_STALE_SURFACE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HISTORICAL_OR_STALE_SURFACE",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "b10ef2bc-dece-472c-b9fe-b8dd1b1a9450",
+      "verdict_id": null
+    },
+    {
+      "id": "55e19073-5114-4539-8729-990615fdd22e",
+      "title": "Validate HOST_HEADER_HANDLING on Example App",
+      "description": "HOST_HEADER_HANDLING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HOST_HEADER_HANDLING",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "f7de0feb-594e-4bc4-9af8-dbe58892ff74",
+      "verdict_id": null
+    },
+    {
+      "id": "ee583a1e-41ac-475f-a77d-e66197e89652",
+      "title": "Validate INFORMATION_DISCLOSURE on Example App",
+      "description": "INFORMATION_DISCLOSURE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "7d3ad222-96d4-41da-8d02-2dbffaae656f",
+      "verdict_id": null
+    },
+    {
+      "id": "7028ee71-a370-426a-86e9-8896d0c8fac0",
+      "title": "Validate INJECTION_CLASS on Example App",
+      "description": "INJECTION_CLASS is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INJECTION_CLASS",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "af42c046-56e5-4213-9703-70f9713c17ed",
+      "verdict_id": null
+    },
+    {
+      "id": "f83486a7-7efa-4b48-9f1c-988d3574984a",
+      "title": "Validate INPUT_VALIDATION on Example App",
+      "description": "INPUT_VALIDATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "fbe7750e-8fc8-42d8-b8b1-2b1cd314a6d5",
+      "verdict_id": null
+    },
+    {
+      "id": "7d6a5980-ab02-4280-9aa7-5292d6a5a7b5",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on Example App",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9629433a-4562-4aa3-be0b-729f73cf3d32",
+      "verdict_id": null
+    },
+    {
+      "id": "86711a5b-71b0-42cd-9772-b07b02e98647",
+      "title": "Validate MULTI_STEP_WORKFLOW on Example App",
+      "description": "MULTI_STEP_WORKFLOW is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "MULTI_STEP_WORKFLOW",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "01eaafc4-e955-4460-9ae2-f68315403d5b",
+      "verdict_id": null
+    },
+    {
+      "id": "ac04da4c-4d5e-43c2-86bc-c4eb1498fa8f",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on Example App",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.75,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "541906b9-0884-420e-81ac-9d7224123784",
+      "verdict_id": null
+    },
+    {
+      "id": "59abfa56-f088-4262-aafa-df731940162f",
+      "title": "Validate PATH_HANDLING on Example App",
+      "description": "PATH_HANDLING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "PATH_HANDLING",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "7419ee4c-cf17-4ebe-a3de-ed0b59503394",
+      "verdict_id": null
+    },
+    {
+      "id": "4584b14c-fe38-458d-b0da-049daef61473",
+      "title": "Validate RATE_CONTROL on Example App",
+      "description": "RATE_CONTROL is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "d743584a-02f0-493b-aa9f-b815dc94bcc8",
+      "verdict_id": null
+    },
+    {
+      "id": "cf292d31-38e1-4d84-93ed-8669ecc80ba1",
+      "title": "Validate REDIRECT_HANDLING on Example App",
+      "description": "REDIRECT_HANDLING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "REDIRECT_HANDLING",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e29b7537-2f2a-4504-9029-094b3b11cca1",
+      "verdict_id": null
+    },
+    {
+      "id": "28c1e5ea-214d-4f3d-b69a-5e7b7a45d0cf",
+      "title": "Validate SECRET_EXPOSURE on Example App",
+      "description": "SECRET_EXPOSURE is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECRET_EXPOSURE",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8cae6920-d7f4-49da-af3d-0c93fac25045",
+      "verdict_id": null
+    },
+    {
+      "id": "62dbb8a3-19d8-4ac2-98b0-de1643bb30d8",
+      "title": "Validate SECURITY_HEADERS on Example App",
+      "description": "SECURITY_HEADERS is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECURITY_HEADERS",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "19b7dd92-5241-480e-af6a-8e67ff1009d6",
+      "verdict_id": null
+    },
+    {
+      "id": "fa6a9a4a-c442-4ce4-9682-1cfe80c78704",
+      "title": "Validate SERVER_SIDE_REQUEST_BEHAVIOR on Example App",
+      "description": "SERVER_SIDE_REQUEST_BEHAVIOR is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SERVER_SIDE_REQUEST_BEHAVIOR",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9a571f70-e24a-487a-860a-63229bc78b15",
+      "verdict_id": null
+    },
+    {
+      "id": "5fcec6d7-8ec2-42ee-8d5a-026dfb5b024e",
+      "title": "Validate SESSION_MANAGEMENT on Example App",
+      "description": "SESSION_MANAGEMENT is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SESSION_MANAGEMENT",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5ae63e20-c94a-47c4-b3e9-2d0dc46b42cf",
+      "verdict_id": null
+    },
+    {
+      "id": "98c75583-204b-4eba-8591-abbe78a3aa2c",
+      "title": "Validate TEMPLATE_PROCESSING on Example App",
+      "description": "TEMPLATE_PROCESSING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TEMPLATE_PROCESSING",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "fcac0927-5c79-4f5a-bf85-777d0069b7c5",
+      "verdict_id": null
+    },
+    {
+      "id": "ac6cde30-bd56-4362-bd73-8cbaf51648cd",
+      "title": "Validate TLS_CONFIGURATION on Example App",
+      "description": "TLS_CONFIGURATION is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TLS_CONFIGURATION",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.8,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e44db0d4-aa25-41ae-b117-86f8c2583a21",
+      "verdict_id": null
+    },
+    {
+      "id": "24aac622-b53e-4a15-b2d8-c5ae9c61e277",
+      "title": "Validate TRANSPORT_SECURITY on Example App",
+      "description": "TRANSPORT_SECURITY is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TRANSPORT_SECURITY",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "40a80b33-87ce-46cf-b2e5-da5a587087e9",
+      "verdict_id": null
+    },
+    {
+      "id": "15684dac-1f11-4849-8b61-7c67d0060321",
+      "title": "Validate XML_PROCESSING on Example App",
+      "description": "XML_PROCESSING is applicable to Example App and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "XML_PROCESSING",
+      "affected_asset_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27"
+      ],
+      "supporting_evidence_ids": [
+        "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "b334ef13-87d1-435e-b92a-81e4cffb0951"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.35,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5c1a5a2b-fe47-4013-9235-b1bbabc47010",
+      "verdict_id": null
+    },
+    {
+      "id": "6154608d-9b22-428e-92b6-5f574f2bb8ed",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on https-api.example.com:443",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to https-api.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "supporting_evidence_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "fd77d7a5-9029-47c9-9a4f-e60c834865a4",
+      "verdict_id": null
+    },
+    {
+      "id": "ed292922-7afd-4e9f-9610-624497df2f17",
+      "title": "Validate EXPOSED_SERVICE on https-api.example.com:443",
+      "description": "EXPOSED_SERVICE is applicable to https-api.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "EXPOSED_SERVICE",
+      "affected_asset_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "supporting_evidence_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "aaf1dda6-8b97-4124-a753-38dfb8c599b5",
+      "verdict_id": null
+    },
+    {
+      "id": "af992b13-5d13-4f8d-a8b4-ee24bf6926ed",
+      "title": "Validate INFORMATION_DISCLOSURE on https-api.example.com:443",
+      "description": "INFORMATION_DISCLOSURE is applicable to https-api.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "supporting_evidence_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "93611c4a-488b-469d-9894-5820ebb49f0f",
+      "verdict_id": null
+    },
+    {
+      "id": "5d3902dd-2394-47f9-bea1-ead143e55302",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on https-api.example.com:443",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to https-api.example.com:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "supporting_evidence_ids": [
+        "f9c5c6e6-6b5a-41dc-886d-c447fb2a349c"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "05c48a05-b6d3-45e8-8126-5c2ab6713e5b",
+      "verdict_id": null
+    }
+  ],
+  "total": 92
+}

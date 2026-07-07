@@ -73,9 +73,7 @@ class MistralEnrichmentService:
         }
         cache_key = hashlib.sha256(
             (
-                input_hash
-                + PROMPT_TEMPLATE_VERSION
-                + json.dumps(model_config, sort_keys=True)
+                input_hash + PROMPT_TEMPLATE_VERSION + json.dumps(model_config, sort_keys=True)
             ).encode()
         ).hexdigest()
         existing = (
@@ -156,9 +154,7 @@ class MistralEnrichmentService:
             "rationale, required_evidence, and confidence. Snapshot: "
             + json.dumps(snapshot, separators=(",", ":"))
         )
-        async with httpx.AsyncClient(
-            timeout=float(self.settings.ai_timeout_seconds)
-        ) as client:
+        async with httpx.AsyncClient(timeout=float(self.settings.ai_timeout_seconds)) as client:
             response = await client.post(
                 f"{self.settings.mistral_base_url.rstrip('/')}/chat/completions",
                 headers={
@@ -182,9 +178,7 @@ class MistralEnrichmentService:
         content = payload["choices"][0]["message"]["content"]
         if isinstance(content, list):
             content = "".join(
-                str(item.get("text", ""))
-                for item in content
-                if isinstance(item, dict)
+                str(item.get("text", "")) for item in content if isinstance(item, dict)
             )
         if not isinstance(content, str):
             raise ValueError("Mistral response content is not text")
@@ -213,9 +207,7 @@ class MistralEnrichmentService:
             list(
                 (
                     await self.session.execute(
-                        select(TestRequirement).where(
-                            TestRequirement.matrix_id.in_(matrix_ids)
-                        )
+                        select(TestRequirement).where(TestRequirement.matrix_id.in_(matrix_ids))
                     )
                 )
                 .scalars()
@@ -265,9 +257,7 @@ class MistralEnrichmentService:
                 coverage_counts.get(requirement.coverage_status, 0) + 1
             )
             if requirement.coverage_status in open_statuses:
-                summary["open_asset_ids"].append(
-                    str(matrix_assets[requirement.matrix_id])
-                )
+                summary["open_asset_ids"].append(str(matrix_assets[requirement.matrix_id]))
         matrix_asset_ids = set(matrix_assets.values())
         redacted_assets = []
         for asset in assets[:100]:
@@ -288,9 +278,7 @@ class MistralEnrichmentService:
             "scan_id": str(scan_id),
             "catalog_class_codes": sorted(class_map.values()),
             "assets": redacted_assets,
-            "class_coverage": sorted(
-                class_summaries.values(), key=lambda item: item["class_code"]
-            ),
+            "class_coverage": sorted(class_summaries.values(), key=lambda item: item["class_code"]),
             "redaction": (
                 "Hostnames, URLs, raw artifacts, credentials, secret values, request "
                 "bodies, and response bodies are excluded."
@@ -307,17 +295,13 @@ class MistralEnrichmentService:
         return advisory.model_copy(
             update={
                 "priority_classes": [
-                    item
-                    for item in advisory.priority_classes
-                    if item.class_code in class_codes
+                    item for item in advisory.priority_classes if item.class_code in class_codes
                 ],
                 "cross_asset_hypotheses": [
                     item.model_copy(
                         update={
                             "asset_ids": [
-                                asset_id
-                                for asset_id in item.asset_ids
-                                if asset_id in asset_ids
+                                asset_id for asset_id in item.asset_ids if asset_id in asset_ids
                             ]
                         }
                     )

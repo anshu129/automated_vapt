@@ -41,7 +41,13 @@ PROFILES = [
     ("STANDARD", "Default profile", 1.0, 1.0, {}),
     ("CAUTIOUS", "Reduced concurrency", 1.5, 0.5, {"cautious": True}),
     ("HIGH_LATENCY", "Extended timeouts", 3.0, 1.0, {"high_latency": True}),
-    ("NO_DISCOVERY_ASSUMPTION", "Never infer absence from silence", 2.0, 1.0, {"no_assumption": True}),
+    (
+        "NO_DISCOVERY_ASSUMPTION",
+        "Never infer absence from silence",
+        2.0,
+        1.0,
+        {"no_assumption": True},
+    ),
     ("PASSIVE_ONLY", "Passive capabilities only", 1.0, 1.0, {"passive_only": True}),
 ]
 

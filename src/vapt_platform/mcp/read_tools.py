@@ -39,15 +39,11 @@ class AssessmentMCPReadService:
         if not scan:
             raise ValueError("Scan not found")
         asset_count = (
-            await self.session.execute(
-                select(func.count(Asset.id)).where(Asset.scan_id == scan_id)
-            )
+            await self.session.execute(select(func.count(Asset.id)).where(Asset.scan_id == scan_id))
         ).scalar_one()
         relationship_count = (
             await self.session.execute(
-                select(func.count(Relationship.id)).where(
-                    Relationship.scan_id == scan_id
-                )
+                select(func.count(Relationship.id)).where(Relationship.scan_id == scan_id)
             )
         ).scalar_one()
         return {
@@ -125,17 +121,13 @@ class AssessmentMCPReadService:
     async def get_vulnerability_catalog(self) -> dict[str, Any]:
         return await vulnerability_classes(self.session)
 
-    async def get_vulnerability_coverage(
-        self, scan_id: uuid.UUID
-    ) -> dict[str, Any]:
+    async def get_vulnerability_coverage(self, scan_id: uuid.UUID) -> dict[str, Any]:
         return await scan_vulnerability_coverage(scan_id, self.session)
 
     async def get_test_matrix(self, scan_id: uuid.UUID) -> dict[str, Any]:
         return await scan_test_matrix(scan_id, self.session)
 
-    async def get_validation_backlog(
-        self, scan_id: uuid.UUID
-    ) -> dict[str, Any]:
+    async def get_validation_backlog(self, scan_id: uuid.UUID) -> dict[str, Any]:
         return await validation_backlog(scan_id, self.session)
 
     async def get_hypotheses(self, scan_id: uuid.UUID) -> dict[str, Any]:
@@ -144,9 +136,7 @@ class AssessmentMCPReadService:
     async def get_verdicts(self, scan_id: uuid.UUID) -> dict[str, Any]:
         return await list_verdicts(scan_id, self.session)
 
-    async def get_confirmed_findings(
-        self, scan_id: uuid.UUID
-    ) -> dict[str, Any]:
+    async def get_confirmed_findings(self, scan_id: uuid.UUID) -> dict[str, Any]:
         return await list_confirmed_findings(scan_id, self.session)
 
     async def get_completion_status(self, scan_id: uuid.UUID) -> dict[str, Any]:
@@ -168,17 +158,13 @@ class AssessmentMCPReadService:
             "blocking_items": record.blocking_items,
             "completion_reasons": record.completion_reasons,
             "metrics": record.metrics,
-            "evaluated_at": (
-                record.evaluated_at.isoformat() if record.evaluated_at else None
-            ),
+            "evaluated_at": (record.evaluated_at.isoformat() if record.evaluated_at else None),
         }
 
     async def get_ai_advisories(self, scan_id: uuid.UUID) -> dict[str, Any]:
         return await list_ai_enrichments(scan_id, self.session)
 
-    async def get_hypothesis_evidence(
-        self, hypothesis_id: uuid.UUID
-    ) -> dict[str, Any]:
+    async def get_hypothesis_evidence(self, hypothesis_id: uuid.UUID) -> dict[str, Any]:
         links = list(
             (
                 await self.session.execute(

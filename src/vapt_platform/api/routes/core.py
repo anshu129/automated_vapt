@@ -51,13 +51,13 @@ from vapt_platform.parameters.references import (
 )
 from vapt_platform.planning.discovery_gain import MarginalDiscoveryGainEngine
 from vapt_platform.services.automated_validation import AutomatedValidationOrchestrator
+from vapt_platform.services.core import ProjectService, ScanService, ValidationService
 from vapt_platform.services.credentials import (
     CredentialContextService,
     auth_context_metadata,
     binding_metadata,
     credential_metadata,
 )
-from vapt_platform.services.core import ProjectService, ScanService, ValidationService
 from vapt_platform.tools.manifest import load_tool_manifests, resolve_tool_binary
 
 router = APIRouter(tags=["core"])
@@ -389,11 +389,7 @@ async def list_relationships(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     rels = list(
-        (
-            await session.execute(
-                select(Relationship).where(Relationship.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(Relationship).where(Relationship.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -401,11 +397,7 @@ async def list_relationships(
     assets = {}
     if asset_ids:
         rows = list(
-            (
-                await session.execute(select(Asset).where(Asset.id.in_(asset_ids)))
-            )
-            .scalars()
-            .all()
+            (await session.execute(select(Asset).where(Asset.id.in_(asset_ids)))).scalars().all()
         )
         assets = {asset.id: asset for asset in rows}
     return {
@@ -580,13 +572,17 @@ async def get_tool_parameter_reference(tool_name: str) -> dict[str, Any]:
 async def scan_report(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
-    assets = list((await session.execute(select(Asset).where(Asset.scan_id == scan_id))).scalars().all())
-    tasks = list((await session.execute(select(Task).where(Task.scan_id == scan_id))).scalars().all())
-    events = list((await session.execute(select(Event).where(Event.scan_id == scan_id))).scalars().all())
+    assets = list(
+        (await session.execute(select(Asset).where(Asset.scan_id == scan_id))).scalars().all()
+    )
+    tasks = list(
+        (await session.execute(select(Task).where(Task.scan_id == scan_id))).scalars().all()
+    )
+    events = list(
+        (await session.execute(select(Event).where(Event.scan_id == scan_id))).scalars().all()
+    )
     relationships = list(
-        (
-            await session.execute(select(Relationship).where(Relationship.scan_id == scan_id))
-        )
+        (await session.execute(select(Relationship).where(Relationship.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -611,9 +607,7 @@ async def scan_report(
         .all()
     )
     matrices = list(
-        (
-            await session.execute(select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id))
-        )
+        (await session.execute(select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -625,9 +619,7 @@ async def scan_report(
         list(
             (
                 await session.execute(
-                    select(TestExecution).where(
-                        TestExecution.test_plan_id.in_(plan_ids)
-                    )
+                    select(TestExecution).where(TestExecution.test_plan_id.in_(plan_ids))
                 )
             )
             .scalars()
@@ -637,9 +629,7 @@ async def scan_report(
         else []
     )
     validation_tasks = list(
-        (
-            await session.execute(select(ValidationTask).where(ValidationTask.scan_id == scan_id))
-        )
+        (await session.execute(select(ValidationTask).where(ValidationTask.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -649,9 +639,7 @@ async def scan_report(
             (
                 await session.execute(
                     select(ValidationResult).where(
-                        ValidationResult.validation_task_id.in_(
-                            validation_task_ids
-                        )
+                        ValidationResult.validation_task_id.in_(validation_task_ids)
                     )
                 )
             )
@@ -662,43 +650,25 @@ async def scan_report(
         else []
     )
     evidence_links = list(
-        (
-            await session.execute(
-                select(EvidenceLink).where(EvidenceLink.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(EvidenceLink).where(EvidenceLink.scan_id == scan_id)))
         .scalars()
         .all()
     )
     hypotheses = list(
-        (
-            await session.execute(select(Hypothesis).where(Hypothesis.scan_id == scan_id))
-        )
+        (await session.execute(select(Hypothesis).where(Hypothesis.scan_id == scan_id)))
         .scalars()
         .all()
     )
     verdicts = list(
-        (
-            await session.execute(select(Verdict).where(Verdict.scan_id == scan_id))
-        )
-        .scalars()
-        .all()
+        (await session.execute(select(Verdict).where(Verdict.scan_id == scan_id))).scalars().all()
     )
     findings = list(
-        (
-            await session.execute(
-                select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan_id)))
         .scalars()
         .all()
     )
     ai_enrichments = list(
-        (
-            await session.execute(
-                select(AIEnrichment).where(AIEnrichment.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(AIEnrichment).where(AIEnrichment.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -742,9 +712,7 @@ async def scan_report(
     artifact_by_run: dict[str, list[RawArtifact]] = {}
     if task_ids:
         task_runs = list(
-            (
-                await session.execute(select(TaskRun).where(TaskRun.task_id.in_(task_ids)))
-            )
+            (await session.execute(select(TaskRun).where(TaskRun.task_id.in_(task_ids))))
             .scalars()
             .all()
         )
@@ -821,9 +789,7 @@ async def scan_report(
             "confirmed_findings": len(findings),
             "ai_enrichments": len(ai_enrichments),
             "authenticated_assets": sum(
-                1
-                for item in auth_coverage["items"]
-                if item["session_established"]
+                1 for item in auth_coverage["items"] if item["session_established"]
             ),
             "authorized_roles": role_coverage["total"],
             "completion_status": completion.status,
@@ -872,15 +838,9 @@ async def scan_report(
                     for run in runs_by_task.get(str(task.id), [])
                     for artifact in artifact_by_run.get(str(run.id), [])
                 ),
-                "last_exit_code": (
-                    last_run_for(task).exit_code
-                    if last_run_for(task)
-                    else None
-                ),
+                "last_exit_code": (last_run_for(task).exit_code if last_run_for(task) else None),
                 "last_error_summary": (
-                    last_run_for(task).error_summary
-                    if last_run_for(task)
-                    else None
+                    last_run_for(task).error_summary if last_run_for(task) else None
                 ),
                 "stderr_preview": (
                     (last_artifact_for(task).metadata_ or {}).get("stderr_preview")
@@ -909,9 +869,7 @@ async def scan_report(
         "test_plans": [
             {
                 "id": str(plan.id),
-                "hypothesis_id": (
-                    str(plan.hypothesis_id) if plan.hypothesis_id else None
-                ),
+                "hypothesis_id": (str(plan.hypothesis_id) if plan.hypothesis_id else None),
                 "testing_mode": plan.testing_mode,
                 "status": plan.status,
                 "asset_ids": plan.asset_ids,
@@ -926,20 +884,14 @@ async def scan_report(
             {
                 "id": str(execution.id),
                 "test_plan_id": str(execution.test_plan_id),
-                "task_run_id": (
-                    str(execution.task_run_id) if execution.task_run_id else None
-                ),
-                "provider_id": (
-                    str(execution.provider_id) if execution.provider_id else None
-                ),
+                "task_run_id": (str(execution.task_run_id) if execution.task_run_id else None),
+                "provider_id": (str(execution.provider_id) if execution.provider_id else None),
                 "template_id": execution.template_id,
                 "status": execution.status,
                 "result_summary": execution.result_summary,
                 "evidence_ids": execution.evidence_ids,
                 "executed_at": (
-                    execution.executed_at.isoformat()
-                    if execution.executed_at
-                    else None
+                    execution.executed_at.isoformat() if execution.executed_at else None
                 ),
             }
             for execution in test_executions
@@ -947,9 +899,7 @@ async def scan_report(
         "validation_backlog": [
             {
                 "id": str(task.id),
-                "hypothesis_id": (
-                    str(task.hypothesis_id) if task.hypothesis_id else None
-                ),
+                "hypothesis_id": (str(task.hypothesis_id) if task.hypothesis_id else None),
                 "test_plan_id": str(task.test_plan_id) if task.test_plan_id else None,
                 "evidence_package_id": (
                     str(task.evidence_package_id) if task.evidence_package_id else None
@@ -969,9 +919,7 @@ async def scan_report(
                 "analyst_notes": result.analyst_notes,
                 "evidence_ids": result.evidence_ids,
                 "recorded_by": result.recorded_by,
-                "recorded_at": (
-                    result.recorded_at.isoformat() if result.recorded_at else None
-                ),
+                "recorded_at": (result.recorded_at.isoformat() if result.recorded_at else None),
             }
             for result in validation_results
         ],
@@ -985,9 +933,7 @@ async def scan_report(
                 "link_type": link.link_type,
                 "weight": link.weight,
                 "provenance": link.provenance,
-                "created_at": (
-                    link.created_at.isoformat() if link.created_at else None
-                ),
+                "created_at": (link.created_at.isoformat() if link.created_at else None),
             }
             for link in evidence_links
         ],
@@ -1002,12 +948,8 @@ async def scan_report(
                 "contradicting_evidence_ids": hypothesis.contradicting_evidence_ids,
                 "confidence": hypothesis.confidence,
                 "status": hypothesis.status,
-                "test_plan_id": (
-                    str(hypothesis.test_plan_id) if hypothesis.test_plan_id else None
-                ),
-                "verdict_id": (
-                    str(hypothesis.verdict_id) if hypothesis.verdict_id else None
-                ),
+                "test_plan_id": (str(hypothesis.test_plan_id) if hypothesis.test_plan_id else None),
+                "verdict_id": (str(hypothesis.verdict_id) if hypothesis.verdict_id else None),
             }
             for hypothesis in hypotheses
         ],
@@ -1015,13 +957,9 @@ async def scan_report(
             {
                 "id": str(verdict.id),
                 "hypothesis_id": str(verdict.hypothesis_id),
-                "test_plan_id": (
-                    str(verdict.test_plan_id) if verdict.test_plan_id else None
-                ),
+                "test_plan_id": (str(verdict.test_plan_id) if verdict.test_plan_id else None),
                 "validation_result_id": (
-                    str(verdict.validation_result_id)
-                    if verdict.validation_result_id
-                    else None
+                    str(verdict.validation_result_id) if verdict.validation_result_id else None
                 ),
                 "status": verdict.status,
                 "confidence": verdict.confidence,
@@ -1035,9 +973,7 @@ async def scan_report(
         "confirmed_findings": [
             {
                 "id": str(finding.id),
-                "hypothesis_id": (
-                    str(finding.hypothesis_id) if finding.hypothesis_id else None
-                ),
+                "hypothesis_id": (str(finding.hypothesis_id) if finding.hypothesis_id else None),
                 "validation_result_id": str(finding.validation_result_id),
                 "title": finding.title,
                 "description": finding.description,
@@ -1054,9 +990,7 @@ async def scan_report(
             }
             for finding in findings
         ],
-        "ai_enrichments": [
-            _ai_enrichment_item(enrichment) for enrichment in ai_enrichments
-        ],
+        "ai_enrichments": [_ai_enrichment_item(enrichment) for enrichment in ai_enrichments],
         "auth_coverage": auth_coverage,
         "role_coverage": role_coverage,
         "completion": {
@@ -1095,9 +1029,7 @@ async def scan_surface_coverage(
     engine = SurfaceCompletenessEngine(session)
     completion = (
         await session.execute(
-            select(AssessmentCompletionRecord).where(
-                AssessmentCompletionRecord.scan_id == scan_id
-            )
+            select(AssessmentCompletionRecord).where(AssessmentCompletionRecord.scan_id == scan_id)
         )
     ).scalar_one_or_none()
     accepted = (completion.accepted_gaps if completion else None) or {}
@@ -1136,9 +1068,7 @@ async def accept_surface_gaps(
     body: AcceptGapsInput,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, Any]:
-    stmt = select(AssessmentCompletionRecord).where(
-        AssessmentCompletionRecord.scan_id == scan_id
-    )
+    stmt = select(AssessmentCompletionRecord).where(AssessmentCompletionRecord.scan_id == scan_id)
     record = (await session.execute(stmt)).scalar_one_or_none()
     if not record:
         record = AssessmentCompletionRecord(
@@ -1196,9 +1126,7 @@ async def asset_applicability(
 
     class_map = {
         vc.id: vc.class_code
-        for vc in (
-            await session.execute(select(VulnerabilityClass))
-        ).scalars().all()
+        for vc in (await session.execute(select(VulnerabilityClass))).scalars().all()
     }
     return {
         "asset_id": str(asset_id),
@@ -1246,9 +1174,7 @@ async def vulnerability_classes(
                 "default_testing_mode": vulnerability_class.default_testing_mode,
                 "taxonomy_version": vulnerability_class.taxonomy_version,
             }
-            for vulnerability_class in sorted(
-                classes, key=lambda item: item.class_code
-            )
+            for vulnerability_class in sorted(classes, key=lambda item: item.class_code)
         ],
         "total": len(classes),
         "coverage_note": (
@@ -1272,16 +1198,10 @@ async def scan_vulnerability_coverage(
         .all()
     )
     assets = list(
-        (await session.execute(select(Asset).where(Asset.scan_id == scan_id)))
-        .scalars()
-        .all()
+        (await session.execute(select(Asset).where(Asset.scan_id == scan_id))).scalars().all()
     )
     matrices = list(
-        (
-            await session.execute(
-                select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -1290,9 +1210,7 @@ async def scan_vulnerability_coverage(
         list(
             (
                 await session.execute(
-                    select(TestRequirement).where(
-                        TestRequirement.matrix_id.in_(matrix_ids)
-                    )
+                    select(TestRequirement).where(TestRequirement.matrix_id.in_(matrix_ids))
                 )
             )
             .scalars()
@@ -1323,12 +1241,8 @@ async def scan_vulnerability_coverage(
             applicability_counts[cell.applicability_state] = (
                 applicability_counts.get(cell.applicability_state, 0) + 1
             )
-            coverage_counts[cell.coverage_status] = (
-                coverage_counts.get(cell.coverage_status, 0) + 1
-            )
-            next_action_counts[cell.next_action] = (
-                next_action_counts.get(cell.next_action, 0) + 1
-            )
+            coverage_counts[cell.coverage_status] = coverage_counts.get(cell.coverage_status, 0) + 1
+            next_action_counts[cell.next_action] = next_action_counts.get(cell.next_action, 0) + 1
             if cell.coverage_status not in closed_statuses:
                 asset_id = matrix_asset.get(cell.matrix_id)
                 asset = asset_map.get(asset_id) if asset_id else None
@@ -1566,9 +1480,7 @@ async def generate_test_plans(
         "items": [
             {
                 "id": str(plan.id),
-                "hypothesis_id": (
-                    str(plan.hypothesis_id) if plan.hypothesis_id else None
-                ),
+                "hypothesis_id": (str(plan.hypothesis_id) if plan.hypothesis_id else None),
                 "testing_mode": plan.testing_mode,
                 "status": plan.status,
                 "safety_class": plan.safety_class,
@@ -1595,13 +1507,9 @@ async def execute_automated_test_plans(
         "items": [
             {
                 "plan_id": str(result.plan_id),
-                "execution_id": (
-                    str(result.execution_id) if result.execution_id else None
-                ),
+                "execution_id": (str(result.execution_id) if result.execution_id else None),
                 "task_id": str(result.task_id) if result.task_id else None,
-                "task_run_id": (
-                    str(result.task_run_id) if result.task_run_id else None
-                ),
+                "task_run_id": (str(result.task_run_id) if result.task_run_id else None),
                 "status": result.status,
                 "finding_candidates": result.finding_candidates,
                 "reused_task": result.reused_task,
@@ -1618,11 +1526,7 @@ async def list_test_executions(
 ) -> dict[str, Any]:
     plan_ids = [
         plan.id
-        for plan in (
-            await session.execute(
-                select(TestPlan).where(TestPlan.scan_id == scan_id)
-            )
-        )
+        for plan in (await session.execute(select(TestPlan).where(TestPlan.scan_id == scan_id)))
         .scalars()
         .all()
     ]
@@ -1630,9 +1534,7 @@ async def list_test_executions(
         list(
             (
                 await session.execute(
-                    select(TestExecution).where(
-                        TestExecution.test_plan_id.in_(plan_ids)
-                    )
+                    select(TestExecution).where(TestExecution.test_plan_id.in_(plan_ids))
                 )
             )
             .scalars()
@@ -1646,20 +1548,14 @@ async def list_test_executions(
             {
                 "id": str(execution.id),
                 "test_plan_id": str(execution.test_plan_id),
-                "task_run_id": (
-                    str(execution.task_run_id) if execution.task_run_id else None
-                ),
-                "provider_id": (
-                    str(execution.provider_id) if execution.provider_id else None
-                ),
+                "task_run_id": (str(execution.task_run_id) if execution.task_run_id else None),
+                "provider_id": (str(execution.provider_id) if execution.provider_id else None),
                 "template_id": execution.template_id,
                 "status": execution.status,
                 "result_summary": execution.result_summary,
                 "evidence_ids": execution.evidence_ids,
                 "executed_at": (
-                    execution.executed_at.isoformat()
-                    if execution.executed_at
-                    else None
+                    execution.executed_at.isoformat() if execution.executed_at else None
                 ),
             }
             for execution in executions
@@ -1770,24 +1666,16 @@ async def list_verdicts(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     verdicts = list(
-        (
-            await session.execute(select(Verdict).where(Verdict.scan_id == scan_id))
-        )
-        .scalars()
-        .all()
+        (await session.execute(select(Verdict).where(Verdict.scan_id == scan_id))).scalars().all()
     )
     return {
         "items": [
             {
                 "id": str(verdict.id),
                 "hypothesis_id": str(verdict.hypothesis_id),
-                "test_plan_id": (
-                    str(verdict.test_plan_id) if verdict.test_plan_id else None
-                ),
+                "test_plan_id": (str(verdict.test_plan_id) if verdict.test_plan_id else None),
                 "validation_result_id": (
-                    str(verdict.validation_result_id)
-                    if verdict.validation_result_id
-                    else None
+                    str(verdict.validation_result_id) if verdict.validation_result_id else None
                 ),
                 "status": verdict.status,
                 "confidence": verdict.confidence,
@@ -1795,9 +1683,7 @@ async def list_verdicts(
                 "contradicting_evidence_ids": verdict.contradicting_evidence_ids,
                 "rule_ids": verdict.rule_ids,
                 "explanation": verdict.explanation,
-                "issued_at": (
-                    verdict.issued_at.isoformat() if verdict.issued_at else None
-                ),
+                "issued_at": (verdict.issued_at.isoformat() if verdict.issued_at else None),
             }
             for verdict in verdicts
         ],
@@ -1810,11 +1696,7 @@ async def list_confirmed_findings(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     findings = list(
-        (
-            await session.execute(
-                select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -1822,9 +1704,7 @@ async def list_confirmed_findings(
         "items": [
             {
                 "id": str(finding.id),
-                "hypothesis_id": (
-                    str(finding.hypothesis_id) if finding.hypothesis_id else None
-                ),
+                "hypothesis_id": (str(finding.hypothesis_id) if finding.hypothesis_id else None),
                 "validation_result_id": str(finding.validation_result_id),
                 "title": finding.title,
                 "description": finding.description,
@@ -1855,9 +1735,7 @@ async def validation_backlog(
         "items": [
             {
                 "id": str(t.id),
-                "hypothesis_id": (
-                    str(t.hypothesis_id) if t.hypothesis_id else None
-                ),
+                "hypothesis_id": (str(t.hypothesis_id) if t.hypothesis_id else None),
                 "test_plan_id": str(t.test_plan_id) if t.test_plan_id else None,
                 "evidence_package_id": (
                     str(t.evidence_package_id) if t.evidence_package_id else None
@@ -1879,11 +1757,7 @@ async def evidence_packages(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     packages = list(
-        (
-            await session.execute(
-                select(EvidencePackage).where(EvidencePackage.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(EvidencePackage).where(EvidencePackage.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -1909,11 +1783,7 @@ async def list_validation_results(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     tasks = list(
-        (
-            await session.execute(
-                select(ValidationTask).where(ValidationTask.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(ValidationTask).where(ValidationTask.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -1953,9 +1823,7 @@ async def list_validation_results(
                 "analyst_notes": result.analyst_notes,
                 "evidence_ids": result.evidence_ids,
                 "recorded_by": result.recorded_by,
-                "recorded_at": (
-                    result.recorded_at.isoformat() if result.recorded_at else None
-                ),
+                "recorded_at": (result.recorded_at.isoformat() if result.recorded_at else None),
             }
             for result in results
         ],
@@ -1968,11 +1836,7 @@ async def list_evidence_links(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     links = list(
-        (
-            await session.execute(
-                select(EvidenceLink).where(EvidenceLink.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(EvidenceLink).where(EvidenceLink.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -1987,9 +1851,7 @@ async def list_evidence_links(
                 "link_type": link.link_type,
                 "weight": link.weight,
                 "provenance": link.provenance,
-                "created_at": (
-                    link.created_at.isoformat() if link.created_at else None
-                ),
+                "created_at": (link.created_at.isoformat() if link.created_at else None),
             }
             for link in links
         ],
@@ -2001,9 +1863,7 @@ async def list_evidence_links(
 async def enrich_scan_coverage(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
-    enrichment = await MistralEnrichmentService(
-        session
-    ).enrich_vulnerability_coverage(scan_id)
+    enrichment = await MistralEnrichmentService(session).enrich_vulnerability_coverage(scan_id)
     await session.commit()
     return _ai_enrichment_item(enrichment)
 
@@ -2013,11 +1873,7 @@ async def list_ai_enrichments(
     scan_id: uuid.UUID, session: AsyncSession = Depends(get_session)
 ) -> dict[str, Any]:
     enrichments = list(
-        (
-            await session.execute(
-                select(AIEnrichment).where(AIEnrichment.scan_id == scan_id)
-            )
-        )
+        (await session.execute(select(AIEnrichment).where(AIEnrichment.scan_id == scan_id)))
         .scalars()
         .all()
     )
@@ -2085,8 +1941,6 @@ def _ai_enrichment_item(enrichment: AIEnrichment) -> dict[str, Any]:
         "output": enrichment.output,
         "validation_status": enrichment.validation_status,
         "cached": enrichment.cached,
-        "created_at": (
-            enrichment.created_at.isoformat() if enrichment.created_at else None
-        ),
+        "created_at": (enrichment.created_at.isoformat() if enrichment.created_at else None),
         "advisory_only": True,
     }

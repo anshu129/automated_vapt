@@ -47,9 +47,13 @@ class CapabilityRegistry:
         result = await self.session.execute(stmt)
         infos: list[ProviderInfo] = []
         for p in result.scalars().all():
-            manifest = await self.session.get(ToolManifest, p.manifest_id) if p.manifest_id else None
+            manifest = (
+                await self.session.get(ToolManifest, p.manifest_id) if p.manifest_id else None
+            )
             manifest_name = manifest.name if manifest else p.provider_name
-            manifest_spec = self._manifests.get(p.provider_name) or self._manifests.get(manifest_name)
+            manifest_spec = self._manifests.get(p.provider_name) or self._manifests.get(
+                manifest_name
+            )
             binary = manifest_spec.binary if manifest_spec else p.provider_name
             binary_available = bool(resolve_tool_binary(binary))
             if p.provider_name.startswith("fake-"):
@@ -85,9 +89,12 @@ class CapabilityRegistry:
                 continue
             if not p.binary_available and not p.provider_name.startswith("fake-"):
                 continue
-            if ctx.execution_profile not in p.supported_profiles and p.supported_profiles:
-                if ctx.execution_profile not in ("STANDARD",):
-                    continue
+            if (
+                ctx.execution_profile not in p.supported_profiles
+                and p.supported_profiles
+                and ctx.execution_profile not in ("STANDARD",)
+            ):
+                continue
             eligible.append(p)
         return eligible
 

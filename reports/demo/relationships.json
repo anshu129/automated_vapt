@@ -1,0 +1,173 @@
+{
+  "items": [
+    {
+      "id": "d245da06-56b6-4caf-9718-755789c7d8a6",
+      "relationship_type": "HAS_SUBDOMAIN",
+      "source_asset_id": "924dcded-88b5-40fd-a859-430d224bb151",
+      "target_asset_id": "84e57697-db54-433a-a87f-b8843290c283",
+      "source": {
+        "id": "924dcded-88b5-40fd-a859-430d224bb151",
+        "asset_type": "DOMAIN",
+        "display_name": "example.com",
+        "normalized_key": "example.com"
+      },
+      "target": {
+        "id": "84e57697-db54-433a-a87f-b8843290c283",
+        "asset_type": "HOSTNAME",
+        "display_name": "www.example.com",
+        "normalized_key": "www.example.com"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "05fbbb25-f06a-41da-9919-ad23b272d48e",
+      "relationship_type": "HAS_SUBDOMAIN",
+      "source_asset_id": "924dcded-88b5-40fd-a859-430d224bb151",
+      "target_asset_id": "1fcd1983-d642-4190-8562-cbaed244398f",
+      "source": {
+        "id": "924dcded-88b5-40fd-a859-430d224bb151",
+        "asset_type": "DOMAIN",
+        "display_name": "example.com",
+        "normalized_key": "example.com"
+      },
+      "target": {
+        "id": "1fcd1983-d642-4190-8562-cbaed244398f",
+        "asset_type": "HOSTNAME",
+        "display_name": "api.example.com",
+        "normalized_key": "api.example.com"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "f2133dd8-9438-46e0-bc54-cb89e13d7dca",
+      "relationship_type": "RESOLVES_TO",
+      "source_asset_id": "84e57697-db54-433a-a87f-b8843290c283",
+      "target_asset_id": "da5db1ee-0265-4b2c-ab15-fc41296926ca",
+      "source": {
+        "id": "84e57697-db54-433a-a87f-b8843290c283",
+        "asset_type": "HOSTNAME",
+        "display_name": "www.example.com",
+        "normalized_key": "www.example.com"
+      },
+      "target": {
+        "id": "da5db1ee-0265-4b2c-ab15-fc41296926ca",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "93.184.216.34",
+        "normalized_key": "93.184.216.34"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "de18dbc2-544b-4e66-b16a-a40464b4b225",
+      "relationship_type": "RESOLVES_TO",
+      "source_asset_id": "1fcd1983-d642-4190-8562-cbaed244398f",
+      "target_asset_id": "da5db1ee-0265-4b2c-ab15-fc41296926ca",
+      "source": {
+        "id": "1fcd1983-d642-4190-8562-cbaed244398f",
+        "asset_type": "HOSTNAME",
+        "display_name": "api.example.com",
+        "normalized_key": "api.example.com"
+      },
+      "target": {
+        "id": "da5db1ee-0265-4b2c-ab15-fc41296926ca",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "93.184.216.34",
+        "normalized_key": "93.184.216.34"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "f2aedfd6-3b70-470c-a99e-341dafd6d040",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+      "target_asset_id": "6e974594-5b94-49d9-845a-6070289d995a",
+      "source": {
+        "id": "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "Example App",
+        "normalized_key": "https://www.example.com"
+      },
+      "target": {
+        "id": "6e974594-5b94-49d9-845a-6070289d995a",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://www.example.com/login",
+        "normalized_key": "https://www.example.com/login"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "80bbdc32-b4f8-424d-a78b-c9fa03b97a1e",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+      "target_asset_id": "75ebd235-132c-4bf8-befd-59519987a143",
+      "source": {
+        "id": "a8f9ee12-3520-4ce4-82ae-89e2b10895d3",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "Example App",
+        "normalized_key": "https://www.example.com"
+      },
+      "target": {
+        "id": "75ebd235-132c-4bf8-befd-59519987a143",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://www.example.com/api/users",
+        "normalized_key": "https://www.example.com/api/users"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "52ea6cd5-0425-499d-be2e-3910496c1971",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+      "target_asset_id": "4426a33e-2bb1-41f1-a040-36b93058f66b",
+      "source": {
+        "id": "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "Example App",
+        "normalized_key": "https://api.example.com"
+      },
+      "target": {
+        "id": "4426a33e-2bb1-41f1-a040-36b93058f66b",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://api.example.com/login",
+        "normalized_key": "https://api.example.com/login"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "db078f1f-f565-4788-99ed-e168ccd664f6",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+      "target_asset_id": "591cd1c2-6821-4a41-9756-c6e4fd444285",
+      "source": {
+        "id": "ae90d0e9-b0d6-44cb-8fdc-b01c21eb4b27",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "Example App",
+        "normalized_key": "https://api.example.com"
+      },
+      "target": {
+        "id": "591cd1c2-6821-4a41-9756-c6e4fd444285",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://api.example.com/api/users",
+        "normalized_key": "https://api.example.com/api/users"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    }
+  ],
+  "total": 8
+}

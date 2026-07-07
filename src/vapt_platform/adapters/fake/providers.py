@@ -26,7 +26,11 @@ class FakeAdapter:
         self.behavior = behavior
 
     def execute(self, target: dict[str, Any], profile: str = "STANDARD") -> AdapterOutput:
-        hostname = target.get("hostname") or target.get("ip") or target.get("domain", "unknown.example.com")
+        hostname = (
+            target.get("hostname")
+            or target.get("ip")
+            or target.get("domain", "unknown.example.com")
+        )
         if self.behavior == "subfinder":
             return AdapterOutput(
                 stdout=json.dumps({"hosts": [f"www.{hostname}", f"api.{hostname}"]}),
@@ -142,9 +146,7 @@ FAKE_ADAPTERS: dict[str, FakeAdapter] = {
     "fake-paramspider": FakeAdapter(
         Capability.PARAMETER_DISCOVERY, "fake-paramspider", "paramspider"
     ),
-    "fake-js-collect": FakeAdapter(
-        Capability.JAVASCRIPT_COLLECTION, "fake-js-collect", "noop"
-    ),
+    "fake-js-collect": FakeAdapter(Capability.JAVASCRIPT_COLLECTION, "fake-js-collect", "noop"),
 }
 
 

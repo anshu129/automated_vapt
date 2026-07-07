@@ -1,7 +1,16 @@
 """Parse tool output into observations and events."""
 
 import json
+from ipaddress import ip_address
 from typing import Any
+
+
+def _is_ip(value: str) -> bool:
+    try:
+        ip_address(value.strip())
+        return True
+    except ValueError:
+        return False
 
 
 def parse_tool_output(
@@ -18,9 +27,7 @@ def _parse_subfinder(stdout: str, target: dict[str, Any]) -> dict[str, list[dict
     for line in stdout.strip().splitlines():
         host = line.strip()
         if host and "." in host:
-            events.append(
-                {"type": "HOSTNAME_DISCOVERED", "hostname": host, "source": "subfinder"}
-            )
+            events.append({"type": "HOSTNAME_DISCOVERED", "hostname": host, "source": "subfinder"})
     return {"events": events, "observations": []}
 
 
@@ -58,7 +65,10 @@ def _parse_dnsx(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str,
             if records:
                 events.append({"type": "DNS_RESOLVED", "hostname": host, "records": records})
         except json.JSONDecodeError:
-            if hostname:
+            # Plaintext resolver output: only accept genuine IP addresses so
+            # tool error messages (e.g. a missing massdns binary) never become
+            # fabricated IP assets.
+            if hostname and _is_ip(line):
                 events.append(
                     {
                         "type": "DNS_RESOLVED",
@@ -88,7 +98,13 @@ def _parse_naabu(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str
                 host, port = fallback_host, None
         if host and port:
             events.append(
-                {"type": "SERVICE_OBSERVED", "host": host, "ip": target.get("ip"), "port": port, "protocol": "tcp"}
+                {
+                    "type": "SERVICE_OBSERVED",
+                    "host": host,
+                    "ip": target.get("ip"),
+                    "port": port,
+                    "protocol": "tcp",
+                }
             )
     return {"events": events, "observations": []}
 
@@ -102,9 +118,7 @@ def _parse_httpx(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str
             url = rec.get("url") or rec.get("input", target.get("url", ""))
             status = rec.get("status_code") or rec.get("status-code", 0)
             if url and status:
-                events.append(
-                    {"type": "HTTP_SERVICE_CONFIRMED", "url": url, "status_code": status}
-                )
+                events.append({"type": "HTTP_SERVICE_CONFIRMED", "url": url, "status_code": status})
                 events.append(
                     {
                         "type": "WEB_APPLICATION_CONFIRMED",
@@ -222,7 +236,9 @@ def _parse_url_utility(stdout: str, target: dict[str, Any]) -> dict[str, list[di
     return {"events": [], "observations": observations}
 
 
-def _parse_content_discovery(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+def _parse_content_discovery(
+    stdout: str, target: dict[str, Any]
+) -> dict[str, list[dict[str, Any]]]:
     events = []
     observations = []
     for line in stdout.strip().splitlines():
@@ -249,7 +265,9 @@ def _parse_content_discovery(stdout: str, target: dict[str, Any]) -> dict[str, l
             url = f"{base}{url}"
         if url.startswith("http"):
             events.append({"type": "ENDPOINT_DISCOVERED", "url": url, "method": "GET"})
-            observations.append({"type": "CONTENT_DISCOVERY_OBSERVATION", "url": url, "status": status})
+            observations.append(
+                {"type": "CONTENT_DISCOVERY_OBSERVATION", "url": url, "status": status}
+            )
     return {"events": events, "observations": observations}
 
 
@@ -317,16 +335,12 @@ def _parse_nuclei(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[st
             {
                 "type": "SCANNER_OBSERVATION",
                 "template_id": (
-                    record.get("template-id")
-                    or record.get("template_id")
-                    or record.get("template")
+                    record.get("template-id") or record.get("template_id") or record.get("template")
                 ),
                 "name": info.get("name") or record.get("name"),
                 "severity": info.get("severity") or record.get("severity"),
                 "matched_at": (
-                    record.get("matched-at")
-                    or record.get("matched_at")
-                    or record.get("host")
+                    record.get("matched-at") or record.get("matched_at") or record.get("host")
                 ),
                 "target": target.get("url"),
             }

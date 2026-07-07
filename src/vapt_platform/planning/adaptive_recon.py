@@ -134,8 +134,11 @@ class AdaptiveReconPlanner:
             Capability.HTTP_CHARACTERIZATION,
             Capability.TECHNOLOGY_IDENTIFICATION,
         ):
-            host = payload.get("hostname") or payload.get("host") or payload.get("ip") or (
-                payload.get("base_url", "").replace("https://", "").split("/")[0]
+            host = (
+                payload.get("hostname")
+                or payload.get("host")
+                or payload.get("ip")
+                or (payload.get("base_url", "").replace("https://", "").split("/")[0])
             )
             url = payload.get("url") or payload.get("base_url") or f"https://{host}"
             target = {**base, "hostname": host, "url": url}

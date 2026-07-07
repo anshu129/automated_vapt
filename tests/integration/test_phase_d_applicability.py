@@ -34,7 +34,9 @@ async def test_applicability_computed_after_recon(db_session) -> None:
                     Event.event_type == "APPLICABILITY_COMPUTED",
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(events) >= 1
     assert events[0].payload.get("applicable_count", 0) >= 6
@@ -60,15 +62,15 @@ async def test_web_app_baseline_classes_applicable(db_session) -> None:
                     Asset.asset_type == AssetType.WEB_APPLICATION.value,
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert web_apps
 
     class_by_code = {
         vc.class_code: vc.id
-        for vc in (
-            await db_session.execute(select(VulnerabilityClass))
-        ).scalars().all()
+        for vc in (await db_session.execute(select(VulnerabilityClass))).scalars().all()
     }
 
     rows = list(
@@ -78,14 +80,12 @@ async def test_web_app_baseline_classes_applicable(db_session) -> None:
                     AssetVulnerabilityApplicability.asset_id == web_apps[0].id
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     by_code = {
-        next(
-            code
-            for code, cid in class_by_code.items()
-            if cid == row.vulnerability_class_id
-        ): row
+        next(code for code, cid in class_by_code.items() if cid == row.vulnerability_class_id): row
         for row in rows
     }
 
@@ -126,6 +126,8 @@ async def test_test_matrix_created_for_applicable_classes(db_session) -> None:
             await db_session.execute(
                 select(AssetTestMatrix).where(AssetTestMatrix.scan_id == scan.id)
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(matrices) >= 1

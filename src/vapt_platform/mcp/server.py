@@ -15,7 +15,7 @@ def build_server() -> Any:
         from mcp.server.fastmcp import FastMCP
     except ImportError as exc:
         raise RuntimeError(
-            'MCP support is not installed. Install the optional dependency with '
+            "MCP support is not installed. Install the optional dependency with "
             'pip install -e ".[mcp]"'
         ) from exc
 

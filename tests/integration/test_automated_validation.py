@@ -80,21 +80,21 @@ async def test_automated_plans_reuse_tasks_and_create_review_backlog(
     assert hypothesis is not None
     assert hypothesis.status == HypothesisStatus.VALIDATION_IN_PROGRESS.value
     assert (
-        await db_session.execute(
-            select(Verdict).where(Verdict.hypothesis_id == hypothesis.id)
-        )
+        await db_session.execute(select(Verdict).where(Verdict.hypothesis_id == hypothesis.id))
     ).scalar_one_or_none() is None
 
     matrix = (
-        await db_session.execute(
-            select(AssetTestMatrix).where(
-                AssetTestMatrix.scan_id == scan.id,
-                AssetTestMatrix.asset_id.in_(
-                    [uuid.UUID(value) for value in plan.asset_ids]
-                ),
+        (
+            await db_session.execute(
+                select(AssetTestMatrix).where(
+                    AssetTestMatrix.scan_id == scan.id,
+                    AssetTestMatrix.asset_id.in_([uuid.UUID(value) for value in plan.asset_ids]),
+                )
             )
         )
-    ).scalars().first()
+        .scalars()
+        .first()
+    )
     assert matrix is not None
     requirement = (
         await db_session.execute(
@@ -106,10 +106,7 @@ async def test_automated_plans_reuse_tasks_and_create_review_backlog(
             )
         )
     ).scalar_one()
-    assert (
-        requirement.coverage_status
-        == CoverageStatus.PARTIALLY_TESTED.value
-    )
+    assert requirement.coverage_status == CoverageStatus.PARTIALLY_TESTED.value
 
     events = list(
         (
@@ -129,9 +126,9 @@ async def test_automated_plans_reuse_tasks_and_create_review_backlog(
         list(
             (
                 await db_session.execute(
-                    select(ExecutionModel).join(
-                        PlanModel, ExecutionModel.test_plan_id == PlanModel.id
-                    ).where(PlanModel.scan_id == scan.id)
+                    select(ExecutionModel)
+                    .join(PlanModel, ExecutionModel.test_plan_id == PlanModel.id)
+                    .where(PlanModel.scan_id == scan.id)
                 )
             )
             .scalars()
@@ -144,9 +141,9 @@ async def test_automated_plans_reuse_tasks_and_create_review_backlog(
         list(
             (
                 await db_session.execute(
-                    select(ExecutionModel).join(
-                        PlanModel, ExecutionModel.test_plan_id == PlanModel.id
-                    ).where(PlanModel.scan_id == scan.id)
+                    select(ExecutionModel)
+                    .join(PlanModel, ExecutionModel.test_plan_id == PlanModel.id)
+                    .where(PlanModel.scan_id == scan.id)
                 )
             )
             .scalars()
@@ -193,7 +190,7 @@ async def test_conclusive_negative_execution_rejects_without_confirming(
     db_session,
     monkeypatch,
 ) -> None:
-    from vapt_platform.adapters.fake.providers import AdapterOutput, FAKE_ADAPTERS
+    from vapt_platform.adapters.fake.providers import FAKE_ADAPTERS, AdapterOutput
 
     fake_nuclei = FAKE_ADAPTERS["fake-nuclei"]
 
@@ -219,11 +216,7 @@ async def test_conclusive_negative_execution_rejects_without_confirming(
     results = await AutomatedValidationOrchestrator(db_session).execute_scan(scan.id)
     await db_session.flush()
 
-    negative = next(
-        item
-        for item in results
-        if item.execution_id and item.finding_candidates == 0
-    )
+    negative = next(item for item in results if item.execution_id and item.finding_candidates == 0)
     plan = await db_session.get(PlanModel, negative.plan_id)
     assert plan is not None
     hypothesis = await db_session.get(Hypothesis, plan.hypothesis_id)
@@ -231,9 +224,7 @@ async def test_conclusive_negative_execution_rejects_without_confirming(
     assert hypothesis.status == HypothesisStatus.REJECTED.value
 
     verdict = (
-        await db_session.execute(
-            select(Verdict).where(Verdict.hypothesis_id == hypothesis.id)
-        )
+        await db_session.execute(select(Verdict).where(Verdict.hypothesis_id == hypothesis.id))
     ).scalar_one()
     assert verdict.status == "REJECTED"
     assert verdict.validation_result_id is None
@@ -253,9 +244,7 @@ async def test_conclusive_negative_execution_rejects_without_confirming(
     findings = list(
         (
             await db_session.execute(
-                select(ConfirmedFinding).where(
-                    ConfirmedFinding.scan_id == scan.id
-                )
+                select(ConfirmedFinding).where(ConfirmedFinding.scan_id == scan.id)
             )
         )
         .scalars()

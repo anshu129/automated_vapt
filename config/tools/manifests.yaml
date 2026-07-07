@@ -124,9 +124,12 @@ tools:
     safety_class: LOW_IMPACT
     cost_tier: FREE
     output_format: text
-    base_args: ["-d", "{hostname}", "-a", "-aaaa", "-cname", "-resp", "-json"]
+    # Resolve the host supplied on stdin. dnsx -d is subdomain-bruteforce mode
+    # and requires -w, so it must not be used for plain resolution.
+    base_args: ["-a", "-aaaa", "-cname", "-resp", "-json", "-silent"]
     priority: 95
     enabled: true
+    stdin: true
 
   shuffledns:
     binary: shuffledns

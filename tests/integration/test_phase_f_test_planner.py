@@ -111,9 +111,7 @@ async def test_phase_f_planner_creates_mode_specific_plans(db_session) -> None:
     assert all(plan.hypothesis_id for plan in plans)
     plans_by_class = {
         next(
-            code
-            for code, vc in classes.items()
-            if str(vc.id) in plan.vulnerability_class_ids
+            code for code, vc in classes.items() if str(vc.id) in plan.vulnerability_class_ids
         ): plan
         for plan in plans
     }

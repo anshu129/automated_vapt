@@ -88,7 +88,9 @@ def test_state_priority_keeps_applicable_over_possible() -> None:
             version="1.0",
             description="",
             condition={"field": "asset_type", "eq": "WEB_APPLICATION"},
-            outputs=[RuleOutput("AUTHORIZATION", ApplicabilityState.POSSIBLY_APPLICABLE.value, 0.5)],
+            outputs=[
+                RuleOutput("AUTHORIZATION", ApplicabilityState.POSSIBLY_APPLICABLE.value, 0.5)
+            ],
         ),
         ApplicabilityRuleSpec(
             rule_id="applicable",

@@ -1,0 +1,131 @@
+{
+  "items": [
+    {
+      "id": "a5a1a875-0ed7-4236-b095-10ee22f1c21f",
+      "relationship_type": "RESOLVES_TO",
+      "source_asset_id": "187d0edf-c976-4684-b195-10720318cb7e",
+      "target_asset_id": "390bd8a2-e8c8-4192-a4b5-e26e96fe7610",
+      "source": {
+        "id": "187d0edf-c976-4684-b195-10720318cb7e",
+        "asset_type": "HOSTNAME",
+        "display_name": "sahaj.sakra.co.in",
+        "normalized_key": "sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "390bd8a2-e8c8-4192-a4b5-e26e96fe7610",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "23.55.244.184",
+        "normalized_key": "23.55.244.184"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "14f9d065-69c0-4100-b532-05622bf84965",
+      "relationship_type": "RESOLVES_TO",
+      "source_asset_id": "187d0edf-c976-4684-b195-10720318cb7e",
+      "target_asset_id": "bfe27fe3-b5fb-4b1b-91b7-4fa3c61b968c",
+      "source": {
+        "id": "187d0edf-c976-4684-b195-10720318cb7e",
+        "asset_type": "HOSTNAME",
+        "display_name": "sahaj.sakra.co.in",
+        "normalized_key": "sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "bfe27fe3-b5fb-4b1b-91b7-4fa3c61b968c",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "23.55.244.177",
+        "normalized_key": "23.55.244.177"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "c8d91f58-8800-440f-8094-4a2f8ec4e17f",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "target_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "bcb290dc-56f4-48b3-a8d1-715f2b366ad0",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "target_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "953223f8-c8c9-4d94-b1b0-f4f0a3b74c59",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "target_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    },
+    {
+      "id": "a2ce5fa2-afac-4ef9-a404-86469677b49d",
+      "relationship_type": "CONTAINS",
+      "source_asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "target_asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://sahaj.sakra.co.in/uploads",
+        "normalized_key": "https://sahaj.sakra.co.in/uploads"
+      },
+      "confidence": 0.5,
+      "active": true,
+      "evidence_ids": []
+    }
+  ],
+  "total": 6
+}

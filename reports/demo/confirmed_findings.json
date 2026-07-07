@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "66df2afa-c891-4e64-814c-147a7de2553d",
+      "hypothesis_id": "be986d45-90ca-4935-a545-8fecdbaa9840",
+      "validation_result_id": "bdf31896-f930-4ace-9ac6-3f1dc004c35f",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://api.example.com/login",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://api.example.com/login and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "affected_asset_ids": [
+        "4426a33e-2bb1-41f1-a040-36b93058f66b"
+      ],
+      "cve_ids": [],
+      "cwe_ids": [],
+      "source_severity": null,
+      "contextual_priority": null,
+      "evidence_ids": [
+        "evidence-manual-review-1"
+      ],
+      "confirmed_by": "demo-analyst",
+      "confirmed_at": "2026-07-07T06:04:07.469233"
+    }
+  ],
+  "total": 1
+}

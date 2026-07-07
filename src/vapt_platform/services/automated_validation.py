@@ -103,12 +103,16 @@ class AutomatedValidationOrchestrator:
         controller: ReconController | None = None,
     ) -> AutomatedPlanRun:
         existing = (
-            await self.session.execute(
-                select(TestExecution)
-                .where(TestExecution.test_plan_id == plan.id)
-                .order_by(TestExecution.executed_at.desc())
+            (
+                await self.session.execute(
+                    select(TestExecution)
+                    .where(TestExecution.test_plan_id == plan.id)
+                    .order_by(TestExecution.executed_at.desc())
+                )
             )
-        ).scalars().first()
+            .scalars()
+            .first()
+        )
         if existing:
             return AutomatedPlanRun(
                 plan_id=plan.id,
@@ -212,9 +216,7 @@ class AutomatedValidationOrchestrator:
             else None
         )
         decision = (
-            await self.session.get(
-                EvidenceQualityDecision, task.evidence_quality_decision_id
-            )
+            await self.session.get(EvidenceQualityDecision, task.evidence_quality_decision_id)
             if task.evidence_quality_decision_id
             else None
         )
@@ -231,16 +233,12 @@ class AutomatedValidationOrchestrator:
             evidence_ids.append(str(decision.id))
         evidence_ids = list(dict.fromkeys(evidence_ids))
 
-        execution_status = (
-            "COMPLETED" if task_run.exit_code == 0 else "FAILED"
-        )
+        execution_status = "COMPLETED" if task_run.exit_code == 0 else "FAILED"
         execution = TestExecution(
             test_plan_id=plan.id,
             task_run_id=task_run.id,
             provider_id=task.capability_provider_id,
-            template_id=(
-                candidates[0].get("template_id") if len(candidates) == 1 else None
-            ),
+            template_id=(candidates[0].get("template_id") if len(candidates) == 1 else None),
             status=execution_status,
             result_summary={
                 "capability": selected_capability.value,
@@ -342,11 +340,7 @@ class AutomatedValidationOrchestrator:
                 AssetType.WEB_APPLICATION.value,
                 AssetType.ENDPOINT.value,
             }:
-                url = (
-                    metadata.get("base_url")
-                    or metadata.get("url")
-                    or asset.normalized_key
-                )
+                url = metadata.get("base_url") or metadata.get("url") or asset.normalized_key
                 hostname = urlparse(url).hostname
                 return {
                     "url": url,
@@ -412,12 +406,16 @@ class AutomatedValidationOrchestrator:
 
     async def _latest_task_run(self, task_id: uuid.UUID) -> TaskRun | None:
         return (
-            await self.session.execute(
-                select(TaskRun)
-                .where(TaskRun.task_id == task_id)
-                .order_by(TaskRun.started_at.desc())
+            (
+                await self.session.execute(
+                    select(TaskRun)
+                    .where(TaskRun.task_id == task_id)
+                    .order_by(TaskRun.started_at.desc())
+                )
             )
-        ).scalars().first()
+            .scalars()
+            .first()
+        )
 
     async def _create_review_task(
         self,
@@ -427,10 +425,14 @@ class AutomatedValidationOrchestrator:
         evidence_ids: list[str],
     ) -> None:
         existing = (
-            await self.session.execute(
-                select(ValidationTask).where(ValidationTask.test_plan_id == plan.id)
+            (
+                await self.session.execute(
+                    select(ValidationTask).where(ValidationTask.test_plan_id == plan.id)
+                )
             )
-        ).scalars().first()
+            .scalars()
+            .first()
+        )
         if existing:
             return
         hypothesis = await self._hypothesis(plan)
@@ -487,9 +489,7 @@ class AutomatedValidationOrchestrator:
                     select(AssetVulnerabilityApplicability).where(
                         AssetVulnerabilityApplicability.scan_id == plan.scan_id,
                         AssetVulnerabilityApplicability.asset_id.in_(asset_ids),
-                        AssetVulnerabilityApplicability.vulnerability_class_id.in_(
-                            class_ids
-                        ),
+                        AssetVulnerabilityApplicability.vulnerability_class_id.in_(class_ids),
                     )
                 )
             )
@@ -501,18 +501,14 @@ class AutomatedValidationOrchestrator:
             row.supporting_evidence_ids = list(
                 dict.fromkeys([*(row.supporting_evidence_ids or []), *evidence_ids])
             )
-            row.rule_ids = list(
-                dict.fromkeys([*(row.rule_ids or []), "automated-validation"])
-            )
+            row.rule_ids = list(dict.fromkeys([*(row.rule_ids or []), "automated-validation"]))
             row.explanation = explanation
         for asset_id in asset_ids:
             await TestMatrixEngine(self.session).build(plan.scan_id, asset_id)
 
     async def _hypothesis(self, plan: TestPlan) -> Hypothesis | None:
         return (
-            await self.session.get(Hypothesis, plan.hypothesis_id)
-            if plan.hypothesis_id
-            else None
+            await self.session.get(Hypothesis, plan.hypothesis_id) if plan.hypothesis_id else None
         )
 
     @staticmethod
@@ -583,14 +579,10 @@ class AutomatedValidationOrchestrator:
                         if isinstance(item, dict)
                     )
                 elif isinstance(record, dict) and (
-                    record.get("template-id")
-                    or record.get("template_id")
-                    or record.get("template")
+                    record.get("template-id") or record.get("template_id") or record.get("template")
                 ):
                     parsed_result = True
-                    candidates.append(
-                        AutomatedValidationOrchestrator._normalize_candidate(record)
-                    )
+                    candidates.append(AutomatedValidationOrchestrator._normalize_candidate(record))
         if "nuclei" in provider_name.lower() and exit_code == 0:
             parsed_result = True
         return candidates, parsed_result
@@ -607,9 +599,7 @@ class AutomatedValidationOrchestrator:
             "name": info.get("name") or candidate.get("name"),
             "severity": info.get("severity") or candidate.get("severity"),
             "matched_at": (
-                candidate.get("matched-at")
-                or candidate.get("matched_at")
-                or candidate.get("host")
+                candidate.get("matched-at") or candidate.get("matched_at") or candidate.get("host")
             ),
             "type": candidate.get("type"),
         }

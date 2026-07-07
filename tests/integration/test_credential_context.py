@@ -1,6 +1,7 @@
 """Phase I - credential references and authenticated coverage."""
 
 import json
+import uuid
 
 import pytest
 from sqlalchemy import select
@@ -12,10 +13,12 @@ from vapt_platform.api.routes.core import (
     scan_report,
     scan_role_coverage,
 )
+from vapt_platform.controller.recon_controller import ReconController
 from vapt_platform.db.tables.models import Asset
 from vapt_platform.domain.enums import AssetType, Capability
 from vapt_platform.mcp.read_tools import AssessmentMCPReadService
-from vapt_platform.services.core import ProjectService, ScanService
+from vapt_platform.scope.manager import ScopeManager, ScopeRuleData
+from vapt_platform.services.core import ProjectService, ScanService, build_target_descriptor
 from vapt_platform.services.credentials import CredentialContextService
 
 
@@ -32,13 +35,17 @@ async def test_credential_context_metadata_is_bound_and_secret_safe(db_session) 
     await db_session.flush()
 
     web_app = (
-        await db_session.execute(
-            select(Asset).where(
-                Asset.scan_id == scan.id,
-                Asset.asset_type == AssetType.WEB_APPLICATION.value,
+        (
+            await db_session.execute(
+                select(Asset).where(
+                    Asset.scan_id == scan.id,
+                    Asset.asset_type == AssetType.WEB_APPLICATION.value,
+                )
             )
         )
-    ).scalars().first()
+        .scalars()
+        .first()
+    )
     assert web_app is not None
 
     secret_ref = "env://VAPT_TEST_PASSWORD"
@@ -65,9 +72,7 @@ async def test_credential_context_metadata_is_bound_and_secret_safe(db_session) 
     )
     await db_session.flush()
 
-    eligible = await service.get_eligible_credentials(
-        web_app.id, Capability.WEB_ACTIVE_ASSESSMENT
-    )
+    eligible = await service.get_eligible_credentials(web_app.id, Capability.WEB_ACTIVE_ASSESSMENT)
     assert [item.id for item in eligible] == [credential.id]
     assert binding.assessment_mode == "CREDENTIALED"
     assert auth_context.session_established is True
@@ -90,9 +95,7 @@ async def test_credential_context_metadata_is_bound_and_secret_safe(db_session) 
     assert report["summary"]["authenticated_assets"] >= 1
     assert report["summary"]["authorized_roles"] >= 1
 
-    web_auth = next(
-        item for item in auth_coverage["items"] if item["asset_id"] == str(web_app.id)
-    )
+    web_auth = next(item for item in auth_coverage["items"] if item["asset_id"] == str(web_app.id))
     assert web_auth["auth_coverage_status"] == "AUTHENTICATED"
     assert set(web_auth["coverage_dimensions"]) == {"AUTHENTICATED", "AUTHORIZATION"}
     assert web_auth["roles"] == ["user"]
@@ -111,3 +114,61 @@ async def test_credential_context_metadata_is_bound_and_secret_safe(db_session) 
         sort_keys=True,
     )
     assert secret_ref not in serialized
+
+
+@pytest.mark.asyncio
+async def test_runtime_credentials_do_not_persist_to_task_descriptor(db_session) -> None:
+    project = await ProjectService(db_session).create("Runtime Credential Safety")
+    scan = await ScanService(db_session).create(
+        project.id,
+        "Runtime Credential Safety Scan",
+        [{"rule_type": "URL_PREFIX", "pattern": "https://example.com", "priority": 100}],
+    )
+    await db_session.flush()
+
+    descriptor = build_target_descriptor("https://user:Secret123@example.com/admin")
+    assert descriptor["url"] == "https://example.com/admin"
+    assert descriptor["operational_context"]["auth_required"] is True
+    assert "username" not in descriptor
+    assert "password" not in descriptor
+
+    controller = ReconController(
+        db_session,
+        ScopeManager(
+            [
+                ScopeRuleData(
+                    "URL_PREFIX",
+                    "https://example.com",
+                    "ACTIVE",
+                    100,
+                )
+            ]
+        ),
+    )
+    task = await controller.create_task(
+        scan.id,
+        Capability.HTTP_PROBING,
+        {"url": "https://example.com", "hostname": "example.com"},
+        uuid.uuid4(),
+    )
+    assert task is not None
+
+    result = await ScanService(db_session).run_ready_tasks(
+        scan.id,
+        limit=1,
+        username="user",
+        password="Secret123",
+    )
+    await db_session.refresh(task)
+
+    assert result["executed"] == 1
+    serialized_task = json.dumps(
+        {
+            "target_descriptor": task.target_descriptor,
+            "parameters": task.parameters,
+        },
+        sort_keys=True,
+    )
+    assert "Secret123" not in serialized_task
+    assert "password" not in (task.target_descriptor or {})
+    assert "username" not in (task.target_descriptor or {})

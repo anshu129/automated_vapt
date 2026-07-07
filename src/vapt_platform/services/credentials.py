@@ -228,9 +228,7 @@ class CredentialContextService:
 
     async def get_auth_coverage(self, scan_id: uuid.UUID) -> dict[str, Any]:
         assets = list(
-            (
-                await self.session.execute(select(Asset).where(Asset.scan_id == scan_id))
-            )
+            (await self.session.execute(select(Asset).where(Asset.scan_id == scan_id)))
             .scalars()
             .all()
         )
@@ -244,11 +242,7 @@ class CredentialContextService:
             .all()
         )
         roles = list(
-            (
-                await self.session.execute(
-                    select(RoleContext).where(RoleContext.scan_id == scan_id)
-                )
-            )
+            (await self.session.execute(select(RoleContext).where(RoleContext.scan_id == scan_id)))
             .scalars()
             .all()
         )
@@ -264,11 +258,7 @@ class CredentialContextService:
             asset_contexts = contexts_by_asset.get(asset.id, [])
             established = [ctx for ctx in asset_contexts if ctx.session_established]
             dimensions = sorted(
-                {
-                    dim
-                    for ctx in established
-                    for dim in (ctx.coverage_dimensions or [])
-                }
+                {dim for ctx in established for dim in (ctx.coverage_dimensions or [])}
             )
             role_names = sorted({role.role_name for role in roles_by_asset.get(asset.id, [])})
             status = "AUTHENTICATED" if established else "UNAUTHENTICATED"
@@ -295,21 +285,21 @@ class CredentialContextService:
 
     async def get_role_coverage(self, scan_id: uuid.UUID) -> dict[str, Any]:
         roles = list(
-            (
-                await self.session.execute(
-                    select(RoleContext).where(RoleContext.scan_id == scan_id)
-                )
-            )
+            (await self.session.execute(select(RoleContext).where(RoleContext.scan_id == scan_id)))
             .scalars()
             .all()
         )
         asset_ids = {role.asset_id for role in roles}
-        assets = {
-            asset.id: asset
-            for asset in (
-                await self.session.execute(select(Asset).where(Asset.id.in_(asset_ids)))
-            ).scalars()
-        } if asset_ids else {}
+        assets = (
+            {
+                asset.id: asset
+                for asset in (
+                    await self.session.execute(select(Asset).where(Asset.id.in_(asset_ids)))
+                ).scalars()
+            }
+            if asset_ids
+            else {}
+        )
         return {
             "scan_id": str(scan_id),
             "items": [
@@ -352,9 +342,7 @@ class CredentialContextService:
                 if not asset or asset.project_id != credential.project_id:
                     raise ValueError("Bound asset is outside credential project")
 
-    async def _credential_bound_to_asset(
-        self, credential_id: uuid.UUID, asset: Asset
-    ) -> bool:
+    async def _credential_bound_to_asset(self, credential_id: uuid.UUID, asset: Asset) -> bool:
         bindings = list(
             (
                 await self.session.execute(

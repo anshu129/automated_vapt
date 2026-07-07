@@ -6,17 +6,29 @@ from sqlalchemy import select
 from vapt_platform.db.tables.models import (
     Asset,
     AssetVulnerabilityApplicability,
-    TestPlan as PlanModel,
-    TestRequirement as RequirementModel,
     VulnerabilityClass,
+)
+from vapt_platform.db.tables.models import (
+    TestPlan as PlanModel,
+)
+from vapt_platform.db.tables.models import (
+    TestRequirement as RequirementModel,
 )
 from vapt_platform.domain.enums import (
     ApplicabilityState,
     AssetType,
-    TestPlanStatus as PlanStatus,
-    TestRequirementCoverageStatus as CoverageStatus,
-    TestRequirementNextAction as NextAction,
+)
+from vapt_platform.domain.enums import (
     TestingMode as Mode,
+)
+from vapt_platform.domain.enums import (
+    TestPlanStatus as PlanStatus,
+)
+from vapt_platform.domain.enums import (
+    TestRequirementCoverageStatus as CoverageStatus,
+)
+from vapt_platform.domain.enums import (
+    TestRequirementNextAction as NextAction,
 )
 from vapt_platform.engines.assessment import TestMatrixEngine as MatrixEngine
 from vapt_platform.services.core import ProjectService, ScanService

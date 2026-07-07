@@ -1,0 +1,2835 @@
+{
+  "scan_id": "3f21acaf-3a93-4d01-974c-adc6a0404347",
+  "summary": {
+    "assets": 6,
+    "tasks": 10,
+    "events": 198,
+    "relationships": 6,
+    "applicable_requirements": 40,
+    "test_plans": 40,
+    "test_executions": 0,
+    "validation_backlog": 37,
+    "validation_results": 0,
+    "evidence_links": 0,
+    "hypotheses": 40,
+    "verdicts": 0,
+    "confirmed_findings": 0,
+    "ai_enrichments": 0,
+    "authenticated_assets": 0,
+    "authorized_roles": 0,
+    "completion_status": "INCOMPLETE",
+    "task_status_counts": {
+      "COMPLETED": 9,
+      "FAILED_RETRYABLE": 1
+    }
+  },
+  "assets": [
+    {
+      "id": "187d0edf-c976-4684-b195-10720318cb7e",
+      "type": "HOSTNAME",
+      "name": "sahaj.sakra.co.in",
+      "key": "sahaj.sakra.co.in",
+      "metadata": {
+        "dns_resolved": true,
+        "dns_status": "COMPLETE"
+      },
+      "surface_status": "PARTIAL"
+    },
+    {
+      "id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "type": "SERVICE",
+      "name": "https-sahaj.sakra.co.in:443",
+      "key": "sahaj.sakra.co.in:443",
+      "metadata": {
+        "url": "https://sahaj.sakra.co.in",
+        "scheme": "https",
+        "hostname": "sahaj.sakra.co.in",
+        "port": 443
+      },
+      "surface_status": null
+    },
+    {
+      "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "type": "WEB_APPLICATION",
+      "name": "https://sahaj.sakra.co.in",
+      "key": "https://sahaj.sakra.co.in",
+      "metadata": {
+        "http_confirmed": true,
+        "technologies": [
+          "nginx"
+        ],
+        "base_url": "https://sahaj.sakra.co.in",
+        "method": "GET"
+      },
+      "surface_status": "PARTIAL"
+    },
+    {
+      "id": "390bd8a2-e8c8-4192-a4b5-e26e96fe7610",
+      "type": "IP_ADDRESS",
+      "name": "23.55.244.184",
+      "key": "23.55.244.184",
+      "metadata": {},
+      "surface_status": null
+    },
+    {
+      "id": "bfe27fe3-b5fb-4b1b-91b7-4fa3c61b968c",
+      "type": "IP_ADDRESS",
+      "name": "23.55.244.177",
+      "key": "23.55.244.177",
+      "metadata": {},
+      "surface_status": null
+    },
+    {
+      "id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "type": "ENDPOINT",
+      "name": "https://sahaj.sakra.co.in/uploads",
+      "key": "https://sahaj.sakra.co.in/uploads",
+      "metadata": {
+        "method": "GET"
+      },
+      "surface_status": null
+    }
+  ],
+  "relationships": [
+    {
+      "id": "a5a1a875-0ed7-4236-b095-10ee22f1c21f",
+      "type": "RESOLVES_TO",
+      "source": {
+        "id": "187d0edf-c976-4684-b195-10720318cb7e",
+        "asset_type": "HOSTNAME",
+        "display_name": "sahaj.sakra.co.in",
+        "normalized_key": "sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "390bd8a2-e8c8-4192-a4b5-e26e96fe7610",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "23.55.244.184",
+        "normalized_key": "23.55.244.184"
+      },
+      "confidence": 0.5,
+      "active": true
+    },
+    {
+      "id": "14f9d065-69c0-4100-b532-05622bf84965",
+      "type": "RESOLVES_TO",
+      "source": {
+        "id": "187d0edf-c976-4684-b195-10720318cb7e",
+        "asset_type": "HOSTNAME",
+        "display_name": "sahaj.sakra.co.in",
+        "normalized_key": "sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "bfe27fe3-b5fb-4b1b-91b7-4fa3c61b968c",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "23.55.244.177",
+        "normalized_key": "23.55.244.177"
+      },
+      "confidence": 0.5,
+      "active": true
+    },
+    {
+      "id": "c8d91f58-8800-440f-8094-4a2f8ec4e17f",
+      "type": "CONTAINS",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "confidence": 0.5,
+      "active": true
+    },
+    {
+      "id": "bcb290dc-56f4-48b3-a8d1-715f2b366ad0",
+      "type": "CONTAINS",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "confidence": 0.5,
+      "active": true
+    },
+    {
+      "id": "953223f8-c8c9-4d94-b1b0-f4f0a3b74c59",
+      "type": "CONTAINS",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "confidence": 0.5,
+      "active": true
+    },
+    {
+      "id": "a2ce5fa2-afac-4ef9-a404-86469677b49d",
+      "type": "CONTAINS",
+      "source": {
+        "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "normalized_key": "https://sahaj.sakra.co.in"
+      },
+      "target": {
+        "id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://sahaj.sakra.co.in/uploads",
+        "normalized_key": "https://sahaj.sakra.co.in/uploads"
+      },
+      "confidence": 0.5,
+      "active": true
+    }
+  ],
+  "tasks": [
+    {
+      "id": "37b753db-702e-4e26-9441-522690717034",
+      "capability": "DNS_RESOLUTION",
+      "status": "COMPLETED",
+      "target": "sahaj.sakra.co.in",
+      "provider": "dnsx",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "{\"host\":\"sahaj.sakra.co.in\",\"ttl\":600,\"resolver\":[\"1.0.0.1:53\",\"8.8.8.8:53\",\"8.8.4.4:53\"],\"a\":[\"23.55.244.184\",\"23.55.244.177\"],\"aaaa\":[\"2600:1417:73::addf:a28a\",\"2600:1417:73::addf:a280\"],\"cname\":[\"sahaj.sakra.co.in.edgekey.net\",\"e242734.dsca.akamaiedge.net\"],\"all\":[\"sahaj.sakra.co.in.\\t600\\tIN\\tCNAME\\tsahaj.sakra.co.in.edgekey.net.\",\"sahaj.sakra.co.in.edgekey.net.\\t21600\\tIN\\tCNAME\\te242734.dsca.akamaiedge.net.\",\"e242734.dsca.akamaiedge.net.\\t20\\tIN\\tA\\t23.55.244.184\",\"e242734.dsca.akamaiedge.net.\\t20\\tIN\\tA\\t23.55.244.177\",\"\\n;; OPT PSEUDOSECTION:\\n; EDNS: version 0; flags:; udp: 1232\",\"e242734.dsca.akamaiedge.net.\\t20\\tIN\\tAAAA\\t2600:1417:73::addf:a28a\",\"e242734.dsca.akamaiedge.net.\\t20\\tIN\\tAAAA\\t2600:1417:73::addf:a280\",\"\\n;; OPT PSEUDOSECTION:\\n; EDNS: version 0; flags:; udp: 512\",\"sahaj.sakra.co.in.\\t266\\tIN\\tCNAME\\tsahaj.sakra.co.in.edgekey.net.\"],\"status_code\":\"NOERROR\",\"timestamp\":\"2026-07-07T12:16:09.1791179+05:30\"}\n"
+    },
+    {
+      "id": "779389ad-6b32-4508-aa91-c60fb57bb3fd",
+      "capability": "LIVE_CRAWLING",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "katana",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "{\"timestamp\":\"2026-07-07T12:16:11.9126003+05:30\",\"request\":{\"method\":\"GET\",\"endpoint\":\"https://sahaj.sakra.co.in\",\"raw\":\"GET / HTTP/1.1\\r\\nHost: sahaj.sakra.co.in\\r\\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36\\r\\nAccept-Encoding: gzip\\r\\n\\r\\n\"},\"response\":{\"status_code\":200,\"headers\":{\"Alt-Svc\":\"h3=\\\":443\\\"; ma=93600\",\"Cache-Control\":\"max-age=0, no-cache, no-store\",\"Connection\":\"keep-alive\",\"Content-Type\":\"text/html; charset=utf-8\",\"Date\":\"Tue, 07 Jul 2026 06:46:11 GMT\",\"Expires\":\"Tue, 07 Jul 2026 06:46:11 GMT\",\"Pragma\":\"no-cache\",\"Server-Timing\":\"edge; dur=326;origin; dur=94;cdn-cache; desc=MISS;ak_p; desc=\\\"1783406771328_389543092_982377896_41878_7837_102_103_-\\\";dur=1\",\"Set-Cookie\":\"ASP.NET_SessionId=s42nwl2cewu0fv2tgljxalkv; path=/; HttpOnly; SameSite=Lax\",\"Vary\":\"Accept-Encoding\",\"X-Akamai-Transformed\":\"9 14386 0 pmb=mRUM,2\",\"X-Aspnet-Version\":\"4.0.30319\"},\"body\":\"\\r\\n\\u003c!DOCTYPE html\\u003e\\r\\"
+    },
+    {
+      "id": "798e86ed-e986-49c8-bed9-25766a14899e",
+      "capability": "ENDPOINT_EXTRACTION",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "katana",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "{\"timestamp\":\"2026-07-07T12:16:24.8887368+05:30\",\"request\":{\"method\":\"GET\",\"endpoint\":\"https://sahaj.sakra.co.in\",\"raw\":\"GET / HTTP/1.1\\r\\nHost: sahaj.sakra.co.in\\r\\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36\\r\\nAccept-Encoding: gzip\\r\\n\\r\\n\"},\"response\":{\"status_code\":200,\"headers\":{\"Alt-Svc\":\"h3=\\\":443\\\"; ma=93600\",\"Cache-Control\":\"max-age=0, no-cache, no-store\",\"Connection\":\"keep-alive\",\"Content-Type\":\"text/html; charset=utf-8\",\"Date\":\"Tue, 07 Jul 2026 06:46:24 GMT\",\"Expires\":\"Tue, 07 Jul 2026 06:46:24 GMT\",\"Pragma\":\"no-cache\",\"Server-Timing\":\"edge; dur=1;origin; dur=28;cdn-cache; desc=MISS;ak_p; desc=\\\"1783406784752_2917114492_2834773670_2823_7740_59_70_-\\\";dur=1\",\"Set-Cookie\":\"ASP.NET_SessionId=oeu50qqoitzccpe1n2t0wyck; path=/; HttpOnly; SameSite=Lax\",\"Vary\":\"Accept-Encoding\",\"X-Akamai-Transformed\":\"9 14386 0 pmb=mRUM,2\",\"X-Aspnet-Version\":\"4.0.30319\"},\"body\":\"\\r\\n\\u003c!DOCTYPE html\\u003e\\r\\n\\u"
+    },
+    {
+      "id": "c210178e-b61d-49fa-8e35-0f04def2131c",
+      "capability": "PARAMETER_DISCOVERY",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "arjun",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "    _\n   /_| _ '\n  (  |/ /(//) v2.2.7\n      _/      \n\n Scanning 0/1: https://sahaj.sakra.co.in\n Probing the target for stability\n Analysing HTTP response for anomalies\n Extracted 16 parameters from response for testing: txtPassword, btnResetPassword, txtEmpId, btnGetPasswordEmail, if, __VIEWSTATEGENERATOR, txtNewPassword, txtUsername, btnLogin, __EVENTVALIDATION, txtConfirmPassword, hdnModalToOpen, btnRecoverEmail, __VIEWSTATE, txtEmail, txtGetPasswordEmailEmpId\n Logicforcing the URL endpoint\n Processing chunks: 1/103   \n Processing chunks: 2/103   \n Processing chunks: 3/103   \n Processing chunks: 4/103   \n Processing chunks: 5/103   \n Processing chunks: 6/103   \n Processing chunks: 7/103   \n Processing chunks: 8/103   \n Processing chunks: 9/103   \n Processing chunks: 10/103   \n Processing chunks: 11/103   \n Processing chunks: 12/103   \n Processing chunks: 13/103   \n Processing chunks: 14/103   \n Processing chunks: 15/103   \n Processing chunks: 16/103   \n Processing chunks: 17/103   \n "
+    },
+    {
+      "id": "09deda72-51f1-4abf-b03b-5629511a5266",
+      "capability": "JAVASCRIPT_COLLECTION",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "katana",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "{\"timestamp\":\"2026-07-07T12:17:32.6021265+05:30\",\"request\":{\"method\":\"GET\",\"endpoint\":\"https://sahaj.sakra.co.in\",\"raw\":\"GET / HTTP/1.1\\r\\nHost: sahaj.sakra.co.in\\r\\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36\\r\\nAccept-Encoding: gzip\\r\\n\\r\\n\"},\"response\":{\"status_code\":200,\"headers\":{\"Alt-Svc\":\"h3=\\\":443\\\"; ma=93600\",\"Cache-Control\":\"max-age=0, no-cache, no-store\",\"Connection\":\"keep-alive\",\"Content-Type\":\"text/html; charset=utf-8\",\"Date\":\"Tue, 07 Jul 2026 06:47:32 GMT\",\"Expires\":\"Tue, 07 Jul 2026 06:47:32 GMT\",\"Pragma\":\"no-cache\",\"Server-Timing\":\"edge; dur=62;origin; dur=33;cdn-cache; desc=MISS;ak_p; desc=\\\"1783406852315_2917114492_2834933389_9474_6191_68_101_-\\\";dur=1\",\"Set-Cookie\":\"ASP.NET_SessionId=xytnxc00vxm3l3us01flhnd4; path=/; HttpOnly; SameSite=Lax\",\"Vary\":\"Accept-Encoding\",\"X-Akamai-Transformed\":\"9 14386 0 pmb=mRUM,2\",\"X-Aspnet-Version\":\"4.0.30319\"},\"body\":\"\\r\\n\\u003c!DOCTYPE html\\u003e\\r\\n"
+    },
+    {
+      "id": "29aba648-9b30-4518-80b3-3d18256734b4",
+      "capability": "STATIC_ROUTE_EXTRACTION",
+      "status": "FAILED_RETRYABLE",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "linkfinder",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 2,
+      "last_error_summary": "python: can't open file 'C:\\\\Users\\\\deepanshu\\\\Downloads\\\\vapt_automate\\\\linkfinder.py': [Errno 2] No such file or directory\n",
+      "stderr_preview": "python: can't open file 'C:\\\\Users\\\\deepanshu\\\\Downloads\\\\vapt_automate\\\\linkfinder.py': [Errno 2] No such file or directory\n",
+      "stdout_preview": ""
+    },
+    {
+      "id": "2362633c-c760-4b9d-98bd-1ac9078eeff4",
+      "capability": "CONTENT_DISCOVERY",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "ffuf",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": "\n        /'___\\  /'___\\           /'___\\       \n       /\\ \\__/ /\\ \\__/  __  __  /\\ \\__/       \n       \\ \\ ,__\\\\ \\ ,__\\/\\ \\/\\ \\ \\ \\ ,__\\      \n        \\ \\ \\_/ \\ \\ \\_/\\ \\ \\_\\ \\ \\ \\ \\_/      \n         \\ \\_\\   \\ \\_\\  \\ \\____/  \\ \\_\\       \n          \\/_/    \\/_/   \\/___/    \\/_/       \n\n       v2.1.0\n________________________________________________\n\n :: Method           : GET\n :: URL              : https://sahaj.sakra.co.in/FUZZ\n :: Wordlist         : FUZZ: C:\\Users\\deepanshu\\Downloads\\vapt_automate",
+      "stdout_preview": "{\"input\":{\"FFUFHASH\":\"MjBhNTNl\",\"FUZZ\":\"dXBsb2Fkcw==\"},\"position\":14,\"status\":301,\"length\":157,\"words\":9,\"lines\":2,\"content-type\":\"text/html; charset=UTF-8\",\"redirectlocation\":\"https://sahaj.sakra.co.in/uploads/\",\"url\":\"https://sahaj.sakra.co.in/uploads\",\"duration\":176836700,\"scraper\":{},\"resultfile\":\"\",\"host\":\"sahaj.sakra.co.in\"}\n"
+    },
+    {
+      "id": "fc13a365-7582-42ff-935b-b15786e0a819",
+      "capability": "TEMPLATE_BASED_ASSESSMENT",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "nuclei",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "{\"template\":\"dns\\\\aaaa-fingerprint.yaml\",\"template-url\":\"https://cloud.projectdiscovery.io/public/aaaa-fingerprint\",\"template-id\":\"aaaa-fingerprint\",\"template-path\":\"C:\\\\Users\\\\deepanshu\\\\nuclei-templates\\\\dns\\\\aaaa-fingerprint.yaml\",\"info\":{\"name\":\"AAAA Record - IPv6 Detection\",\"author\":[\"rxerium\"],\"tags\":[\"dns\",\"aaaa\",\"ipv6\",\"discovery\"],\"description\":\"An AAAA record was detected. AAAA records are used to map domain names to IPv6 addresses.\\n\",\"reference\":[\"https://www.cloudflare.com/learning/dns/dns-records/dns-aaaa-record/\",\"https://en.wikipedia.org/wiki/IPv6_address\"],\"severity\":\"info\",\"metadata\":{\"max-request\":1},\"classification\":{\"cve-id\":null,\"cwe-id\":[\"cwe-200\"]}},\"type\":\"dns\",\"host\":\"sahaj.sakra.co.in\",\"matched-at\":\"sahaj.sakra.co.in\",\"extracted-results\":[\"2600:140f:1e00::1737:f4d9\",\"2600:140f:1e00::1737:f4c0\"],\"timestamp\":\"2026-07-07T12:18:50.3547204+05:30\",\"matcher-status\":true}\n{\"template\":\"dns\\\\dns-saas-service-detection.yaml\",\"template-url\":\"https://cloud.projectdiscover"
+    },
+    {
+      "id": "cce6c672-67b6-4dc7-851d-089af3a01040",
+      "capability": "HTTP_PROBING",
+      "status": "COMPLETED",
+      "target": "https://sahaj.sakra.co.in",
+      "provider": "httpx",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "{\"timestamp\":\"2026-07-07T12:18:53.6497889+05:30\",\"port\":\"443\",\"url\":\"https://sahaj.sakra.co.in\",\"input\":\"https://sahaj.sakra.co.in\",\"title\":\"Login - Dashboard\",\"scheme\":\"https\",\"content_type\":\"text/html\",\"method\":\"GET\",\"host\":\"sahaj.sakra.co.in\",\"host_ip\":\"2600:1417:73::addf:a280\",\"path\":\"/\",\"time\":\"632.6392ms\",\"a\":[\"23.55.244.177\",\"23.55.244.184\"],\"aaaa\":[\"2600:1417:73::addf:a280\",\"2600:1417:73::addf:a28a\"],\"cname\":[\"sahaj.sakra.co.in.edgekey.net\",\"e242734.dsca.akamaiedge.net\"],\"tech\":[\"Akamai\",\"Bootstrap:5.3.2\",\"HTTP/3\",\"Microsoft ASP.NET:4.0.30319\",\"jQuery CDN\",\"jQuery:3.6.0\",\"jsDelivr\"],\"words\":4894,\"lines\":268,\"status_code\":200,\"content_length\":19072,\"failed\":false,\"knowledgebase\":{\"pHash\":0},\"resolvers\":[\"1.0.0.1:53\",\"8.8.8.8:53\"]}\n"
+    },
+    {
+      "id": "b632a8e0-d509-4d88-b5bc-0c6067e4f6bd",
+      "capability": "PORT_DISCOVERY",
+      "status": "COMPLETED",
+      "target": "sahaj.sakra.co.in",
+      "provider": "nmap",
+      "execution_profile": "STANDARD",
+      "used_fake_fallback": false,
+      "last_exit_code": 0,
+      "last_error_summary": null,
+      "stderr_preview": null,
+      "stdout_preview": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE nmaprun>\n<?xml-stylesheet href=\"file:///C:/Program Files (x86)/Nmap/nmap.xsl\" type=\"text/xsl\"?>\n<!-- Nmap 7.80 scan initiated Tue Jul 07 12:18:54 2026 as: &quot;C:\\\\Program Files (x86)\\\\Nmap\\\\nmap.EXE&quot; -Pn -sV -oX - 23.55.244.184 -->\n<nmaprun scanner=\"nmap\" args=\"&quot;C:\\\\Program Files (x86)\\\\Nmap\\\\nmap.EXE&quot; -Pn -sV -oX - 23.55.244.184\" start=\"1783406934\" startstr=\"Tue Jul 07 12:18:54 2026\" version=\"7.80\" xmloutputversion=\"1.04\">\n<scaninfo type=\"syn\" protocol=\"tcp\" numservices=\"1000\" services=\"1,3-4,6-7,9,13,17,19-26,30,32-33,37,42-43,49,53,70,79-85,88-90,99-100,106,109-111,113,119,125,135,139,143-144,146,161,163,179,199,211-212,222,254-256,259,264,280,301,306,311,340,366,389,406-407,416-417,425,427,443-445,458,464-465,481,497,500,512-515,524,541,543-545,548,554-555,563,587,593,616-617,625,631,636,646,648,666-668,683,687,691,700,705,711,714,720,722,726,749,765,777,783,787,800-801,808,843,873,880,888,898,900-903,911-912,981,987"
+    }
+  ],
+  "applicability": [
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "endpoint-baseline"
+      ]
+    },
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "endpoint-baseline"
+      ]
+    },
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "class_code": "RATE_CONTROL",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "endpoint-baseline"
+      ]
+    },
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "class_code": "INFORMATION_DISCLOSURE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "endpoint-baseline"
+      ]
+    },
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "class_code": "INPUT_VALIDATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.6,
+      "rule_ids": [
+        "endpoint-baseline"
+      ]
+    },
+    {
+      "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.6,
+      "rule_ids": [
+        "service-baseline"
+      ]
+    },
+    {
+      "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "class_code": "EXPOSED_SERVICE",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "service-baseline"
+      ]
+    },
+    {
+      "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "service-baseline"
+      ]
+    },
+    {
+      "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "class_code": "INFORMATION_DISCLOSURE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "service-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "MULTI_STEP_WORKFLOW",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "SESSION_MANAGEMENT",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "HISTORICAL_OR_STALE_SURFACE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.4,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "TLS_CONFIGURATION",
+      "state": "APPLICABLE",
+      "confidence": 0.8,
+      "rule_ids": [
+        "web-app-tls-class"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "CACHE_BEHAVIOR",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "API_SCHEMA_VALIDATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "TEMPLATE_PROCESSING",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.4,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "PATH_HANDLING",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "SECURITY_HEADERS",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "DEBUG_SURFACE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "SECRET_EXPOSURE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.4,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "CROSS_ORIGIN_POLICY",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "BUSINESS_LOGIC",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "TRANSPORT_SECURITY",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "XML_PROCESSING",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.35,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "AUTHENTICATION",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "ADMINISTRATIVE_SURFACE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.45,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "AUTHORIZATION",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "RATE_CONTROL",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "HOST_HEADER_HANDLING",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "known-component-technology-only"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "INJECTION_CLASS",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.6,
+      "rule_ids": [
+        "injection-surface"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "UPLOAD_SECURITY",
+      "state": "APPLICABLE",
+      "confidence": 0.7,
+      "rule_ids": [
+        "upload-endpoint-pattern"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "INFORMATION_DISCLOSURE",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.6,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "REDIRECT_HANDLING",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.5,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "DEPENDENCY_RISK",
+      "state": "POSSIBLY_APPLICABLE",
+      "confidence": 0.55,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "class_code": "INPUT_VALIDATION",
+      "state": "APPLICABLE",
+      "confidence": 0.85,
+      "rule_ids": [
+        "web-app-baseline"
+      ]
+    }
+  ],
+  "test_matrix": [
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "requirements": [
+        {
+          "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "INFORMATION_DISCLOSURE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "INPUT_VALIDATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL"
+        },
+        {
+          "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "RATE_CONTROL",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        }
+      ]
+    },
+    {
+      "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "requirements": [
+        {
+          "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "EXPOSED_SERVICE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "INFORMATION_DISCLOSURE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        }
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "requirements": [
+        {
+          "class_code": "ADMINISTRATIVE_SURFACE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "API_SCHEMA_VALIDATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "AUTHENTICATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "AUTHORIZATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "BUSINESS_LOGIC",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "CACHE_BEHAVIOR",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "CROSS_ORIGIN_POLICY",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "DEBUG_SURFACE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "DEPENDENCY_RISK",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "HISTORICAL_OR_STALE_SURFACE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "HOST_HEADER_HANDLING",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "INFORMATION_DISCLOSURE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "INJECTION_CLASS",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL"
+        },
+        {
+          "class_code": "INPUT_VALIDATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL"
+        },
+        {
+          "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "MULTI_STEP_WORKFLOW",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "PATH_HANDLING",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "RATE_CONTROL",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "REDIRECT_HANDLING",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "SECRET_EXPOSURE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "SECURITY_HEADERS",
+          "coverage_status": "PLANNED",
+          "testing_mode": "AUTOMATED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "SESSION_MANAGEMENT",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "TEMPLATE_PROCESSING",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "TLS_CONFIGURATION",
+          "coverage_status": "PLANNED",
+          "testing_mode": "AUTOMATED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "TRANSPORT_SECURITY",
+          "coverage_status": "PLANNED",
+          "testing_mode": "AUTOMATED",
+          "next_action": "AWAIT_EXECUTION"
+        },
+        {
+          "class_code": "UPLOAD_SECURITY",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL"
+        },
+        {
+          "class_code": "XML_PROCESSING",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION"
+        }
+      ]
+    }
+  ],
+  "test_plans": [
+    {
+      "id": "a68c3f0b-6d2a-4341-a849-487a9f5ad4d0",
+      "hypothesis_id": "f7aac8b5-815d-414e-856b-27c2b8f70e07",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "vulnerability_class_ids": [
+        "38b0e0ac-2d1e-4060-abd3-934389318d77"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "312d9862-3db9-4288-9011-42f4384fe46e",
+      "hypothesis_id": "5ac34b80-a6c0-4866-babd-5e7a4c81a642",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "vulnerability_class_ids": [
+        "d1aba4d6-aa48-4ba9-a60b-ff75329d259d"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "aa188882-1cc8-4d23-8bd3-66434a58aced",
+      "hypothesis_id": "a4096302-e9c4-4ecd-a85b-634ebfe7f966",
+      "testing_mode": "ASSISTED",
+      "status": "PENDING_APPROVAL",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "vulnerability_class_ids": [
+        "e8cb34a8-35dd-49ca-9d42-71f1d805bba2"
+      ],
+      "required_capabilities": [
+        "PARAMETER_DISCOVERY",
+        "WEB_ACTIVE_ASSESSMENT"
+      ],
+      "safety_class": "STATE_CHANGING",
+      "authorization_requirement": "ANALYST_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "3a86e82b-6c6f-4317-85af-0a5f724f9430",
+      "hypothesis_id": "352e08d1-a992-4050-a5f6-faa36f26b1b7",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "vulnerability_class_ids": [
+        "230f30b9-cdce-420c-b9a0-ef6195fb736f"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "5c15f096-fe56-42e4-a127-f7fa54f4af4b",
+      "hypothesis_id": "586cbd4d-d265-4040-8611-496d68168037",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "vulnerability_class_ids": [
+        "c542d703-3c20-4da4-b1b1-0331a0214a14"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "375dd0ee-bb3d-464e-b567-0c6bf54c98ec",
+      "hypothesis_id": "04eba954-02cb-4f70-bf3a-4d18282af1d0",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "vulnerability_class_ids": [
+        "a2dd472c-4f3a-4da1-86b5-ded1df1ec452"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "6cdd4d93-4144-4e27-9418-6bc80fba01bc",
+      "hypothesis_id": "7c1fab02-21e1-469b-bfa7-beec3d98e44e",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "vulnerability_class_ids": [
+        "b7e7f955-c5d1-41ed-8b28-2c391a970da8"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "e2cd66a7-85ae-44e5-9480-506e4f687109",
+      "hypothesis_id": "0a045ffa-9437-4488-aacb-10aee6b3d6d8",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "vulnerability_class_ids": [
+        "d1aba4d6-aa48-4ba9-a60b-ff75329d259d"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "166c229f-d561-484e-bde0-6c9661329c0a",
+      "hypothesis_id": "a129d061-f62e-406b-97ea-7ca119d47c96",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "vulnerability_class_ids": [
+        "c87b697b-8018-4ec5-ac8b-c9c35d026cb8"
+      ],
+      "required_capabilities": [
+        "TECHNOLOGY_IDENTIFICATION",
+        "TEMPLATE_BASED_ASSESSMENT"
+      ],
+      "safety_class": "LOW_IMPACT",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "b93f300f-d44b-45f6-9e87-cbdbd4bc2fa3",
+      "hypothesis_id": "e662a4b9-9a35-4c8b-97f0-8076dc144e67",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "b829ec59-1f75-48c8-910d-ed2d8a219a70"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "ae3a2fb6-2765-4ca6-8a45-a6ce72b7460a",
+      "hypothesis_id": "fb44ecb7-12fd-4011-a02b-18601a5ee43c",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "3d9b20a4-c4c4-48f9-97f9-327a6b326bdd"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "a4dcf9da-5c5a-40b2-8736-a4451523cba6",
+      "hypothesis_id": "01432324-091f-4434-9ddc-1686e005adba",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "b5145c04-abaf-4687-bbaa-1f3197d84a98"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "2ccca84f-01ad-4354-b4a4-871b6c397f8d",
+      "hypothesis_id": "dd30db57-4fc2-43e1-9a2f-64a9c894aed4",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "c3751e24-cf11-40d9-818f-8d8489f1a348"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "8c6772b1-5b15-4a8a-9f66-81eabac7954d",
+      "hypothesis_id": "5b7987ef-20a7-4f55-8bfe-a9a18654e6c8",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "978a9b48-ef6c-47df-ab24-88997ab486f9"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "18ce5686-2397-49ca-a254-ae8b07db1295",
+      "hypothesis_id": "ce87b096-da78-417f-9e45-999ab0eff314",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "2cce8ab9-143b-4bb3-890d-6fc03f54af0d"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "67d5482d-1bdf-4780-be16-07d05092cbce",
+      "hypothesis_id": "cf1a2138-cdce-41d3-8127-32f81d143a08",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "813df145-a8ae-4e8a-8321-8f316eefb693"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "19c762d2-7bd7-4146-801a-57db2bb93f4c",
+      "hypothesis_id": "2e414fee-7b10-49d0-bbba-230c8d512dda",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "54c8b218-dcc7-413f-b701-d9c2c82883fd"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "c2738902-8fa8-4ec1-98c2-15615c6af30e",
+      "hypothesis_id": "5954eb10-128b-48e4-a1cf-f2047d5a25d7",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "a2dd472c-4f3a-4da1-86b5-ded1df1ec452"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "2178f1df-b2d7-4da7-93a3-70430ce330dd",
+      "hypothesis_id": "99c65213-dc37-43b5-b5f0-d56bf3f1a9a9",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "d8a07108-53c2-4908-a391-dcbb3855d5e1"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "e1e7986e-179a-4e02-816d-63e738f25d14",
+      "hypothesis_id": "2495657e-7d15-41e2-96ba-ac8f347a4eb1",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "38b0e0ac-2d1e-4060-abd3-934389318d77"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "cbdd8a4b-9cec-49e8-9fb5-d5a84a9c801d",
+      "hypothesis_id": "589bdbad-4e66-425e-bc8b-639875844c4e",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "08dca408-af48-4449-a11e-8a96c1746d40"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "e45dd55d-9bef-43e0-9aa2-556ce45092f6",
+      "hypothesis_id": "c34482e0-01e0-447b-945a-693f58c0811e",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "c813316c-7293-4c7f-b0ad-3449930c2f3e"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "9fe990d4-fc41-418c-a676-2de539220bb9",
+      "hypothesis_id": "843a0775-7ed9-4364-b886-95a66254962b",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "d1aba4d6-aa48-4ba9-a60b-ff75329d259d"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "5194a5b1-1f80-49b9-a5f6-4cb3df5e7400",
+      "hypothesis_id": "0a5533aa-5dac-4fc6-b17e-9ed31c65a967",
+      "testing_mode": "ASSISTED",
+      "status": "PENDING_APPROVAL",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "cf125517-a682-4844-9f53-aa8d827467b9"
+      ],
+      "required_capabilities": [
+        "PARAMETER_DISCOVERY",
+        "WEB_ACTIVE_ASSESSMENT"
+      ],
+      "safety_class": "STATE_CHANGING",
+      "authorization_requirement": "ANALYST_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "00c931ad-a4e9-48df-bfa8-884549626f24",
+      "hypothesis_id": "fc6e689e-10cb-4a74-8653-14d06595c3de",
+      "testing_mode": "ASSISTED",
+      "status": "PENDING_APPROVAL",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "e8cb34a8-35dd-49ca-9d42-71f1d805bba2"
+      ],
+      "required_capabilities": [
+        "PARAMETER_DISCOVERY",
+        "WEB_ACTIVE_ASSESSMENT"
+      ],
+      "safety_class": "STATE_CHANGING",
+      "authorization_requirement": "ANALYST_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "97120604-9bb5-4785-a53c-b5e5606ca5d1",
+      "hypothesis_id": "da1e2ba2-4c43-4c8a-bfcc-f85b2567310c",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "c87b697b-8018-4ec5-ac8b-c9c35d026cb8"
+      ],
+      "required_capabilities": [
+        "TECHNOLOGY_IDENTIFICATION",
+        "TEMPLATE_BASED_ASSESSMENT"
+      ],
+      "safety_class": "LOW_IMPACT",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "2463b7bf-72c1-4f3f-835d-8a6af2f179b6",
+      "hypothesis_id": "7e2dc50c-eb7b-45d5-b675-3e7cc0ce3e1d",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "0420f401-2b26-4bc2-8ac5-6cb03397b3ef"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "53d5969b-9e48-40af-bbbc-5c4177b65a22",
+      "hypothesis_id": "7a48e6d9-deed-42c3-8f17-fdb38ea508ee",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "230f30b9-cdce-420c-b9a0-ef6195fb736f"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "a2025a5f-ec0f-456d-bba3-abe13d5bcd64",
+      "hypothesis_id": "d5bc03a8-e2ba-46e4-95a5-5b79538b05d1",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "4a486338-8c98-4586-87bb-e30dd3b24db9"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "222949c6-861c-4065-81c7-994f5a4cbcb8",
+      "hypothesis_id": "b0c28b45-7592-4223-ab79-c479131a2e03",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "c542d703-3c20-4da4-b1b1-0331a0214a14"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "98f071d3-fe12-4c88-8959-957932abef79",
+      "hypothesis_id": "87413e8e-2eec-40f6-8f72-6ddceeb50233",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "d2f946f6-56f3-4a36-96fd-2aca402d0942"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "5e78fde2-1186-413b-a0a5-f5920d9e9d7b",
+      "hypothesis_id": "6a56559f-28e2-4b2a-9667-35fa1be4d5d3",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "63c67786-ba21-4fc5-878b-deed81bd78a3"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "b5d76bb5-a500-487b-9002-378b149e7eea",
+      "hypothesis_id": "7dcf2acc-0106-465b-889a-ffdd56248e96",
+      "testing_mode": "AUTOMATED",
+      "status": "APPROVED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "4df5abfa-2b3b-46d4-acd4-1020cce8a8c0"
+      ],
+      "required_capabilities": [
+        "WEB_PASSIVE_ASSESSMENT",
+        "TEMPLATE_BASED_ASSESSMENT"
+      ],
+      "safety_class": "LOW_IMPACT",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "1d48e0ba-3e6e-449a-a101-307029b4810f",
+      "hypothesis_id": "311049f0-6375-4dfa-9b07-24877aa5ec1f",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "72ca10bf-78c5-4cdb-b189-ba58dd99be69"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "9db5169e-a535-4d2d-8bf9-6c181f2f7032",
+      "hypothesis_id": "af47b4ac-5626-40b7-9beb-3426aaedd5ba",
+      "testing_mode": "MANUAL",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "08954cc3-d6cd-4238-a986-9e7a2294ea70"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "daecdfec-2841-471e-864a-3ab43b443b64",
+      "hypothesis_id": "dbec30fc-42fe-45d2-8c72-dc9be9e132a0",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "4778d7aa-67d9-4e7b-acb4-7c2ac2d4a090"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "2bc53794-74dd-41cd-941e-a74012db9136",
+      "hypothesis_id": "504d399c-96e9-4af5-8d63-bfb722d756d8",
+      "testing_mode": "AUTOMATED",
+      "status": "APPROVED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "26cb4dc2-e21a-4f07-b095-c52738bf9ec4"
+      ],
+      "required_capabilities": [
+        "TLS_CHARACTERIZATION",
+        "TEMPLATE_BASED_ASSESSMENT"
+      ],
+      "safety_class": "LOW_IMPACT",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "8a576574-5ee5-4948-9d3c-cdb590bdae94",
+      "hypothesis_id": "34c70542-0ec3-47d5-8d03-f370951ce0cd",
+      "testing_mode": "AUTOMATED",
+      "status": "APPROVED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "9ae2a7c9-7209-4644-b15b-0623e53c72f5"
+      ],
+      "required_capabilities": [
+        "TLS_CHARACTERIZATION",
+        "WEB_PASSIVE_ASSESSMENT"
+      ],
+      "safety_class": "LOW_IMPACT",
+      "authorization_requirement": "PRE_APPROVED"
+    },
+    {
+      "id": "084926dc-58d9-4495-805e-81dc93a44ba2",
+      "hypothesis_id": "4cbe6a75-4822-4e60-b9fa-fc5b5ed7298a",
+      "testing_mode": "ASSISTED",
+      "status": "PENDING_APPROVAL",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "d1395de0-2e9c-4688-8f90-01158adbf97f"
+      ],
+      "required_capabilities": [
+        "CONTENT_DISCOVERY",
+        "WEB_ACTIVE_ASSESSMENT"
+      ],
+      "safety_class": "STATE_CHANGING",
+      "authorization_requirement": "ANALYST_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "ac93744a-b7ef-42f7-9574-bccd59ec4548",
+      "hypothesis_id": "473e9064-b2c0-4ff3-95e9-755c2b0f08b0",
+      "testing_mode": "ASSISTED",
+      "status": "SCHEDULED",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "vulnerability_class_ids": [
+        "a511509b-ab12-4393-8f4e-be2b8b4e7faa"
+      ],
+      "required_capabilities": [],
+      "safety_class": "PASSIVE",
+      "authorization_requirement": "PRE_APPROVED"
+    }
+  ],
+  "test_executions": [],
+  "validation_backlog": [
+    {
+      "id": "43789bdf-357c-48ce-82ff-57e1aa723575",
+      "hypothesis_id": "f7aac8b5-815d-414e-856b-27c2b8f70e07",
+      "test_plan_id": "a68c3f0b-6d2a-4341-a849-487a9f5ad4d0",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Manually validate FUNCTION_LEVEL_AUTHORIZATION",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "e4550aba-59fd-4009-8575-e0bd6050d813",
+      "hypothesis_id": "5ac34b80-a6c0-4866-babd-5e7a4c81a642",
+      "test_plan_id": "312d9862-3db9-4288-9011-42f4384fe46e",
+      "evidence_package_id": "fb32a29a-edc3-474a-a985-31bae0830235",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Prepare and review evidence for INFORMATION_DISCLOSURE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "53c56bc0-2718-48cb-85fe-d3d90c4587e0",
+      "hypothesis_id": "a4096302-e9c4-4ecd-a85b-634ebfe7f966",
+      "test_plan_id": "aa188882-1cc8-4d23-8bd3-66434a58aced",
+      "evidence_package_id": "ad684d86-042f-45a2-a20b-718abdc36a0e",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Prepare and review evidence for INPUT_VALIDATION",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "809b2be5-81dc-4636-9ad2-f35198d6afdd",
+      "hypothesis_id": "352e08d1-a992-4050-a5f6-faa36f26b1b7",
+      "test_plan_id": "3a86e82b-6c6f-4317-85af-0a5f724f9430",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Manually validate OBJECT_LEVEL_AUTHORIZATION",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "17079523-1714-4d81-8e51-fae50b32e621",
+      "hypothesis_id": "586cbd4d-d265-4040-8611-496d68168037",
+      "test_plan_id": "5c15f096-fe56-42e4-a127-f7fa54f4af4b",
+      "evidence_package_id": "441f45f4-e6e8-4dce-86f7-e0ab06c968c1",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Prepare and review evidence for RATE_CONTROL",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "b04e4708-5a71-4095-9df1-2868ee2f4270",
+      "hypothesis_id": "04eba954-02cb-4f70-bf3a-4d18282af1d0",
+      "test_plan_id": "375dd0ee-bb3d-464e-b567-0c6bf54c98ec",
+      "evidence_package_id": "828a6ee4-f9f4-43db-9fb9-fb021a8c8150",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for DEFAULT_OR_WEAK_CONFIGURATION",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "83db44b4-b853-4061-a1d2-5767371b1efc",
+      "hypothesis_id": "7c1fab02-21e1-469b-bfa7-beec3d98e44e",
+      "test_plan_id": "6cdd4d93-4144-4e27-9418-6bc80fba01bc",
+      "evidence_package_id": "0f17a379-fe97-4bcf-a496-4f7186bd1e89",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for EXPOSED_SERVICE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "d5f5de24-380a-4f1b-9564-16b59fe1db34",
+      "hypothesis_id": "0a045ffa-9437-4488-aacb-10aee6b3d6d8",
+      "test_plan_id": "e2cd66a7-85ae-44e5-9480-506e4f687109",
+      "evidence_package_id": "55a5d5b0-d8f4-4baa-a2b6-f25fbf53f5f1",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for INFORMATION_DISCLOSURE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "d49a005c-aa66-4b85-9b6e-cee736c26ab2",
+      "hypothesis_id": "a129d061-f62e-406b-97ea-7ca119d47c96",
+      "test_plan_id": "166c229f-d561-484e-bde0-6c9661329c0a",
+      "evidence_package_id": "3fb32572-70b6-4c02-aff1-ffe31d7b326b",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for KNOWN_COMPONENT_VULNERABILITY",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "7bf429eb-4268-4923-8c88-b3f5c9ad5c04",
+      "hypothesis_id": "e662a4b9-9a35-4c8b-97f0-8076dc144e67",
+      "test_plan_id": "b93f300f-d44b-45f6-9e87-cbdbd4bc2fa3",
+      "evidence_package_id": "381f7be3-4def-4ad7-b9e7-a8f060fc21a6",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for ADMINISTRATIVE_SURFACE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "4e9b93c9-4615-4d60-9fb7-30cd8e2992b5",
+      "hypothesis_id": "fb44ecb7-12fd-4011-a02b-18601a5ee43c",
+      "test_plan_id": "ae3a2fb6-2765-4ca6-8a45-a6ce72b7460a",
+      "evidence_package_id": "46ffe6ba-c265-4ccc-979a-38abd7a4b0f8",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for API_SCHEMA_VALIDATION",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "ade10208-2fd2-4630-8332-e1dfda213438",
+      "hypothesis_id": "01432324-091f-4434-9ddc-1686e005adba",
+      "test_plan_id": "a4dcf9da-5c5a-40b2-8736-a4451523cba6",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate AUTHENTICATION",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "bdb78559-604e-48a8-bb15-7b75de2d3a8e",
+      "hypothesis_id": "dd30db57-4fc2-43e1-9a2f-64a9c894aed4",
+      "test_plan_id": "2ccca84f-01ad-4354-b4a4-871b6c397f8d",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate AUTHORIZATION",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "d7c38fc7-1b8c-42ea-9b78-1c879b3df47f",
+      "hypothesis_id": "5b7987ef-20a7-4f55-8bfe-a9a18654e6c8",
+      "test_plan_id": "8c6772b1-5b15-4a8a-9f66-81eabac7954d",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate BUSINESS_LOGIC",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "7e209e53-eba4-4522-a214-26759bcaa0b7",
+      "hypothesis_id": "ce87b096-da78-417f-9e45-999ab0eff314",
+      "test_plan_id": "18ce5686-2397-49ca-a254-ae8b07db1295",
+      "evidence_package_id": "ca41098d-56a5-48f9-93aa-7552e5366598",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for CACHE_BEHAVIOR",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "2994b6a8-7e95-43e8-b7d8-75359948172b",
+      "hypothesis_id": "cf1a2138-cdce-41d3-8127-32f81d143a08",
+      "test_plan_id": "67d5482d-1bdf-4780-be16-07d05092cbce",
+      "evidence_package_id": "512e528d-d5fb-4172-a0d7-f7f93b440693",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for CROSS_ORIGIN_POLICY",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "5921d937-d77e-4e5b-b241-842a6532c703",
+      "hypothesis_id": "2e414fee-7b10-49d0-bbba-230c8d512dda",
+      "test_plan_id": "19c762d2-7bd7-4146-801a-57db2bb93f4c",
+      "evidence_package_id": "adf16b27-4c60-44aa-9010-51da651c032e",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for DEBUG_SURFACE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "af7c97a6-c84a-4401-85db-e42c35b09ffb",
+      "hypothesis_id": "5954eb10-128b-48e4-a1cf-f2047d5a25d7",
+      "test_plan_id": "c2738902-8fa8-4ec1-98c2-15615c6af30e",
+      "evidence_package_id": "b4646002-2ccd-4192-9157-aab77499e8b1",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for DEFAULT_OR_WEAK_CONFIGURATION",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "3ef7ebf4-e676-45d1-b871-3134beb61d95",
+      "hypothesis_id": "99c65213-dc37-43b5-b5f0-d56bf3f1a9a9",
+      "test_plan_id": "2178f1df-b2d7-4da7-93a3-70430ce330dd",
+      "evidence_package_id": "91b4fe11-8ace-4f01-8a97-e6bd8ec95236",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for DEPENDENCY_RISK",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "a6c387b5-d9ce-4af4-b8f6-989bbdf79e3b",
+      "hypothesis_id": "2495657e-7d15-41e2-96ba-ac8f347a4eb1",
+      "test_plan_id": "e1e7986e-179a-4e02-816d-63e738f25d14",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate FUNCTION_LEVEL_AUTHORIZATION",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "bd2a42a5-38e3-4391-8a9b-b2233513c43b",
+      "hypothesis_id": "589bdbad-4e66-425e-bc8b-639875844c4e",
+      "test_plan_id": "cbdd8a4b-9cec-49e8-9fb5-d5a84a9c801d",
+      "evidence_package_id": "2bca71cc-14ad-456d-a6a1-efa999e5ebaa",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for HISTORICAL_OR_STALE_SURFACE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "12f56125-5c5a-434f-b15d-ab4e1ed97dd3",
+      "hypothesis_id": "c34482e0-01e0-447b-945a-693f58c0811e",
+      "test_plan_id": "e45dd55d-9bef-43e0-9aa2-556ce45092f6",
+      "evidence_package_id": "f26bf116-7cff-4187-94b6-840727210f30",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for HOST_HEADER_HANDLING",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "7ac5db69-cfec-4098-bc62-10591e0baaaf",
+      "hypothesis_id": "843a0775-7ed9-4364-b886-95a66254962b",
+      "test_plan_id": "9fe990d4-fc41-418c-a676-2de539220bb9",
+      "evidence_package_id": "02e77982-ac72-40a8-a5b1-9ea45333259d",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for INFORMATION_DISCLOSURE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "abf8f5e9-ed49-4ffd-a1a7-1b637fa626b3",
+      "hypothesis_id": "0a5533aa-5dac-4fc6-b17e-9ed31c65a967",
+      "test_plan_id": "5194a5b1-1f80-49b9-a5f6-4cb3df5e7400",
+      "evidence_package_id": "6dc0177a-e28c-4848-896f-d4ac9658db27",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for INJECTION_CLASS",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "5b45c51f-354f-42dc-b58c-6a4733fac932",
+      "hypothesis_id": "fc6e689e-10cb-4a74-8653-14d06595c3de",
+      "test_plan_id": "00c931ad-a4e9-48df-bfa8-884549626f24",
+      "evidence_package_id": "c3063ebc-ff0e-4ff2-acb3-6b0ccba5dcfd",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for INPUT_VALIDATION",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "e204c834-1f72-4b69-964e-7ba819346e4c",
+      "hypothesis_id": "da1e2ba2-4c43-4c8a-bfcc-f85b2567310c",
+      "test_plan_id": "97120604-9bb5-4785-a53c-b5e5606ca5d1",
+      "evidence_package_id": "4efc0161-496f-4028-834f-d4ef0b6356fd",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for KNOWN_COMPONENT_VULNERABILITY",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "9495fe6a-80fb-480d-b6d0-21284ed5e33a",
+      "hypothesis_id": "7e2dc50c-eb7b-45d5-b675-3e7cc0ce3e1d",
+      "test_plan_id": "2463b7bf-72c1-4f3f-835d-8a6af2f179b6",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate MULTI_STEP_WORKFLOW",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "204e80ef-cc5a-4f4b-b564-3c630177fbb0",
+      "hypothesis_id": "7a48e6d9-deed-42c3-8f17-fdb38ea508ee",
+      "test_plan_id": "53d5969b-9e48-40af-bbbc-5c4177b65a22",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate OBJECT_LEVEL_AUTHORIZATION",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "ef4ed092-9492-4ba7-a3be-fcceca8e38ca",
+      "hypothesis_id": "d5bc03a8-e2ba-46e4-95a5-5b79538b05d1",
+      "test_plan_id": "a2025a5f-ec0f-456d-bba3-abe13d5bcd64",
+      "evidence_package_id": "6a8f8662-9183-4f5f-8705-7a992ce934fb",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for PATH_HANDLING",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "30b7e87e-a098-4448-9333-6633524c08a3",
+      "hypothesis_id": "b0c28b45-7592-4223-ab79-c479131a2e03",
+      "test_plan_id": "222949c6-861c-4065-81c7-994f5a4cbcb8",
+      "evidence_package_id": "12acc287-76b9-42e9-a5ab-a4a416272cd3",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for RATE_CONTROL",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "9ba92e28-b0b1-4ae0-8210-13f7d0e2db31",
+      "hypothesis_id": "87413e8e-2eec-40f6-8f72-6ddceeb50233",
+      "test_plan_id": "98f071d3-fe12-4c88-8959-957932abef79",
+      "evidence_package_id": "ada60882-e44b-48e5-98c0-05ddde744a45",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for REDIRECT_HANDLING",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "dfc07196-2bc1-4cac-80c2-ab44bc091f99",
+      "hypothesis_id": "6a56559f-28e2-4b2a-9667-35fa1be4d5d3",
+      "test_plan_id": "5e78fde2-1186-413b-a0a5-f5920d9e9d7b",
+      "evidence_package_id": "626ffae3-773b-4527-845d-5d96612a5f32",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for SECRET_EXPOSURE",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "21895d65-d38d-42d8-a2cf-999c78278742",
+      "hypothesis_id": "311049f0-6375-4dfa-9b07-24877aa5ec1f",
+      "test_plan_id": "1d48e0ba-3e6e-449a-a101-307029b4810f",
+      "evidence_package_id": "0de44adc-08fb-4d97-93eb-8ee75425846a",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for SERVER_SIDE_REQUEST_BEHAVIOR",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "4d90f6aa-2c6c-47a9-8ab3-3e1723048d07",
+      "hypothesis_id": "af47b4ac-5626-40b7-9beb-3426aaedd5ba",
+      "test_plan_id": "9db5169e-a535-4d2d-8bf9-6c181f2f7032",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate SESSION_MANAGEMENT",
+      "testing_mode": "MANUAL",
+      "status": "OPEN"
+    },
+    {
+      "id": "135bf5ec-a379-4fd1-9c71-a9790830b28e",
+      "hypothesis_id": "dbec30fc-42fe-45d2-8c72-dc9be9e132a0",
+      "test_plan_id": "daecdfec-2841-471e-864a-3ab43b443b64",
+      "evidence_package_id": "9c4769f3-51f5-414a-96d3-7b2c1819d3c3",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for TEMPLATE_PROCESSING",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "52f07611-c175-4a67-b591-bcdab862128e",
+      "hypothesis_id": "4cbe6a75-4822-4e60-b9fa-fc5b5ed7298a",
+      "test_plan_id": "084926dc-58d9-4495-805e-81dc93a44ba2",
+      "evidence_package_id": "35eaa002-49fd-43b0-998d-a20b1abaea24",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for UPLOAD_SECURITY",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    },
+    {
+      "id": "da4e56a8-1ff4-4c09-baef-cefe5d2b189e",
+      "hypothesis_id": "473e9064-b2c0-4ff3-95e9-755c2b0f08b0",
+      "test_plan_id": "ac93744a-b7ef-42f7-9574-bccd59ec4548",
+      "evidence_package_id": "5686cd84-2ea7-4006-99d1-5c0e531e8214",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for XML_PROCESSING",
+      "testing_mode": "ASSISTED",
+      "status": "OPEN"
+    }
+  ],
+  "validation_results": [],
+  "evidence_links": [],
+  "hypotheses": [
+    {
+      "id": "f7aac8b5-815d-414e-856b-27c2b8f70e07",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in/uploads",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a68c3f0b-6d2a-4341-a849-487a9f5ad4d0",
+      "verdict_id": null
+    },
+    {
+      "id": "5ac34b80-a6c0-4866-babd-5e7a4c81a642",
+      "title": "Validate INFORMATION_DISCLOSURE on https://sahaj.sakra.co.in/uploads",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "312d9862-3db9-4288-9011-42f4384fe46e",
+      "verdict_id": null
+    },
+    {
+      "id": "a4096302-e9c4-4ecd-a85b-634ebfe7f966",
+      "title": "Validate INPUT_VALIDATION on https://sahaj.sakra.co.in/uploads",
+      "description": "INPUT_VALIDATION is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "aa188882-1cc8-4d23-8bd3-66434a58aced",
+      "verdict_id": null
+    },
+    {
+      "id": "352e08d1-a992-4050-a5f6-faa36f26b1b7",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in/uploads",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "3a86e82b-6c6f-4317-85af-0a5f724f9430",
+      "verdict_id": null
+    },
+    {
+      "id": "586cbd4d-d265-4040-8611-496d68168037",
+      "title": "Validate RATE_CONTROL on https://sahaj.sakra.co.in/uploads",
+      "description": "RATE_CONTROL is applicable to https://sahaj.sakra.co.in/uploads and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "supporting_evidence_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5c15f096-fe56-42e4-a127-f7fa54f4af4b",
+      "verdict_id": null
+    },
+    {
+      "id": "04eba954-02cb-4f70-bf3a-4d18282af1d0",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on https-sahaj.sakra.co.in:443",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "375dd0ee-bb3d-464e-b567-0c6bf54c98ec",
+      "verdict_id": null
+    },
+    {
+      "id": "7c1fab02-21e1-469b-bfa7-beec3d98e44e",
+      "title": "Validate EXPOSED_SERVICE on https-sahaj.sakra.co.in:443",
+      "description": "EXPOSED_SERVICE is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "EXPOSED_SERVICE",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "6cdd4d93-4144-4e27-9418-6bc80fba01bc",
+      "verdict_id": null
+    },
+    {
+      "id": "0a045ffa-9437-4488-aacb-10aee6b3d6d8",
+      "title": "Validate INFORMATION_DISCLOSURE on https-sahaj.sakra.co.in:443",
+      "description": "INFORMATION_DISCLOSURE is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e2cd66a7-85ae-44e5-9480-506e4f687109",
+      "verdict_id": null
+    },
+    {
+      "id": "a129d061-f62e-406b-97ea-7ca119d47c96",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on https-sahaj.sakra.co.in:443",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to https-sahaj.sakra.co.in:443 and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "supporting_evidence_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "166c229f-d561-484e-bde0-6c9661329c0a",
+      "verdict_id": null
+    },
+    {
+      "id": "e662a4b9-9a35-4c8b-97f0-8076dc144e67",
+      "title": "Validate ADMINISTRATIVE_SURFACE on https://sahaj.sakra.co.in",
+      "description": "ADMINISTRATIVE_SURFACE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "ADMINISTRATIVE_SURFACE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "b93f300f-d44b-45f6-9e87-cbdbd4bc2fa3",
+      "verdict_id": null
+    },
+    {
+      "id": "fb44ecb7-12fd-4011-a02b-18601a5ee43c",
+      "title": "Validate API_SCHEMA_VALIDATION on https://sahaj.sakra.co.in",
+      "description": "API_SCHEMA_VALIDATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "API_SCHEMA_VALIDATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "ae3a2fb6-2765-4ca6-8a45-a6ce72b7460a",
+      "verdict_id": null
+    },
+    {
+      "id": "01432324-091f-4434-9ddc-1686e005adba",
+      "title": "Validate AUTHENTICATION on https://sahaj.sakra.co.in",
+      "description": "AUTHENTICATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHENTICATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a4dcf9da-5c5a-40b2-8736-a4451523cba6",
+      "verdict_id": null
+    },
+    {
+      "id": "dd30db57-4fc2-43e1-9a2f-64a9c894aed4",
+      "title": "Validate AUTHORIZATION on https://sahaj.sakra.co.in",
+      "description": "AUTHORIZATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "AUTHORIZATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2ccca84f-01ad-4354-b4a4-871b6c397f8d",
+      "verdict_id": null
+    },
+    {
+      "id": "5b7987ef-20a7-4f55-8bfe-a9a18654e6c8",
+      "title": "Validate BUSINESS_LOGIC on https://sahaj.sakra.co.in",
+      "description": "BUSINESS_LOGIC is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "BUSINESS_LOGIC",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8c6772b1-5b15-4a8a-9f66-81eabac7954d",
+      "verdict_id": null
+    },
+    {
+      "id": "ce87b096-da78-417f-9e45-999ab0eff314",
+      "title": "Validate CACHE_BEHAVIOR on https://sahaj.sakra.co.in",
+      "description": "CACHE_BEHAVIOR is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CACHE_BEHAVIOR",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "18ce5686-2397-49ca-a254-ae8b07db1295",
+      "verdict_id": null
+    },
+    {
+      "id": "cf1a2138-cdce-41d3-8127-32f81d143a08",
+      "title": "Validate CROSS_ORIGIN_POLICY on https://sahaj.sakra.co.in",
+      "description": "CROSS_ORIGIN_POLICY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "CROSS_ORIGIN_POLICY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "67d5482d-1bdf-4780-be16-07d05092cbce",
+      "verdict_id": null
+    },
+    {
+      "id": "2e414fee-7b10-49d0-bbba-230c8d512dda",
+      "title": "Validate DEBUG_SURFACE on https://sahaj.sakra.co.in",
+      "description": "DEBUG_SURFACE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEBUG_SURFACE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "19c762d2-7bd7-4146-801a-57db2bb93f4c",
+      "verdict_id": null
+    },
+    {
+      "id": "5954eb10-128b-48e4-a1cf-f2047d5a25d7",
+      "title": "Validate DEFAULT_OR_WEAK_CONFIGURATION on https://sahaj.sakra.co.in",
+      "description": "DEFAULT_OR_WEAK_CONFIGURATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEFAULT_OR_WEAK_CONFIGURATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "c2738902-8fa8-4ec1-98c2-15615c6af30e",
+      "verdict_id": null
+    },
+    {
+      "id": "99c65213-dc37-43b5-b5f0-d56bf3f1a9a9",
+      "title": "Validate DEPENDENCY_RISK on https://sahaj.sakra.co.in",
+      "description": "DEPENDENCY_RISK is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "DEPENDENCY_RISK",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2178f1df-b2d7-4da7-93a3-70430ce330dd",
+      "verdict_id": null
+    },
+    {
+      "id": "2495657e-7d15-41e2-96ba-ac8f347a4eb1",
+      "title": "Validate FUNCTION_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in",
+      "description": "FUNCTION_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "FUNCTION_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e1e7986e-179a-4e02-816d-63e738f25d14",
+      "verdict_id": null
+    },
+    {
+      "id": "589bdbad-4e66-425e-bc8b-639875844c4e",
+      "title": "Validate HISTORICAL_OR_STALE_SURFACE on https://sahaj.sakra.co.in",
+      "description": "HISTORICAL_OR_STALE_SURFACE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HISTORICAL_OR_STALE_SURFACE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "cbdd8a4b-9cec-49e8-9fb5-d5a84a9c801d",
+      "verdict_id": null
+    },
+    {
+      "id": "c34482e0-01e0-447b-945a-693f58c0811e",
+      "title": "Validate HOST_HEADER_HANDLING on https://sahaj.sakra.co.in",
+      "description": "HOST_HEADER_HANDLING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "HOST_HEADER_HANDLING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "e45dd55d-9bef-43e0-9aa2-556ce45092f6",
+      "verdict_id": null
+    },
+    {
+      "id": "843a0775-7ed9-4364-b886-95a66254962b",
+      "title": "Validate INFORMATION_DISCLOSURE on https://sahaj.sakra.co.in",
+      "description": "INFORMATION_DISCLOSURE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INFORMATION_DISCLOSURE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9fe990d4-fc41-418c-a676-2de539220bb9",
+      "verdict_id": null
+    },
+    {
+      "id": "0a5533aa-5dac-4fc6-b17e-9ed31c65a967",
+      "title": "Validate INJECTION_CLASS on https://sahaj.sakra.co.in",
+      "description": "INJECTION_CLASS is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INJECTION_CLASS",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.6,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5194a5b1-1f80-49b9-a5f6-4cb3df5e7400",
+      "verdict_id": null
+    },
+    {
+      "id": "fc6e689e-10cb-4a74-8653-14d06595c3de",
+      "title": "Validate INPUT_VALIDATION on https://sahaj.sakra.co.in",
+      "description": "INPUT_VALIDATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "INPUT_VALIDATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "00c931ad-a4e9-48df-bfa8-884549626f24",
+      "verdict_id": null
+    },
+    {
+      "id": "da1e2ba2-4c43-4c8a-bfcc-f85b2567310c",
+      "title": "Validate KNOWN_COMPONENT_VULNERABILITY on https://sahaj.sakra.co.in",
+      "description": "KNOWN_COMPONENT_VULNERABILITY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "KNOWN_COMPONENT_VULNERABILITY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "97120604-9bb5-4785-a53c-b5e5606ca5d1",
+      "verdict_id": null
+    },
+    {
+      "id": "7e2dc50c-eb7b-45d5-b675-3e7cc0ce3e1d",
+      "title": "Validate MULTI_STEP_WORKFLOW on https://sahaj.sakra.co.in",
+      "description": "MULTI_STEP_WORKFLOW is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "MULTI_STEP_WORKFLOW",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2463b7bf-72c1-4f3f-835d-8a6af2f179b6",
+      "verdict_id": null
+    },
+    {
+      "id": "7a48e6d9-deed-42c3-8f17-fdb38ea508ee",
+      "title": "Validate OBJECT_LEVEL_AUTHORIZATION on https://sahaj.sakra.co.in",
+      "description": "OBJECT_LEVEL_AUTHORIZATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "OBJECT_LEVEL_AUTHORIZATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "53d5969b-9e48-40af-bbbc-5c4177b65a22",
+      "verdict_id": null
+    },
+    {
+      "id": "d5bc03a8-e2ba-46e4-95a5-5b79538b05d1",
+      "title": "Validate PATH_HANDLING on https://sahaj.sakra.co.in",
+      "description": "PATH_HANDLING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "PATH_HANDLING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "a2025a5f-ec0f-456d-bba3-abe13d5bcd64",
+      "verdict_id": null
+    },
+    {
+      "id": "b0c28b45-7592-4223-ab79-c479131a2e03",
+      "title": "Validate RATE_CONTROL on https://sahaj.sakra.co.in",
+      "description": "RATE_CONTROL is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "RATE_CONTROL",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.55,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "222949c6-861c-4065-81c7-994f5a4cbcb8",
+      "verdict_id": null
+    },
+    {
+      "id": "87413e8e-2eec-40f6-8f72-6ddceeb50233",
+      "title": "Validate REDIRECT_HANDLING on https://sahaj.sakra.co.in",
+      "description": "REDIRECT_HANDLING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "REDIRECT_HANDLING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.5,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "98f071d3-fe12-4c88-8959-957932abef79",
+      "verdict_id": null
+    },
+    {
+      "id": "6a56559f-28e2-4b2a-9667-35fa1be4d5d3",
+      "title": "Validate SECRET_EXPOSURE on https://sahaj.sakra.co.in",
+      "description": "SECRET_EXPOSURE is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECRET_EXPOSURE",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.45,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "5e78fde2-1186-413b-a0a5-f5920d9e9d7b",
+      "verdict_id": null
+    },
+    {
+      "id": "7dcf2acc-0106-465b-889a-ffdd56248e96",
+      "title": "Validate SECURITY_HEADERS on https://sahaj.sakra.co.in",
+      "description": "SECURITY_HEADERS is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SECURITY_HEADERS",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "b5d76bb5-a500-487b-9002-378b149e7eea",
+      "verdict_id": null
+    },
+    {
+      "id": "311049f0-6375-4dfa-9b07-24877aa5ec1f",
+      "title": "Validate SERVER_SIDE_REQUEST_BEHAVIOR on https://sahaj.sakra.co.in",
+      "description": "SERVER_SIDE_REQUEST_BEHAVIOR is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SERVER_SIDE_REQUEST_BEHAVIOR",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "1d48e0ba-3e6e-449a-a101-307029b4810f",
+      "verdict_id": null
+    },
+    {
+      "id": "af47b4ac-5626-40b7-9beb-3426aaedd5ba",
+      "title": "Validate SESSION_MANAGEMENT on https://sahaj.sakra.co.in",
+      "description": "SESSION_MANAGEMENT is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "SESSION_MANAGEMENT",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "9db5169e-a535-4d2d-8bf9-6c181f2f7032",
+      "verdict_id": null
+    },
+    {
+      "id": "dbec30fc-42fe-45d2-8c72-dc9be9e132a0",
+      "title": "Validate TEMPLATE_PROCESSING on https://sahaj.sakra.co.in",
+      "description": "TEMPLATE_PROCESSING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TEMPLATE_PROCESSING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.4,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "daecdfec-2841-471e-864a-3ab43b443b64",
+      "verdict_id": null
+    },
+    {
+      "id": "504d399c-96e9-4af5-8d63-bfb722d756d8",
+      "title": "Validate TLS_CONFIGURATION on https://sahaj.sakra.co.in",
+      "description": "TLS_CONFIGURATION is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TLS_CONFIGURATION",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.8,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "2bc53794-74dd-41cd-941e-a74012db9136",
+      "verdict_id": null
+    },
+    {
+      "id": "34c70542-0ec3-47d5-8d03-f370951ce0cd",
+      "title": "Validate TRANSPORT_SECURITY on https://sahaj.sakra.co.in",
+      "description": "TRANSPORT_SECURITY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "TRANSPORT_SECURITY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.85,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "8a576574-5ee5-4948-9d3c-cdb590bdae94",
+      "verdict_id": null
+    },
+    {
+      "id": "4cbe6a75-4822-4e60-b9fa-fc5b5ed7298a",
+      "title": "Validate UPLOAD_SECURITY on https://sahaj.sakra.co.in",
+      "description": "UPLOAD_SECURITY is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "UPLOAD_SECURITY",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.7,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "084926dc-58d9-4495-805e-81dc93a44ba2",
+      "verdict_id": null
+    },
+    {
+      "id": "473e9064-b2c0-4ff3-95e9-755c2b0f08b0",
+      "title": "Validate XML_PROCESSING on https://sahaj.sakra.co.in",
+      "description": "XML_PROCESSING is applicable to https://sahaj.sakra.co.in and requires explicit validation. Applicability alone is not a confirmed vulnerability.",
+      "hypothesis_type": "XML_PROCESSING",
+      "affected_asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "supporting_evidence_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "fa22858c-79f7-4f79-bd58-429762fea3f6"
+      ],
+      "contradicting_evidence_ids": [],
+      "confidence": 0.35,
+      "status": "READY_FOR_VALIDATION",
+      "test_plan_id": "ac93744a-b7ef-42f7-9574-bccd59ec4548",
+      "verdict_id": null
+    }
+  ],
+  "verdicts": [],
+  "confirmed_findings": [],
+  "ai_enrichments": [],
+  "auth_coverage": {
+    "scan_id": "3f21acaf-3a93-4d01-974c-adc6a0404347",
+    "items": [
+      {
+        "asset_id": "187d0edf-c976-4684-b195-10720318cb7e",
+        "asset_type": "HOSTNAME",
+        "display_name": "sahaj.sakra.co.in",
+        "auth_coverage_status": "UNAUTHENTICATED",
+        "session_established": false,
+        "coverage_dimensions": [],
+        "roles": [],
+        "auth_context_count": 0
+      },
+      {
+        "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+        "asset_type": "SERVICE",
+        "display_name": "https-sahaj.sakra.co.in:443",
+        "auth_coverage_status": "UNAUTHENTICATED",
+        "session_established": false,
+        "coverage_dimensions": [],
+        "roles": [],
+        "auth_context_count": 0
+      },
+      {
+        "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+        "asset_type": "WEB_APPLICATION",
+        "display_name": "https://sahaj.sakra.co.in",
+        "auth_coverage_status": "UNAUTHENTICATED",
+        "session_established": false,
+        "coverage_dimensions": [],
+        "roles": [],
+        "auth_context_count": 0
+      },
+      {
+        "asset_id": "390bd8a2-e8c8-4192-a4b5-e26e96fe7610",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "23.55.244.184",
+        "auth_coverage_status": "UNAUTHENTICATED",
+        "session_established": false,
+        "coverage_dimensions": [],
+        "roles": [],
+        "auth_context_count": 0
+      },
+      {
+        "asset_id": "bfe27fe3-b5fb-4b1b-91b7-4fa3c61b968c",
+        "asset_type": "IP_ADDRESS",
+        "display_name": "23.55.244.177",
+        "auth_coverage_status": "UNAUTHENTICATED",
+        "session_established": false,
+        "coverage_dimensions": [],
+        "roles": [],
+        "auth_context_count": 0
+      },
+      {
+        "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+        "asset_type": "ENDPOINT",
+        "display_name": "https://sahaj.sakra.co.in/uploads",
+        "auth_coverage_status": "UNAUTHENTICATED",
+        "session_established": false,
+        "coverage_dimensions": [],
+        "roles": [],
+        "auth_context_count": 0
+      }
+    ],
+    "total": 6,
+    "secret_values_excluded": true
+  },
+  "role_coverage": {
+    "scan_id": "3f21acaf-3a93-4d01-974c-adc6a0404347",
+    "items": [],
+    "total": 0,
+    "secret_values_excluded": true
+  },
+  "completion": {
+    "status": "INCOMPLETE",
+    "blocking_items": [
+      "37 open validation tasks",
+      "40 unresolved test requirements"
+    ],
+    "metrics": {
+      "open_validation_tasks": 37,
+      "web_application_count": 1,
+      "blocking_gap_count": 0,
+      "blocking_test_requirement_count": 40,
+      "accepted_gap_count": 0
+    }
+  }
+}

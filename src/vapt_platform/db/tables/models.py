@@ -380,9 +380,7 @@ class TestRequirement(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         String(32), nullable=False, default="NOT_APPLICABLE"
     )
     testing_mode: Mapped[str] = mapped_column(String(32), nullable=False, default="MANUAL")
-    coverage_status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="NOT_TESTED"
-    )
+    coverage_status: Mapped[str] = mapped_column(String(32), nullable=False, default="NOT_TESTED")
     required_evidence: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     eligible_capabilities: Mapped[list[str]] = mapped_column(JSON, default=list)
     latest_result_id: Mapped[uuid.UUID | None] = mapped_column(Uuid())

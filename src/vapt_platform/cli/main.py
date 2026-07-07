@@ -32,9 +32,7 @@ def _get(api_url: str, path: str, timeout: float | None = 10.0) -> httpx.Respons
         ) from e
     except httpx.TimeoutException as e:
         wait = "without a client timeout" if timeout is None else f"after {timeout:g} seconds"
-        raise typer.BadParameter(
-            f"API request to {api_url}{path} timed out {wait}."
-        ) from e
+        raise typer.BadParameter(f"API request to {api_url}{path} timed out {wait}.") from e
 
 
 def _post(
@@ -53,9 +51,7 @@ def _post(
         ) from e
     except httpx.TimeoutException as e:
         wait = "without a client timeout" if timeout is None else f"after {timeout:g} seconds"
-        raise typer.BadParameter(
-            f"API request to {api_url}{path} timed out {wait}."
-        ) from e
+        raise typer.BadParameter(f"API request to {api_url}{path} timed out {wait}.") from e
 
 
 def _raise_for_status(response: httpx.Response) -> None:
@@ -81,11 +77,7 @@ def _emit_tool_response(data: dict[str, object], output_file: Path | None) -> No
 
 
 def _compact_tool_response(data: dict[str, object]) -> dict[str, object]:
-    compact = {
-        key: value
-        for key, value in data.items()
-        if key not in {"items"}
-    }
+    compact = {key: value for key, value in data.items() if key not in {"items"}}
     items = data.get("items")
     if not isinstance(items, list):
         items = []
@@ -220,9 +212,7 @@ def _export_scan_bundle(
             timeout=None,
         )
         _raise_for_status(r)
-        files["ai_advisory"] = str(
-            _write_json_file(r.json(), output_dir / "ai-advisory.json")
-        )
+        files["ai_advisory"] = str(_write_json_file(r.json(), output_dir / "ai-advisory.json"))
 
     endpoints = [
         ("scan", f"/scans/{scan_id}"),
@@ -269,7 +259,9 @@ def _tool_item_note(item: dict[str, object]) -> str:
     if exit_code == 124:
         return "Tool was stopped by the configured subprocess timeout."
     if provider == "amass" and "plugin started" in stderr.lower() and not stdout.strip():
-        return "Amass emitted lifecycle/plugin logs on stderr but no discovered hostnames on stdout."
+        return (
+            "Amass emitted lifecycle/plugin logs on stderr but no discovered hostnames on stdout."
+        )
     if provider in {"subfinder", "assetfinder", "amass"} and not stdout.strip():
         return "No subdomain/hostname lines were emitted on stdout."
     if stdout.strip():
@@ -307,7 +299,9 @@ def scan_create(
     if hostname:
         scope_rules.append({"rule_type": "HOSTNAME", "pattern": hostname, "priority": 100})
     if url:
-        scope_rules.append({"rule_type": "URL_PREFIX", "pattern": _normalize_url(url), "priority": 100})
+        scope_rules.append(
+            {"rule_type": "URL_PREFIX", "pattern": _normalize_url(url), "priority": 100}
+        )
     if ip:
         scope_rules.append({"rule_type": "IP", "pattern": ip, "priority": 100})
     if not scope_rules:
@@ -332,12 +326,18 @@ def scan_start(scan_id: str, api_url: str = API_BASE) -> None:
 @app.command("scan-run-ready")
 def scan_run_ready(
     scan_id: str,
-    limit: int = typer.Option(1, help="Maximum READY tasks to execute now. Use 0 for all matching tasks."),
+    limit: int = typer.Option(
+        1, help="Maximum READY tasks to execute now. Use 0 for all matching tasks."
+    ),
     target: str | None = typer.Option(None, help="Only run tasks whose target contains this text"),
-    tool: str | None = typer.Option(None, help="Only run queued tasks for these provider names, comma-separated"),
+    tool: str | None = typer.Option(
+        None, help="Only run queued tasks for these provider names, comma-separated"
+    ),
     username: str | None = typer.Option(None, help="Username to attach to selected HTTP tasks"),
     password: str | None = typer.Option(None, help="Password to attach to selected HTTP tasks"),
-    timeout: int | None = typer.Option(0, help="Per-tool timeout seconds. Default 0 means no subprocess timeout."),
+    timeout: int | None = typer.Option(
+        0, help="Per-tool timeout seconds. Default 0 means no subprocess timeout."
+    ),
     verbose: bool = typer.Option(False, help="Include full captured stdout/stderr in the response"),
     output_file: Path | None = typer.Option(
         None,
@@ -363,7 +363,9 @@ def scan_run_ready(
         params["timeout"] = timeout
     if verbose or output_file:
         params["verbose"] = True
-    request_timeout = None if timeout == 0 else max(30.0, float(max(limit, 1) * max(timeout or 30, 1) + 10))
+    request_timeout = (
+        None if timeout == 0 else max(30.0, float(max(limit, 1) * max(timeout or 30, 1) + 10))
+    )
     r = _post(
         api_url,
         f"/scans/{scan_id}/run-ready",
@@ -381,7 +383,9 @@ def scan_run_tools(
     target: str = typer.Option(..., help="URL, hostname, or IP to run tools against"),
     username: str | None = typer.Option(None, help="Username for HTTP Basic auth"),
     password: str | None = typer.Option(None, help="Password for HTTP Basic auth"),
-    timeout: int | None = typer.Option(0, help="Per-tool timeout seconds. Default 0 means no subprocess timeout."),
+    timeout: int | None = typer.Option(
+        0, help="Per-tool timeout seconds. Default 0 means no subprocess timeout."
+    ),
     verbose: bool = typer.Option(False, help="Include full captured stdout/stderr in the response"),
     output_file: Path | None = typer.Option(
         None,
@@ -407,9 +411,13 @@ def scan_run_tools(
     if verbose or output_file:
         params["verbose"] = True
     tool_count = len([item for item in tools.split(",") if item.strip()])
-    request_timeout = None if timeout == 0 else max(
-        60.0,
-        float(max(tool_count, 1) * max(timeout or 60, 1) + 10),
+    request_timeout = (
+        None
+        if timeout == 0
+        else max(
+            60.0,
+            float(max(tool_count, 1) * max(timeout or 60, 1) + 10),
+        )
     )
     r = _post(
         api_url,

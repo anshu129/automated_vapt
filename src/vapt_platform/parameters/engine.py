@@ -142,13 +142,11 @@ class ParameterSelectionEngine:
         if caps := when.get("capability_in"):
             if ctx.capability not in caps:
                 return False
-        elif cap := when.get("capability"):
-            if ctx.capability != cap:
-                return False
+        elif (cap := when.get("capability")) and ctx.capability != cap:
+            return False
 
-        if profiles := when.get("profile_in"):
-            if ctx.execution_profile not in profiles:
-                return False
+        if (profiles := when.get("profile_in")) and ctx.execution_profile not in profiles:
+            return False
 
         if when.get("never"):
             return False
@@ -156,27 +154,22 @@ class ParameterSelectionEngine:
         if when.get("passive_only") and not ctx.passive_only:
             return False
 
-        if min_t := when.get("min_previous_timeouts"):
-            if ctx.previous_timeouts < int(min_t):
-                return False
+        if (min_t := when.get("min_previous_timeouts")) and ctx.previous_timeouts < int(min_t):
+            return False
 
-        if codes := when.get("reason_code_in"):
-            if not any(c in ctx.reason_codes for c in codes):
-                return False
+        if (codes := when.get("reason_code_in")) and not any(c in ctx.reason_codes for c in codes):
+            return False
 
         flags = self._context_flags(ctx)
 
-        if none_of := when.get("none_of"):
-            if any(flags.get(k, False) for k in none_of):
-                return False
+        if (none_of := when.get("none_of")) and any(flags.get(k, False) for k in none_of):
+            return False
 
-        if any_of := when.get("any_of"):
-            if not any(flags.get(k, False) for k in any_of):
-                return False
+        if (any_of := when.get("any_of")) and not any(flags.get(k, False) for k in any_of):
+            return False
 
-        if all_of := when.get("all_of"):
-            if not all(flags.get(k, False) for k in all_of):
-                return False
+        if (all_of := when.get("all_of")) and not all(flags.get(k, False) for k in all_of):
+            return False
 
         return bool(
             when.get("always")

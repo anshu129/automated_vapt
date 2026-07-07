@@ -41,7 +41,9 @@ async def test_phase_b_full_recon_pipeline(db_session) -> None:
                     Asset.asset_type == AssetType.ENDPOINT.value,
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(endpoints) >= 2
 
@@ -53,7 +55,9 @@ async def test_phase_b_full_recon_pipeline(db_session) -> None:
                     Asset.asset_type == AssetType.WEB_APPLICATION.value,
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(web_apps) >= 1
 
@@ -62,7 +66,9 @@ async def test_phase_b_full_recon_pipeline(db_session) -> None:
             await db_session.execute(
                 select(SurfaceCoverageRecord).where(SurfaceCoverageRecord.scan_id == scan.id)
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(surfaces) >= 1
     assert any(s.dimensions.get("HTTP_CHARACTERIZATION") == "COMPLETE" for s in surfaces)

@@ -1,0 +1,3455 @@
+{
+  "items": [
+    {
+      "asset_id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "matrix_id": "93c818ca-5fae-4973-b863-8811331bec20",
+      "requirements_count": 37,
+      "uncovered_count": 0,
+      "status_counts": {
+        "NOT_APPLICABLE": 32,
+        "PLANNED": 5
+      },
+      "requirements": [
+        {
+          "id": "73217a6b-00f5-4f49-bc2d-1eb7f413717b",
+          "vulnerability_class_id": "b829ec59-1f75-48c8-910d-ed2d8a219a70",
+          "class_code": "ADMINISTRATIVE_SURFACE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "ADMINISTRATIVE_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "229a35f6-4938-4bd2-90d6-c7be6f8d90ac",
+          "vulnerability_class_id": "3d9b20a4-c4c4-48f9-97f9-327a6b326bdd",
+          "class_code": "API_SCHEMA_VALIDATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "API_SCHEMA_VALIDATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "47efe877-5e99-4550-a135-c22f683528d3",
+          "vulnerability_class_id": "b5145c04-abaf-4687-bbaa-1f3197d84a98",
+          "class_code": "AUTHENTICATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "AUTHENTICATION",
+            "required": [
+              {
+                "evidence_type": "AUTH_FLOW_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "fa70bf7f-551f-4f26-a734-09620dc0481f",
+          "vulnerability_class_id": "c3751e24-cf11-40d9-818f-8d8489f1a348",
+          "class_code": "AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "AUTHORIZATION_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "d18f43cd-de07-46ff-a902-308509fec071",
+          "vulnerability_class_id": "978a9b48-ef6c-47df-ab24-88997ab486f9",
+          "class_code": "BUSINESS_LOGIC",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "BUSINESS_LOGIC",
+            "required": [
+              {
+                "evidence_type": "BUSINESS_LOGIC_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "9523acad-152c-4ddd-a79b-fec50f21215a",
+          "vulnerability_class_id": "2cce8ab9-143b-4bb3-890d-6fc03f54af0d",
+          "class_code": "CACHE_BEHAVIOR",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CACHE_BEHAVIOR",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "89a3b2c2-392e-49a2-9377-21ec5dafa201",
+          "vulnerability_class_id": "d024caa7-6529-4602-8c21-158b0ab564de",
+          "class_code": "CLOUD_CONFIGURATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CLOUD_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "07d83dc4-ec18-47d6-8414-a93c612a92ef",
+          "vulnerability_class_id": "987437f5-1c5e-4c1e-92da-3f29a44a27d6",
+          "class_code": "CROSS_APPLICATION_AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CROSS_APPLICATION_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "CROSS_APP_ACCESS_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "22d67d14-1409-4670-baff-28b9662b3155",
+          "vulnerability_class_id": "813df145-a8ae-4e8a-8321-8f316eefb693",
+          "class_code": "CROSS_ORIGIN_POLICY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CROSS_ORIGIN_POLICY",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "73dd2cd8-83d6-4c29-838d-5c03682bedcb",
+          "vulnerability_class_id": "54c8b218-dcc7-413f-b701-d9c2c82883fd",
+          "class_code": "DEBUG_SURFACE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEBUG_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "14c56e1d-c03a-4300-94e1-1826e8199a62",
+          "vulnerability_class_id": "a2dd472c-4f3a-4da1-86b5-ded1df1ec452",
+          "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "0f653842-44e3-4e53-b32e-63e1bc9683f0",
+          "vulnerability_class_id": "d8a07108-53c2-4908-a391-dcbb3855d5e1",
+          "class_code": "DEPENDENCY_RISK",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEPENDENCY_RISK",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "89719f51-6521-4520-a27f-ce679ccb82ac",
+          "vulnerability_class_id": "b7e7f955-c5d1-41ed-8b28-2c391a970da8",
+          "class_code": "EXPOSED_SERVICE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "EXPOSED_SERVICE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "82604b6f-dc57-453f-9a32-09e662186c2a",
+          "vulnerability_class_id": "3f378e43-a1a1-454f-b1e0-424987f9323a",
+          "class_code": "FILE_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "CONTENT_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "FILE_HANDLING",
+            "required": [
+              {
+                "evidence_type": "FILE_SURFACE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "File handling requires analyst-reviewed validation evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "55f55473-6092-48e5-8da4-121d3bbe4e2e",
+          "vulnerability_class_id": "38b0e0ac-2d1e-4060-abd3-934389318d77",
+          "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "endpoint-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "7b4db1d5-f0ea-4cef-80ff-c28d7cd67888",
+          "vulnerability_class_id": "3ed983a9-b4d5-470a-a41d-caf048002239",
+          "class_code": "GRAPHQL_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "GRAPHQL_SCHEMA_INVENTORY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "GRAPHQL_SECURITY",
+            "required": [
+              {
+                "evidence_type": "GRAPHQL_SCHEMA",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "AUTHORIZATION_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "GraphQL testing requires schema and authorization context.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "9a42d30c-0102-4f2e-a578-8568d421b8d7",
+          "vulnerability_class_id": "08dca408-af48-4449-a11e-8a96c1746d40",
+          "class_code": "HISTORICAL_OR_STALE_SURFACE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "HISTORICAL_OR_STALE_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "f4d8aece-668f-477a-8c21-ca0e3e327acb",
+          "vulnerability_class_id": "c813316c-7293-4c7f-b0ad-3449930c2f3e",
+          "class_code": "HOST_HEADER_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "HOST_HEADER_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "5ca04747-8248-44a4-a3be-f68ac1c4c108",
+          "vulnerability_class_id": "d1aba4d6-aa48-4ba9-a60b-ff75329d259d",
+          "class_code": "INFORMATION_DISCLOSURE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "INFORMATION_DISCLOSURE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "endpoint-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "245aac40-8f52-4d3a-9d20-fafa286ffc95",
+          "vulnerability_class_id": "cf125517-a682-4844-9f53-aa8d827467b9",
+          "class_code": "INJECTION_CLASS",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "PARAMETER_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "INJECTION_CLASS",
+            "required": [
+              {
+                "evidence_type": "PARAMETER_INVENTORY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "CONTROLLED_TEST_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Injection coverage requires parameter inventory and controlled tests.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "2d417e8b-1082-471f-90f1-4007b3060e14",
+          "vulnerability_class_id": "e8cb34a8-35dd-49ca-9d42-71f1d805bba2",
+          "class_code": "INPUT_VALIDATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL",
+          "eligible_capabilities": [
+            "PARAMETER_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "INPUT_VALIDATION",
+            "required": [
+              {
+                "evidence_type": "PARAMETER_INVENTORY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Input validation requires parameter coverage and validation evidence.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "endpoint-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.6
+        },
+        {
+          "id": "99c5a6d5-ba12-4013-8923-2a265e89d517",
+          "vulnerability_class_id": "c87b697b-8018-4ec5-ac8b-c9c35d026cb8",
+          "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "TECHNOLOGY_IDENTIFICATION",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+            "required": [
+              {
+                "evidence_type": "VERSIONED_TECHNOLOGY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "TEMPLATE_MATCH_OR_NEGATIVE_EVIDENCE",
+                "minimum": 1
+              }
+            ],
+            "completion": "Component testing requires version confidence or scanner evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "8325d316-96dc-4673-af2b-0525a11caa5e",
+          "vulnerability_class_id": "0420f401-2b26-4bc2-8ac5-6cb03397b3ef",
+          "class_code": "MULTI_STEP_WORKFLOW",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "MULTI_STEP_WORKFLOW",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "c31ca149-e383-4c6a-8689-ec7fd8a16d69",
+          "vulnerability_class_id": "230f30b9-cdce-420c-b9a0-ef6195fb736f",
+          "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "OBJECT_ACCESS_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "endpoint-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "8568c436-9c6f-4c62-8544-d1d891e4e56e",
+          "vulnerability_class_id": "4a486338-8c98-4586-87bb-e30dd3b24db9",
+          "class_code": "PATH_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "PATH_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "89f17cdb-ba9e-4182-a92d-aef10a4f26b5",
+          "vulnerability_class_id": "c542d703-3c20-4da4-b1b1-0331a0214a14",
+          "class_code": "RATE_CONTROL",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "RATE_CONTROL",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "endpoint-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "a861db0e-5fff-492a-9134-770988290eaf",
+          "vulnerability_class_id": "d2f946f6-56f3-4a36-96fd-2aca402d0942",
+          "class_code": "REDIRECT_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "REDIRECT_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "87446bda-4fee-4df5-9f5b-600440c4e332",
+          "vulnerability_class_id": "63c67786-ba21-4fc5-878b-deed81bd78a3",
+          "class_code": "SECRET_EXPOSURE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SECRET_EXPOSURE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "7ce5bed2-f801-42f4-b9e9-1ab2b66602a2",
+          "vulnerability_class_id": "4df5abfa-2b3b-46d4-acd4-1020cce8a8c0",
+          "class_code": "SECURITY_HEADERS",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "AUTOMATED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "WEB_PASSIVE_ASSESSMENT",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "SECURITY_HEADERS",
+            "required": [
+              {
+                "evidence_type": "HTTP_RESPONSE_HEADERS",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "HEADER_POLICY_EVALUATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Security headers assessed from HTTP response evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "0fa01d65-40b2-47db-8e4f-83b51b0fd3f0",
+          "vulnerability_class_id": "72ca10bf-78c5-4cdb-b189-ba58dd99be69",
+          "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "b1ff04f3-a821-4310-aaaa-75f9c17ab9a8",
+          "vulnerability_class_id": "08954cc3-d6cd-4238-a986-9e7a2294ea70",
+          "class_code": "SESSION_MANAGEMENT",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SESSION_MANAGEMENT",
+            "required": [
+              {
+                "evidence_type": "SESSION_FLOW_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "279a315d-b3d3-4ce5-9daf-9a8a30537e7c",
+          "vulnerability_class_id": "4778d7aa-67d9-4e7b-acb4-7c2ac2d4a090",
+          "class_code": "TEMPLATE_PROCESSING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "TEMPLATE_PROCESSING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "cb072777-5211-4544-ab0d-6fd485b63a09",
+          "vulnerability_class_id": "26cb4dc2-e21a-4f07-b095-c52738bf9ec4",
+          "class_code": "TLS_CONFIGURATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "AUTOMATED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "TLS_CHARACTERIZATION",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "TLS_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "TLS_HANDSHAKE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "CERTIFICATE_METADATA",
+                "minimum": 1
+              }
+            ],
+            "completion": "TLS configuration assessed from protocol and certificate evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "b0218d04-7924-4085-89e9-6168ca5c9142",
+          "vulnerability_class_id": "9ae2a7c9-7209-4644-b15b-0623e53c72f5",
+          "class_code": "TRANSPORT_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "AUTOMATED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "TLS_CHARACTERIZATION",
+            "WEB_PASSIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "TRANSPORT_SECURITY",
+            "required": [
+              {
+                "evidence_type": "TRANSPORT_POLICY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "HTTP_RESPONSE_HEADERS",
+                "minimum": 1
+              }
+            ],
+            "completion": "Transport security assessed without changing application state.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "14cfc8b1-931e-48c5-91c9-e92a28c0b9b5",
+          "vulnerability_class_id": "01a12786-e98e-4f28-b748-a354e0dd8bb7",
+          "class_code": "TRUST_BOUNDARY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "TRUST_BOUNDARY",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "f8908531-a028-442b-bbeb-c3f5f9985b1b",
+          "vulnerability_class_id": "d1395de0-2e9c-4688-8f90-01158adbf97f",
+          "class_code": "UPLOAD_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "CONTENT_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "UPLOAD_SECURITY",
+            "required": [
+              {
+                "evidence_type": "UPLOAD_SURFACE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Upload testing requires explicit upload surface validation evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "5fdebc90-2f36-48b2-9d60-c91bed60a3ae",
+          "vulnerability_class_id": "a511509b-ab12-4393-8f4e-be2b8b4e7faa",
+          "class_code": "XML_PROCESSING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "XML_PROCESSING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+              ]
+            }
+          },
+          "confidence": 0.1
+        }
+      ]
+    },
+    {
+      "asset_id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "matrix_id": "de1a7667-cfdc-4cc4-9442-bf125966028f",
+      "requirements_count": 37,
+      "uncovered_count": 0,
+      "status_counts": {
+        "NOT_APPLICABLE": 33,
+        "PLANNED": 4
+      },
+      "requirements": [
+        {
+          "id": "b09e0eda-c9ee-4bef-b222-d9c7d2ab8c5f",
+          "vulnerability_class_id": "b829ec59-1f75-48c8-910d-ed2d8a219a70",
+          "class_code": "ADMINISTRATIVE_SURFACE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "ADMINISTRATIVE_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "7df6d1e9-4014-46aa-858d-f00c85a88142",
+          "vulnerability_class_id": "3d9b20a4-c4c4-48f9-97f9-327a6b326bdd",
+          "class_code": "API_SCHEMA_VALIDATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "API_SCHEMA_VALIDATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "7b2b2217-1f09-4e92-aaf6-56e84b63b37a",
+          "vulnerability_class_id": "b5145c04-abaf-4687-bbaa-1f3197d84a98",
+          "class_code": "AUTHENTICATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "AUTHENTICATION",
+            "required": [
+              {
+                "evidence_type": "AUTH_FLOW_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "93dde1f4-7dd0-441f-93c1-a0fc682ab36e",
+          "vulnerability_class_id": "c3751e24-cf11-40d9-818f-8d8489f1a348",
+          "class_code": "AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "AUTHORIZATION_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "7650b2b1-996e-4464-9766-a0ee0a32fbf5",
+          "vulnerability_class_id": "978a9b48-ef6c-47df-ab24-88997ab486f9",
+          "class_code": "BUSINESS_LOGIC",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "BUSINESS_LOGIC",
+            "required": [
+              {
+                "evidence_type": "BUSINESS_LOGIC_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "846a36fa-4e2d-4728-9018-48b88f0f04bc",
+          "vulnerability_class_id": "2cce8ab9-143b-4bb3-890d-6fc03f54af0d",
+          "class_code": "CACHE_BEHAVIOR",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CACHE_BEHAVIOR",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "99899eb2-41ad-4418-9fcf-fbe3a8a5b7b4",
+          "vulnerability_class_id": "d024caa7-6529-4602-8c21-158b0ab564de",
+          "class_code": "CLOUD_CONFIGURATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CLOUD_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "7ec94576-6d5f-45ce-a91a-5777a8e26dc5",
+          "vulnerability_class_id": "987437f5-1c5e-4c1e-92da-3f29a44a27d6",
+          "class_code": "CROSS_APPLICATION_AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CROSS_APPLICATION_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "CROSS_APP_ACCESS_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "98322a1b-3587-41a3-af37-f6efbb480eba",
+          "vulnerability_class_id": "813df145-a8ae-4e8a-8321-8f316eefb693",
+          "class_code": "CROSS_ORIGIN_POLICY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CROSS_ORIGIN_POLICY",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "c4b75a57-f2b6-4c9b-a78d-b79ab0e689ec",
+          "vulnerability_class_id": "54c8b218-dcc7-413f-b701-d9c2c82883fd",
+          "class_code": "DEBUG_SURFACE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEBUG_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "85976bf2-5ce8-440f-8dfb-f492c9d7baf5",
+          "vulnerability_class_id": "a2dd472c-4f3a-4da1-86b5-ded1df1ec452",
+          "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "service-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.6
+        },
+        {
+          "id": "efe12c5f-7cc2-41a0-bf07-b45ee2e9182a",
+          "vulnerability_class_id": "d8a07108-53c2-4908-a391-dcbb3855d5e1",
+          "class_code": "DEPENDENCY_RISK",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEPENDENCY_RISK",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "0512af3f-13e5-4ee9-a104-1a7cd34bc66e",
+          "vulnerability_class_id": "b7e7f955-c5d1-41ed-8b28-2c391a970da8",
+          "class_code": "EXPOSED_SERVICE",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "EXPOSED_SERVICE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "service-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "6a460af6-878a-4626-b72b-f8c1bd2efcbd",
+          "vulnerability_class_id": "3f378e43-a1a1-454f-b1e0-424987f9323a",
+          "class_code": "FILE_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "CONTENT_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "FILE_HANDLING",
+            "required": [
+              {
+                "evidence_type": "FILE_SURFACE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "File handling requires analyst-reviewed validation evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "aaa32ac5-f974-47e4-a287-cc5a61f20f0a",
+          "vulnerability_class_id": "38b0e0ac-2d1e-4060-abd3-934389318d77",
+          "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "51be73c1-289d-49e3-8ab0-6cc6d32e0966",
+          "vulnerability_class_id": "3ed983a9-b4d5-470a-a41d-caf048002239",
+          "class_code": "GRAPHQL_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "GRAPHQL_SCHEMA_INVENTORY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "GRAPHQL_SECURITY",
+            "required": [
+              {
+                "evidence_type": "GRAPHQL_SCHEMA",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "AUTHORIZATION_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "GraphQL testing requires schema and authorization context.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "961eb317-15aa-4e1a-89d9-da971098c13b",
+          "vulnerability_class_id": "08dca408-af48-4449-a11e-8a96c1746d40",
+          "class_code": "HISTORICAL_OR_STALE_SURFACE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "HISTORICAL_OR_STALE_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "9be8d727-efc6-45cf-b8f6-fcf8d7fc11f1",
+          "vulnerability_class_id": "c813316c-7293-4c7f-b0ad-3449930c2f3e",
+          "class_code": "HOST_HEADER_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "HOST_HEADER_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "4e2f1924-ff99-41c0-9e49-b7fbfcfe8dec",
+          "vulnerability_class_id": "d1aba4d6-aa48-4ba9-a60b-ff75329d259d",
+          "class_code": "INFORMATION_DISCLOSURE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "INFORMATION_DISCLOSURE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "service-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "c3416f8c-98a1-45cd-b1bb-f8a8c734c9dc",
+          "vulnerability_class_id": "cf125517-a682-4844-9f53-aa8d827467b9",
+          "class_code": "INJECTION_CLASS",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "PARAMETER_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "INJECTION_CLASS",
+            "required": [
+              {
+                "evidence_type": "PARAMETER_INVENTORY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "CONTROLLED_TEST_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Injection coverage requires parameter inventory and controlled tests.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "0d6fad3f-74b1-41a8-ba5e-2b806841eda3",
+          "vulnerability_class_id": "e8cb34a8-35dd-49ca-9d42-71f1d805bba2",
+          "class_code": "INPUT_VALIDATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "PARAMETER_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "INPUT_VALIDATION",
+            "required": [
+              {
+                "evidence_type": "PARAMETER_INVENTORY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Input validation requires parameter coverage and validation evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "0ef7be5c-44d7-40dd-871c-93385911d436",
+          "vulnerability_class_id": "c87b697b-8018-4ec5-ac8b-c9c35d026cb8",
+          "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [
+            "TECHNOLOGY_IDENTIFICATION",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+            "required": [
+              {
+                "evidence_type": "VERSIONED_TECHNOLOGY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "TEMPLATE_MATCH_OR_NEGATIVE_EVIDENCE",
+                "minimum": 1
+              }
+            ],
+            "completion": "Component testing requires version confidence or scanner evidence.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "service-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "a12d658d-1789-4f5e-aba1-686e03713f77",
+          "vulnerability_class_id": "0420f401-2b26-4bc2-8ac5-6cb03397b3ef",
+          "class_code": "MULTI_STEP_WORKFLOW",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "MULTI_STEP_WORKFLOW",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "3489d917-b1d8-44fe-9b36-37a5a20ea948",
+          "vulnerability_class_id": "230f30b9-cdce-420c-b9a0-ef6195fb736f",
+          "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "OBJECT_ACCESS_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "aa7b6d11-b224-480d-8d45-31bed185511c",
+          "vulnerability_class_id": "4a486338-8c98-4586-87bb-e30dd3b24db9",
+          "class_code": "PATH_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "PATH_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "6f108c50-b2f5-4bc0-b9e0-789f70008b1a",
+          "vulnerability_class_id": "c542d703-3c20-4da4-b1b1-0331a0214a14",
+          "class_code": "RATE_CONTROL",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "RATE_CONTROL",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "6979a7b6-0ee7-41c8-b688-cfe844738b82",
+          "vulnerability_class_id": "d2f946f6-56f3-4a36-96fd-2aca402d0942",
+          "class_code": "REDIRECT_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "REDIRECT_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "85e6323b-9c79-48b7-938a-9a1ac388d0f7",
+          "vulnerability_class_id": "63c67786-ba21-4fc5-878b-deed81bd78a3",
+          "class_code": "SECRET_EXPOSURE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SECRET_EXPOSURE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "8b64a968-c006-467a-9fb6-869f81fca8e5",
+          "vulnerability_class_id": "4df5abfa-2b3b-46d4-acd4-1020cce8a8c0",
+          "class_code": "SECURITY_HEADERS",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "AUTOMATED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "WEB_PASSIVE_ASSESSMENT",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "SECURITY_HEADERS",
+            "required": [
+              {
+                "evidence_type": "HTTP_RESPONSE_HEADERS",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "HEADER_POLICY_EVALUATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Security headers assessed from HTTP response evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "b0a6bd41-807f-4ecc-9d31-5bdd6119da81",
+          "vulnerability_class_id": "72ca10bf-78c5-4cdb-b189-ba58dd99be69",
+          "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "604d7ea3-7df8-4248-ab38-c4c3d4efed47",
+          "vulnerability_class_id": "08954cc3-d6cd-4238-a986-9e7a2294ea70",
+          "class_code": "SESSION_MANAGEMENT",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SESSION_MANAGEMENT",
+            "required": [
+              {
+                "evidence_type": "SESSION_FLOW_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "b6f4092f-ede6-4617-9ef3-80a8ab7dc05e",
+          "vulnerability_class_id": "4778d7aa-67d9-4e7b-acb4-7c2ac2d4a090",
+          "class_code": "TEMPLATE_PROCESSING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "TEMPLATE_PROCESSING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "1dc8ec46-6b68-48e1-836c-97f3aab3b5f8",
+          "vulnerability_class_id": "26cb4dc2-e21a-4f07-b095-c52738bf9ec4",
+          "class_code": "TLS_CONFIGURATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "AUTOMATED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "TLS_CHARACTERIZATION",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "TLS_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "TLS_HANDSHAKE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "CERTIFICATE_METADATA",
+                "minimum": 1
+              }
+            ],
+            "completion": "TLS configuration assessed from protocol and certificate evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "89c35053-e555-498b-82b7-edd5bd6952e4",
+          "vulnerability_class_id": "9ae2a7c9-7209-4644-b15b-0623e53c72f5",
+          "class_code": "TRANSPORT_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "AUTOMATED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "TLS_CHARACTERIZATION",
+            "WEB_PASSIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "TRANSPORT_SECURITY",
+            "required": [
+              {
+                "evidence_type": "TRANSPORT_POLICY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "HTTP_RESPONSE_HEADERS",
+                "minimum": 1
+              }
+            ],
+            "completion": "Transport security assessed without changing application state.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "aa9d6a41-7ff3-402a-a360-6e7fc52dac93",
+          "vulnerability_class_id": "01a12786-e98e-4f28-b748-a354e0dd8bb7",
+          "class_code": "TRUST_BOUNDARY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "TRUST_BOUNDARY",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "01d01766-e206-4f66-b7e2-8534a5be6018",
+          "vulnerability_class_id": "d1395de0-2e9c-4688-8f90-01158adbf97f",
+          "class_code": "UPLOAD_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "CONTENT_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "UPLOAD_SECURITY",
+            "required": [
+              {
+                "evidence_type": "UPLOAD_SURFACE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Upload testing requires explicit upload surface validation evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "4f383826-dbb3-4dea-b5e3-f5cc3d5951e7",
+          "vulnerability_class_id": "a511509b-ab12-4393-8f4e-be2b8b4e7faa",
+          "class_code": "XML_PROCESSING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "XML_PROCESSING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+              ]
+            }
+          },
+          "confidence": 0.1
+        }
+      ]
+    },
+    {
+      "asset_id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "matrix_id": "5798f6a8-9075-4432-8e08-c0d38fa170e7",
+      "requirements_count": 37,
+      "uncovered_count": 0,
+      "status_counts": {
+        "PLANNED": 31,
+        "NOT_APPLICABLE": 6
+      },
+      "requirements": [
+        {
+          "id": "962bbb5a-041d-47b1-a756-71496d871340",
+          "vulnerability_class_id": "b829ec59-1f75-48c8-910d-ed2d8a219a70",
+          "class_code": "ADMINISTRATIVE_SURFACE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "ADMINISTRATIVE_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "d5b8703b-e416-4de5-b053-3cc8c682326c",
+          "vulnerability_class_id": "3d9b20a4-c4c4-48f9-97f9-327a6b326bdd",
+          "class_code": "API_SCHEMA_VALIDATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "API_SCHEMA_VALIDATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "cef87169-1d41-4301-8627-7a3c76ef359c",
+          "vulnerability_class_id": "b5145c04-abaf-4687-bbaa-1f3197d84a98",
+          "class_code": "AUTHENTICATION",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "AUTHENTICATION",
+            "required": [
+              {
+                "evidence_type": "AUTH_FLOW_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "f5390715-fe2c-4425-a012-d175c6161c37",
+          "vulnerability_class_id": "c3751e24-cf11-40d9-818f-8d8489f1a348",
+          "class_code": "AUTHORIZATION",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "AUTHORIZATION_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "2fe52f10-142f-4c83-bb82-4df84080ae20",
+          "vulnerability_class_id": "978a9b48-ef6c-47df-ab24-88997ab486f9",
+          "class_code": "BUSINESS_LOGIC",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "BUSINESS_LOGIC",
+            "required": [
+              {
+                "evidence_type": "BUSINESS_LOGIC_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "533233a3-8512-41ab-99eb-7fbc980603a0",
+          "vulnerability_class_id": "2cce8ab9-143b-4bb3-890d-6fc03f54af0d",
+          "class_code": "CACHE_BEHAVIOR",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CACHE_BEHAVIOR",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "7616791c-bbe7-4bd9-9544-df4f4f2b4f78",
+          "vulnerability_class_id": "d024caa7-6529-4602-8c21-158b0ab564de",
+          "class_code": "CLOUD_CONFIGURATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CLOUD_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "9c1e0490-3b9c-40ea-9f4b-1d50624c6e5c",
+          "vulnerability_class_id": "987437f5-1c5e-4c1e-92da-3f29a44a27d6",
+          "class_code": "CROSS_APPLICATION_AUTHORIZATION",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CROSS_APPLICATION_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "CROSS_APP_ACCESS_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "b5b57b34-ab40-4729-bfe4-b5045b87aeec",
+          "vulnerability_class_id": "813df145-a8ae-4e8a-8321-8f316eefb693",
+          "class_code": "CROSS_ORIGIN_POLICY",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "CROSS_ORIGIN_POLICY",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "941f537f-4183-450e-955e-bd275e70bd7a",
+          "vulnerability_class_id": "54c8b218-dcc7-413f-b701-d9c2c82883fd",
+          "class_code": "DEBUG_SURFACE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEBUG_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "482da224-70b7-4cca-ac1f-a050732ac548",
+          "vulnerability_class_id": "a2dd472c-4f3a-4da1-86b5-ded1df1ec452",
+          "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "4470e695-4fcd-4000-8d8a-0137fc594e18",
+          "vulnerability_class_id": "d8a07108-53c2-4908-a391-dcbb3855d5e1",
+          "class_code": "DEPENDENCY_RISK",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "DEPENDENCY_RISK",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "5aecfa7f-91b1-48cf-92a4-f515d10d65d9",
+          "vulnerability_class_id": "b7e7f955-c5d1-41ed-8b28-2c391a970da8",
+          "class_code": "EXPOSED_SERVICE",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "EXPOSED_SERVICE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "05f4f5dc-89b6-47ff-b5b7-826f34a2adfa",
+          "vulnerability_class_id": "3f378e43-a1a1-454f-b1e0-424987f9323a",
+          "class_code": "FILE_HANDLING",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "CONTENT_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "FILE_HANDLING",
+            "required": [
+              {
+                "evidence_type": "FILE_SURFACE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "File handling requires analyst-reviewed validation evidence.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "d1431f4d-62ba-4020-a7ba-f65b7dd57f74",
+          "vulnerability_class_id": "38b0e0ac-2d1e-4060-abd3-934389318d77",
+          "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "b02da711-aa0a-453c-a0cd-f0701c1bb275",
+          "vulnerability_class_id": "3ed983a9-b4d5-470a-a41d-caf048002239",
+          "class_code": "GRAPHQL_SECURITY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "ASSISTED",
+          "next_action": "NONE",
+          "eligible_capabilities": [
+            "GRAPHQL_SCHEMA_INVENTORY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "GRAPHQL_SECURITY",
+            "required": [
+              {
+                "evidence_type": "GRAPHQL_SCHEMA",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "AUTHORIZATION_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "GraphQL testing requires schema and authorization context.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "f6b240d7-c8b3-495e-ac07-02c2b33e4dae",
+          "vulnerability_class_id": "08dca408-af48-4449-a11e-8a96c1746d40",
+          "class_code": "HISTORICAL_OR_STALE_SURFACE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "HISTORICAL_OR_STALE_SURFACE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.4
+        },
+        {
+          "id": "d8113145-36c5-4cfc-b132-698ac82ba6fb",
+          "vulnerability_class_id": "c813316c-7293-4c7f-b0ad-3449930c2f3e",
+          "class_code": "HOST_HEADER_HANDLING",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "HOST_HEADER_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "eceaef73-9c06-4395-996b-42c42aac2e5b",
+          "vulnerability_class_id": "d1aba4d6-aa48-4ba9-a60b-ff75329d259d",
+          "class_code": "INFORMATION_DISCLOSURE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "INFORMATION_DISCLOSURE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.6
+        },
+        {
+          "id": "bb8fc073-7f54-4756-a02a-d56e3ce1a84d",
+          "vulnerability_class_id": "cf125517-a682-4844-9f53-aa8d827467b9",
+          "class_code": "INJECTION_CLASS",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL",
+          "eligible_capabilities": [
+            "PARAMETER_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "INJECTION_CLASS",
+            "required": [
+              {
+                "evidence_type": "PARAMETER_INVENTORY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "CONTROLLED_TEST_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Injection coverage requires parameter inventory and controlled tests.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "injection-surface"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.6
+        },
+        {
+          "id": "c381b9d9-af9b-479d-8b92-e1db173478a0",
+          "vulnerability_class_id": "e8cb34a8-35dd-49ca-9d42-71f1d805bba2",
+          "class_code": "INPUT_VALIDATION",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL",
+          "eligible_capabilities": [
+            "PARAMETER_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "INPUT_VALIDATION",
+            "required": [
+              {
+                "evidence_type": "PARAMETER_INVENTORY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Input validation requires parameter coverage and validation evidence.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "e9b0ac2e-6448-4c35-a55e-1f7908536327",
+          "vulnerability_class_id": "c87b697b-8018-4ec5-ac8b-c9c35d026cb8",
+          "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [
+            "TECHNOLOGY_IDENTIFICATION",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+            "required": [
+              {
+                "evidence_type": "VERSIONED_TECHNOLOGY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "TEMPLATE_MATCH_OR_NEGATIVE_EVIDENCE",
+                "minimum": 1
+              }
+            ],
+            "completion": "Component testing requires version confidence or scanner evidence.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "known-component-technology-only"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "fef8ddf8-a04e-484c-a109-214e94c355f5",
+          "vulnerability_class_id": "0420f401-2b26-4bc2-8ac5-6cb03397b3ef",
+          "class_code": "MULTI_STEP_WORKFLOW",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "MULTI_STEP_WORKFLOW",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "ff39c795-94fe-45e4-b052-e77e9a8ae885",
+          "vulnerability_class_id": "230f30b9-cdce-420c-b9a0-ef6195fb736f",
+          "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+            "required": [
+              {
+                "evidence_type": "OBJECT_ACCESS_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "ecd58f7d-1035-476a-aa58-7d5f3cf45589",
+          "vulnerability_class_id": "4a486338-8c98-4586-87bb-e30dd3b24db9",
+          "class_code": "PATH_HANDLING",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "PATH_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "9dc6e32f-13e5-49d9-9192-07d45b18c1af",
+          "vulnerability_class_id": "c542d703-3c20-4da4-b1b1-0331a0214a14",
+          "class_code": "RATE_CONTROL",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "RATE_CONTROL",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.55
+        },
+        {
+          "id": "ce620b19-a8b6-49ff-a760-d69300fb4dad",
+          "vulnerability_class_id": "d2f946f6-56f3-4a36-96fd-2aca402d0942",
+          "class_code": "REDIRECT_HANDLING",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "REDIRECT_HANDLING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.5
+        },
+        {
+          "id": "6aaf5760-7bff-4e4f-9668-8421dc93b9fc",
+          "vulnerability_class_id": "63c67786-ba21-4fc5-878b-deed81bd78a3",
+          "class_code": "SECRET_EXPOSURE",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SECRET_EXPOSURE",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.45
+        },
+        {
+          "id": "356908fd-3bf3-4719-8055-4e8469214d60",
+          "vulnerability_class_id": "4df5abfa-2b3b-46d4-acd4-1020cce8a8c0",
+          "class_code": "SECURITY_HEADERS",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "AUTOMATED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [
+            "WEB_PASSIVE_ASSESSMENT",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "SECURITY_HEADERS",
+            "required": [
+              {
+                "evidence_type": "HTTP_RESPONSE_HEADERS",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "HEADER_POLICY_EVALUATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Security headers assessed from HTTP response evidence.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "d83952b6-0355-4e8d-bfe8-943b436d25f7",
+          "vulnerability_class_id": "72ca10bf-78c5-4cdb-b189-ba58dd99be69",
+          "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.4
+        },
+        {
+          "id": "73483619-d215-41e6-a0ac-5d452c3c77fe",
+          "vulnerability_class_id": "08954cc3-d6cd-4238-a986-9e7a2294ea70",
+          "class_code": "SESSION_MANAGEMENT",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "MANUAL",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "SESSION_MANAGEMENT",
+            "required": [
+              {
+                "evidence_type": "SESSION_FLOW_REVIEW",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "9e285530-b1c7-4167-aeee-8d1713d1c9ee",
+          "vulnerability_class_id": "4778d7aa-67d9-4e7b-acb4-7c2ac2d4a090",
+          "class_code": "TEMPLATE_PROCESSING",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "TEMPLATE_PROCESSING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.4
+        },
+        {
+          "id": "5ddc80f0-e950-443c-8483-e3fc8bcc9d76",
+          "vulnerability_class_id": "26cb4dc2-e21a-4f07-b095-c52738bf9ec4",
+          "class_code": "TLS_CONFIGURATION",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "AUTOMATED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [
+            "TLS_CHARACTERIZATION",
+            "TEMPLATE_BASED_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "TLS_CONFIGURATION",
+            "required": [
+              {
+                "evidence_type": "TLS_HANDSHAKE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "CERTIFICATE_METADATA",
+                "minimum": 1
+              }
+            ],
+            "completion": "TLS configuration assessed from protocol and certificate evidence.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-tls-class"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.8
+        },
+        {
+          "id": "1304c048-67c0-4af2-a9ad-3cc211b5bbba",
+          "vulnerability_class_id": "9ae2a7c9-7209-4644-b15b-0623e53c72f5",
+          "class_code": "TRANSPORT_SECURITY",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "AUTOMATED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [
+            "TLS_CHARACTERIZATION",
+            "WEB_PASSIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "TRANSPORT_SECURITY",
+            "required": [
+              {
+                "evidence_type": "TRANSPORT_POLICY",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "HTTP_RESPONSE_HEADERS",
+                "minimum": 1
+              }
+            ],
+            "completion": "Transport security assessed without changing application state.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.85
+        },
+        {
+          "id": "f76a8a00-38d1-4401-9939-507b82d1eeba",
+          "vulnerability_class_id": "01a12786-e98e-4f28-b748-a354e0dd8bb7",
+          "class_code": "TRUST_BOUNDARY",
+          "applicability_state": "NOT_APPLICABLE",
+          "coverage_status": "NOT_APPLICABLE",
+          "testing_mode": "MANUAL",
+          "next_action": "NONE",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "TRUST_BOUNDARY",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "NOT_APPLICABLE",
+              "rule_ids": [],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.1
+        },
+        {
+          "id": "51c1d8f0-7ea5-4a32-bc8b-b3ed7939a45e",
+          "vulnerability_class_id": "d1395de0-2e9c-4688-8f90-01158adbf97f",
+          "class_code": "UPLOAD_SECURITY",
+          "applicability_state": "APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_APPROVAL",
+          "eligible_capabilities": [
+            "CONTENT_DISCOVERY",
+            "WEB_ACTIVE_ASSESSMENT"
+          ],
+          "required_evidence": {
+            "class_code": "UPLOAD_SECURITY",
+            "required": [
+              {
+                "evidence_type": "UPLOAD_SURFACE",
+                "minimum": 1
+              },
+              {
+                "evidence_type": "VALIDATION_RESULT",
+                "minimum": 1
+              }
+            ],
+            "completion": "Upload testing requires explicit upload surface validation evidence.",
+            "applicability": {
+              "state": "APPLICABLE",
+              "rule_ids": [
+                "upload-endpoint-pattern"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.7
+        },
+        {
+          "id": "cb1e1bd6-6c39-4d8e-a8f3-b63fa1ca23bf",
+          "vulnerability_class_id": "a511509b-ab12-4393-8f4e-be2b8b4e7faa",
+          "class_code": "XML_PROCESSING",
+          "applicability_state": "POSSIBLY_APPLICABLE",
+          "coverage_status": "PLANNED",
+          "testing_mode": "ASSISTED",
+          "next_action": "AWAIT_EXECUTION",
+          "eligible_capabilities": [],
+          "required_evidence": {
+            "class_code": "XML_PROCESSING",
+            "required": [
+              {
+                "evidence_type": "ANALYST_VALIDATION",
+                "minimum": 1
+              }
+            ],
+            "completion": "Manual validation evidence is required to close this class.",
+            "applicability": {
+              "state": "POSSIBLY_APPLICABLE",
+              "rule_ids": [
+                "web-app-baseline"
+              ],
+              "supporting_evidence_ids": [
+                "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+                "fa22858c-79f7-4f79-bd58-429762fea3f6"
+              ]
+            }
+          },
+          "confidence": 0.35
+        }
+      ]
+    }
+  ],
+  "total": 3
+}

@@ -30,9 +30,7 @@ async def db_session():
         from vapt_platform.scripts.seed import seed_data
 
         await seed_data(session)
-        providers = (
-            await session.execute(select(CapabilityProvider))
-        ).scalars().all()
+        providers = (await session.execute(select(CapabilityProvider))).scalars().all()
         for provider in providers:
             provider.enabled = provider.provider_name.startswith("fake-")
         await session.commit()

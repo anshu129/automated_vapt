@@ -173,7 +173,10 @@ def evaluate_rules(
                     rule_ids=rule_ids,
                     explanation=rule.description or f"Matched rule {rule.rule_id}",
                 )
-            elif existing is not None and STATE_PRIORITY[output.state] == STATE_PRIORITY[existing.state]:
+            elif (
+                existing is not None
+                and STATE_PRIORITY[output.state] == STATE_PRIORITY[existing.state]
+            ):
                 if rule.rule_id not in existing.rule_ids:
                     existing.rule_ids.append(rule.rule_id)
             elif existing is not None and rule.rule_id not in existing.rule_ids:

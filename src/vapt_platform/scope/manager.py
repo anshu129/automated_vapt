@@ -103,14 +103,16 @@ class ScopeManager:
                 audit_id,
             )
 
-        if matched.assessment_mode == AssessmentMode.PASSIVE_ONLY.value:
-            if cap not in self.PASSIVE_CAPABILITIES:
-                return ScopeDecision(
-                    ScopeDecisionType.DENY,
-                    matched.pattern,
-                    "Passive-only target; capability not passive",
-                    audit_id,
-                )
+        if (
+            matched.assessment_mode == AssessmentMode.PASSIVE_ONLY.value
+            and cap not in self.PASSIVE_CAPABILITIES
+        ):
+            return ScopeDecision(
+                ScopeDecisionType.DENY,
+                matched.pattern,
+                "Passive-only target; capability not passive",
+                audit_id,
+            )
 
         return ScopeDecision(
             ScopeDecisionType.ALLOW,

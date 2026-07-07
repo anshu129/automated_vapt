@@ -1,0 +1,1351 @@
+{
+  "items": [
+    {
+      "id": "43789bdf-357c-48ce-82ff-57e1aa723575",
+      "hypothesis_id": "f7aac8b5-815d-414e-856b-27c2b8f70e07",
+      "test_plan_id": "a68c3f0b-6d2a-4341-a849-487a9f5ad4d0",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Manually validate FUNCTION_LEVEL_AUTHORIZATION",
+      "required_evidence": {
+        "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "endpoint-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "e4550aba-59fd-4009-8575-e0bd6050d813",
+      "hypothesis_id": "5ac34b80-a6c0-4866-babd-5e7a4c81a642",
+      "test_plan_id": "312d9862-3db9-4288-9011-42f4384fe46e",
+      "evidence_package_id": "fb32a29a-edc3-474a-a985-31bae0830235",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Prepare and review evidence for INFORMATION_DISCLOSURE",
+      "required_evidence": {
+        "class_code": "INFORMATION_DISCLOSURE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "endpoint-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "53c56bc0-2718-48cb-85fe-d3d90c4587e0",
+      "hypothesis_id": "a4096302-e9c4-4ecd-a85b-634ebfe7f966",
+      "test_plan_id": "aa188882-1cc8-4d23-8bd3-66434a58aced",
+      "evidence_package_id": "ad684d86-042f-45a2-a20b-718abdc36a0e",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Prepare and review evidence for INPUT_VALIDATION",
+      "required_evidence": {
+        "class_code": "INPUT_VALIDATION",
+        "required": [
+          {
+            "evidence_type": "PARAMETER_INVENTORY",
+            "minimum": 1
+          },
+          {
+            "evidence_type": "VALIDATION_RESULT",
+            "minimum": 1
+          }
+        ],
+        "completion": "Input validation requires parameter coverage and validation evidence.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "endpoint-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "809b2be5-81dc-4636-9ad2-f35198d6afdd",
+      "hypothesis_id": "352e08d1-a992-4050-a5f6-faa36f26b1b7",
+      "test_plan_id": "3a86e82b-6c6f-4317-85af-0a5f724f9430",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Manually validate OBJECT_LEVEL_AUTHORIZATION",
+      "required_evidence": {
+        "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+        "required": [
+          {
+            "evidence_type": "OBJECT_ACCESS_REVIEW",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "endpoint-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "17079523-1714-4d81-8e51-fae50b32e621",
+      "hypothesis_id": "586cbd4d-d265-4040-8611-496d68168037",
+      "test_plan_id": "5c15f096-fe56-42e4-a127-f7fa54f4af4b",
+      "evidence_package_id": "441f45f4-e6e8-4dce-86f7-e0ab06c968c1",
+      "asset_ids": [
+        "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+      ],
+      "validation_goal": "Prepare and review evidence for RATE_CONTROL",
+      "required_evidence": {
+        "class_code": "RATE_CONTROL",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "endpoint-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "b04e4708-5a71-4095-9df1-2868ee2f4270",
+      "hypothesis_id": "04eba954-02cb-4f70-bf3a-4d18282af1d0",
+      "test_plan_id": "375dd0ee-bb3d-464e-b567-0c6bf54c98ec",
+      "evidence_package_id": "828a6ee4-f9f4-43db-9fb9-fb021a8c8150",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for DEFAULT_OR_WEAK_CONFIGURATION",
+      "required_evidence": {
+        "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "service-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "83db44b4-b853-4061-a1d2-5767371b1efc",
+      "hypothesis_id": "7c1fab02-21e1-469b-bfa7-beec3d98e44e",
+      "test_plan_id": "6cdd4d93-4144-4e27-9418-6bc80fba01bc",
+      "evidence_package_id": "0f17a379-fe97-4bcf-a496-4f7186bd1e89",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for EXPOSED_SERVICE",
+      "required_evidence": {
+        "class_code": "EXPOSED_SERVICE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "APPLICABLE",
+          "rule_ids": [
+            "service-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "d5f5de24-380a-4f1b-9564-16b59fe1db34",
+      "hypothesis_id": "0a045ffa-9437-4488-aacb-10aee6b3d6d8",
+      "test_plan_id": "e2cd66a7-85ae-44e5-9480-506e4f687109",
+      "evidence_package_id": "55a5d5b0-d8f4-4baa-a2b6-f25fbf53f5f1",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for INFORMATION_DISCLOSURE",
+      "required_evidence": {
+        "class_code": "INFORMATION_DISCLOSURE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "service-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "d49a005c-aa66-4b85-9b6e-cee736c26ab2",
+      "hypothesis_id": "a129d061-f62e-406b-97ea-7ca119d47c96",
+      "test_plan_id": "166c229f-d561-484e-bde0-6c9661329c0a",
+      "evidence_package_id": "3fb32572-70b6-4c02-aff1-ffe31d7b326b",
+      "asset_ids": [
+        "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+      ],
+      "validation_goal": "Prepare and review evidence for KNOWN_COMPONENT_VULNERABILITY",
+      "required_evidence": {
+        "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+        "required": [
+          {
+            "evidence_type": "VERSIONED_TECHNOLOGY",
+            "minimum": 1
+          },
+          {
+            "evidence_type": "TEMPLATE_MATCH_OR_NEGATIVE_EVIDENCE",
+            "minimum": 1
+          }
+        ],
+        "completion": "Component testing requires version confidence or scanner evidence.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "service-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "3c1f4049-f2c5-4e77-88fe-ff2b20f44870"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "7bf429eb-4268-4923-8c88-b3f5c9ad5c04",
+      "hypothesis_id": "e662a4b9-9a35-4c8b-97f0-8076dc144e67",
+      "test_plan_id": "b93f300f-d44b-45f6-9e87-cbdbd4bc2fa3",
+      "evidence_package_id": "381f7be3-4def-4ad7-b9e7-a8f060fc21a6",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for ADMINISTRATIVE_SURFACE",
+      "required_evidence": {
+        "class_code": "ADMINISTRATIVE_SURFACE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "4e9b93c9-4615-4d60-9fb7-30cd8e2992b5",
+      "hypothesis_id": "fb44ecb7-12fd-4011-a02b-18601a5ee43c",
+      "test_plan_id": "ae3a2fb6-2765-4ca6-8a45-a6ce72b7460a",
+      "evidence_package_id": "46ffe6ba-c265-4ccc-979a-38abd7a4b0f8",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for API_SCHEMA_VALIDATION",
+      "required_evidence": {
+        "class_code": "API_SCHEMA_VALIDATION",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "ade10208-2fd2-4630-8332-e1dfda213438",
+      "hypothesis_id": "01432324-091f-4434-9ddc-1686e005adba",
+      "test_plan_id": "a4dcf9da-5c5a-40b2-8736-a4451523cba6",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate AUTHENTICATION",
+      "required_evidence": {
+        "class_code": "AUTHENTICATION",
+        "required": [
+          {
+            "evidence_type": "AUTH_FLOW_REVIEW",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "bdb78559-604e-48a8-bb15-7b75de2d3a8e",
+      "hypothesis_id": "dd30db57-4fc2-43e1-9a2f-64a9c894aed4",
+      "test_plan_id": "2ccca84f-01ad-4354-b4a4-871b6c397f8d",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate AUTHORIZATION",
+      "required_evidence": {
+        "class_code": "AUTHORIZATION",
+        "required": [
+          {
+            "evidence_type": "AUTHORIZATION_REVIEW",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "d7c38fc7-1b8c-42ea-9b78-1c879b3df47f",
+      "hypothesis_id": "5b7987ef-20a7-4f55-8bfe-a9a18654e6c8",
+      "test_plan_id": "8c6772b1-5b15-4a8a-9f66-81eabac7954d",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate BUSINESS_LOGIC",
+      "required_evidence": {
+        "class_code": "BUSINESS_LOGIC",
+        "required": [
+          {
+            "evidence_type": "BUSINESS_LOGIC_REVIEW",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "7e209e53-eba4-4522-a214-26759bcaa0b7",
+      "hypothesis_id": "ce87b096-da78-417f-9e45-999ab0eff314",
+      "test_plan_id": "18ce5686-2397-49ca-a254-ae8b07db1295",
+      "evidence_package_id": "ca41098d-56a5-48f9-93aa-7552e5366598",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for CACHE_BEHAVIOR",
+      "required_evidence": {
+        "class_code": "CACHE_BEHAVIOR",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "2994b6a8-7e95-43e8-b7d8-75359948172b",
+      "hypothesis_id": "cf1a2138-cdce-41d3-8127-32f81d143a08",
+      "test_plan_id": "67d5482d-1bdf-4780-be16-07d05092cbce",
+      "evidence_package_id": "512e528d-d5fb-4172-a0d7-f7f93b440693",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for CROSS_ORIGIN_POLICY",
+      "required_evidence": {
+        "class_code": "CROSS_ORIGIN_POLICY",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "5921d937-d77e-4e5b-b241-842a6532c703",
+      "hypothesis_id": "2e414fee-7b10-49d0-bbba-230c8d512dda",
+      "test_plan_id": "19c762d2-7bd7-4146-801a-57db2bb93f4c",
+      "evidence_package_id": "adf16b27-4c60-44aa-9010-51da651c032e",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for DEBUG_SURFACE",
+      "required_evidence": {
+        "class_code": "DEBUG_SURFACE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "af7c97a6-c84a-4401-85db-e42c35b09ffb",
+      "hypothesis_id": "5954eb10-128b-48e4-a1cf-f2047d5a25d7",
+      "test_plan_id": "c2738902-8fa8-4ec1-98c2-15615c6af30e",
+      "evidence_package_id": "b4646002-2ccd-4192-9157-aab77499e8b1",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for DEFAULT_OR_WEAK_CONFIGURATION",
+      "required_evidence": {
+        "class_code": "DEFAULT_OR_WEAK_CONFIGURATION",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "3ef7ebf4-e676-45d1-b871-3134beb61d95",
+      "hypothesis_id": "99c65213-dc37-43b5-b5f0-d56bf3f1a9a9",
+      "test_plan_id": "2178f1df-b2d7-4da7-93a3-70430ce330dd",
+      "evidence_package_id": "91b4fe11-8ace-4f01-8a97-e6bd8ec95236",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for DEPENDENCY_RISK",
+      "required_evidence": {
+        "class_code": "DEPENDENCY_RISK",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "a6c387b5-d9ce-4af4-b8f6-989bbdf79e3b",
+      "hypothesis_id": "2495657e-7d15-41e2-96ba-ac8f347a4eb1",
+      "test_plan_id": "e1e7986e-179a-4e02-816d-63e738f25d14",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate FUNCTION_LEVEL_AUTHORIZATION",
+      "required_evidence": {
+        "class_code": "FUNCTION_LEVEL_AUTHORIZATION",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "bd2a42a5-38e3-4391-8a9b-b2233513c43b",
+      "hypothesis_id": "589bdbad-4e66-425e-bc8b-639875844c4e",
+      "test_plan_id": "cbdd8a4b-9cec-49e8-9fb5-d5a84a9c801d",
+      "evidence_package_id": "2bca71cc-14ad-456d-a6a1-efa999e5ebaa",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for HISTORICAL_OR_STALE_SURFACE",
+      "required_evidence": {
+        "class_code": "HISTORICAL_OR_STALE_SURFACE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "12f56125-5c5a-434f-b15d-ab4e1ed97dd3",
+      "hypothesis_id": "c34482e0-01e0-447b-945a-693f58c0811e",
+      "test_plan_id": "e45dd55d-9bef-43e0-9aa2-556ce45092f6",
+      "evidence_package_id": "f26bf116-7cff-4187-94b6-840727210f30",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for HOST_HEADER_HANDLING",
+      "required_evidence": {
+        "class_code": "HOST_HEADER_HANDLING",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "7ac5db69-cfec-4098-bc62-10591e0baaaf",
+      "hypothesis_id": "843a0775-7ed9-4364-b886-95a66254962b",
+      "test_plan_id": "9fe990d4-fc41-418c-a676-2de539220bb9",
+      "evidence_package_id": "02e77982-ac72-40a8-a5b1-9ea45333259d",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for INFORMATION_DISCLOSURE",
+      "required_evidence": {
+        "class_code": "INFORMATION_DISCLOSURE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "abf8f5e9-ed49-4ffd-a1a7-1b637fa626b3",
+      "hypothesis_id": "0a5533aa-5dac-4fc6-b17e-9ed31c65a967",
+      "test_plan_id": "5194a5b1-1f80-49b9-a5f6-4cb3df5e7400",
+      "evidence_package_id": "6dc0177a-e28c-4848-896f-d4ac9658db27",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for INJECTION_CLASS",
+      "required_evidence": {
+        "class_code": "INJECTION_CLASS",
+        "required": [
+          {
+            "evidence_type": "PARAMETER_INVENTORY",
+            "minimum": 1
+          },
+          {
+            "evidence_type": "CONTROLLED_TEST_RESULT",
+            "minimum": 1
+          }
+        ],
+        "completion": "Injection coverage requires parameter inventory and controlled tests.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "injection-surface"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "5b45c51f-354f-42dc-b58c-6a4733fac932",
+      "hypothesis_id": "fc6e689e-10cb-4a74-8653-14d06595c3de",
+      "test_plan_id": "00c931ad-a4e9-48df-bfa8-884549626f24",
+      "evidence_package_id": "c3063ebc-ff0e-4ff2-acb3-6b0ccba5dcfd",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for INPUT_VALIDATION",
+      "required_evidence": {
+        "class_code": "INPUT_VALIDATION",
+        "required": [
+          {
+            "evidence_type": "PARAMETER_INVENTORY",
+            "minimum": 1
+          },
+          {
+            "evidence_type": "VALIDATION_RESULT",
+            "minimum": 1
+          }
+        ],
+        "completion": "Input validation requires parameter coverage and validation evidence.",
+        "applicability": {
+          "state": "APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "e204c834-1f72-4b69-964e-7ba819346e4c",
+      "hypothesis_id": "da1e2ba2-4c43-4c8a-bfcc-f85b2567310c",
+      "test_plan_id": "97120604-9bb5-4785-a53c-b5e5606ca5d1",
+      "evidence_package_id": "4efc0161-496f-4028-834f-d4ef0b6356fd",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for KNOWN_COMPONENT_VULNERABILITY",
+      "required_evidence": {
+        "class_code": "KNOWN_COMPONENT_VULNERABILITY",
+        "required": [
+          {
+            "evidence_type": "VERSIONED_TECHNOLOGY",
+            "minimum": 1
+          },
+          {
+            "evidence_type": "TEMPLATE_MATCH_OR_NEGATIVE_EVIDENCE",
+            "minimum": 1
+          }
+        ],
+        "completion": "Component testing requires version confidence or scanner evidence.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "known-component-technology-only"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "9495fe6a-80fb-480d-b6d0-21284ed5e33a",
+      "hypothesis_id": "7e2dc50c-eb7b-45d5-b675-3e7cc0ce3e1d",
+      "test_plan_id": "2463b7bf-72c1-4f3f-835d-8a6af2f179b6",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate MULTI_STEP_WORKFLOW",
+      "required_evidence": {
+        "class_code": "MULTI_STEP_WORKFLOW",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "204e80ef-cc5a-4f4b-b564-3c630177fbb0",
+      "hypothesis_id": "7a48e6d9-deed-42c3-8f17-fdb38ea508ee",
+      "test_plan_id": "53d5969b-9e48-40af-bbbc-5c4177b65a22",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate OBJECT_LEVEL_AUTHORIZATION",
+      "required_evidence": {
+        "class_code": "OBJECT_LEVEL_AUTHORIZATION",
+        "required": [
+          {
+            "evidence_type": "OBJECT_ACCESS_REVIEW",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "ef4ed092-9492-4ba7-a3be-fcceca8e38ca",
+      "hypothesis_id": "d5bc03a8-e2ba-46e4-95a5-5b79538b05d1",
+      "test_plan_id": "a2025a5f-ec0f-456d-bba3-abe13d5bcd64",
+      "evidence_package_id": "6a8f8662-9183-4f5f-8705-7a992ce934fb",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for PATH_HANDLING",
+      "required_evidence": {
+        "class_code": "PATH_HANDLING",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "30b7e87e-a098-4448-9333-6633524c08a3",
+      "hypothesis_id": "b0c28b45-7592-4223-ab79-c479131a2e03",
+      "test_plan_id": "222949c6-861c-4065-81c7-994f5a4cbcb8",
+      "evidence_package_id": "12acc287-76b9-42e9-a5ab-a4a416272cd3",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for RATE_CONTROL",
+      "required_evidence": {
+        "class_code": "RATE_CONTROL",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "9ba92e28-b0b1-4ae0-8210-13f7d0e2db31",
+      "hypothesis_id": "87413e8e-2eec-40f6-8f72-6ddceeb50233",
+      "test_plan_id": "98f071d3-fe12-4c88-8959-957932abef79",
+      "evidence_package_id": "ada60882-e44b-48e5-98c0-05ddde744a45",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for REDIRECT_HANDLING",
+      "required_evidence": {
+        "class_code": "REDIRECT_HANDLING",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "dfc07196-2bc1-4cac-80c2-ab44bc091f99",
+      "hypothesis_id": "6a56559f-28e2-4b2a-9667-35fa1be4d5d3",
+      "test_plan_id": "5e78fde2-1186-413b-a0a5-f5920d9e9d7b",
+      "evidence_package_id": "626ffae3-773b-4527-845d-5d96612a5f32",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for SECRET_EXPOSURE",
+      "required_evidence": {
+        "class_code": "SECRET_EXPOSURE",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "21895d65-d38d-42d8-a2cf-999c78278742",
+      "hypothesis_id": "311049f0-6375-4dfa-9b07-24877aa5ec1f",
+      "test_plan_id": "1d48e0ba-3e6e-449a-a101-307029b4810f",
+      "evidence_package_id": "0de44adc-08fb-4d97-93eb-8ee75425846a",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for SERVER_SIDE_REQUEST_BEHAVIOR",
+      "required_evidence": {
+        "class_code": "SERVER_SIDE_REQUEST_BEHAVIOR",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "4d90f6aa-2c6c-47a9-8ab3-3e1723048d07",
+      "hypothesis_id": "af47b4ac-5626-40b7-9beb-3426aaedd5ba",
+      "test_plan_id": "9db5169e-a535-4d2d-8bf9-6c181f2f7032",
+      "evidence_package_id": null,
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Manually validate SESSION_MANAGEMENT",
+      "required_evidence": {
+        "class_code": "SESSION_MANAGEMENT",
+        "required": [
+          {
+            "evidence_type": "SESSION_FLOW_REVIEW",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Review the affected workflow manually",
+        "Record evidence IDs before issuing a verdict"
+      ],
+      "status": "OPEN",
+      "testing_mode": "MANUAL"
+    },
+    {
+      "id": "135bf5ec-a379-4fd1-9c71-a9790830b28e",
+      "hypothesis_id": "dbec30fc-42fe-45d2-8c72-dc9be9e132a0",
+      "test_plan_id": "daecdfec-2841-471e-864a-3ab43b443b64",
+      "evidence_package_id": "9c4769f3-51f5-414a-96d3-7b2c1819d3c3",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for TEMPLATE_PROCESSING",
+      "required_evidence": {
+        "class_code": "TEMPLATE_PROCESSING",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "52f07611-c175-4a67-b591-bcdab862128e",
+      "hypothesis_id": "4cbe6a75-4822-4e60-b9fa-fc5b5ed7298a",
+      "test_plan_id": "084926dc-58d9-4495-805e-81dc93a44ba2",
+      "evidence_package_id": "35eaa002-49fd-43b0-998d-a20b1abaea24",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for UPLOAD_SECURITY",
+      "required_evidence": {
+        "class_code": "UPLOAD_SECURITY",
+        "required": [
+          {
+            "evidence_type": "UPLOAD_SURFACE",
+            "minimum": 1
+          },
+          {
+            "evidence_type": "VALIDATION_RESULT",
+            "minimum": 1
+          }
+        ],
+        "completion": "Upload testing requires explicit upload surface validation evidence.",
+        "applicability": {
+          "state": "APPLICABLE",
+          "rule_ids": [
+            "upload-endpoint-pattern"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    },
+    {
+      "id": "da4e56a8-1ff4-4c09-baef-cefe5d2b189e",
+      "hypothesis_id": "473e9064-b2c0-4ff3-95e9-755c2b0f08b0",
+      "test_plan_id": "ac93744a-b7ef-42f7-9574-bccd59ec4548",
+      "evidence_package_id": "5686cd84-2ea7-4006-99d1-5c0e531e8214",
+      "asset_ids": [
+        "a7bb7788-a436-4d22-8bbe-6ebfa95501aa"
+      ],
+      "validation_goal": "Prepare and review evidence for XML_PROCESSING",
+      "required_evidence": {
+        "class_code": "XML_PROCESSING",
+        "required": [
+          {
+            "evidence_type": "ANALYST_VALIDATION",
+            "minimum": 1
+          }
+        ],
+        "completion": "Manual validation evidence is required to close this class.",
+        "applicability": {
+          "state": "POSSIBLY_APPLICABLE",
+          "rule_ids": [
+            "web-app-baseline"
+          ],
+          "supporting_evidence_ids": [
+            "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+            "fa22858c-79f7-4f79-bd58-429762fea3f6"
+          ]
+        }
+      },
+      "suggested_safe_checks": [
+        "Collect non-destructive evidence before analyst validation",
+        "Do not include secrets in the evidence package"
+      ],
+      "status": "OPEN",
+      "testing_mode": "ASSISTED"
+    }
+  ]
+}

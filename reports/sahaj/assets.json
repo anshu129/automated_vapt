@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "id": "187d0edf-c976-4684-b195-10720318cb7e",
+      "asset_type": "HOSTNAME",
+      "display_name": "sahaj.sakra.co.in",
+      "normalized_key": "sahaj.sakra.co.in",
+      "confidence": 0.5,
+      "metadata": {
+        "dns_resolved": true,
+        "dns_status": "COMPLETE"
+      },
+      "first_seen": "2026-07-07T06:46:05.465415",
+      "last_seen": "2026-07-07T06:46:05.465421"
+    },
+    {
+      "id": "3c1f4049-f2c5-4e77-88fe-ff2b20f44870",
+      "asset_type": "SERVICE",
+      "display_name": "https-sahaj.sakra.co.in:443",
+      "normalized_key": "sahaj.sakra.co.in:443",
+      "confidence": 0.5,
+      "metadata": {
+        "url": "https://sahaj.sakra.co.in",
+        "scheme": "https",
+        "hostname": "sahaj.sakra.co.in",
+        "port": 443
+      },
+      "first_seen": "2026-07-07T06:46:05.537726",
+      "last_seen": "2026-07-07T06:48:53.732255"
+    },
+    {
+      "id": "a7bb7788-a436-4d22-8bbe-6ebfa95501aa",
+      "asset_type": "WEB_APPLICATION",
+      "display_name": "https://sahaj.sakra.co.in",
+      "normalized_key": "https://sahaj.sakra.co.in",
+      "confidence": 0.5,
+      "metadata": {
+        "http_confirmed": true,
+        "technologies": [
+          "nginx"
+        ],
+        "base_url": "https://sahaj.sakra.co.in",
+        "method": "GET"
+      },
+      "first_seen": "2026-07-07T06:46:05.613276",
+      "last_seen": "2026-07-07T06:48:53.753773"
+    },
+    {
+      "id": "390bd8a2-e8c8-4192-a4b5-e26e96fe7610",
+      "asset_type": "IP_ADDRESS",
+      "display_name": "23.55.244.184",
+      "normalized_key": "23.55.244.184",
+      "confidence": 0.5,
+      "metadata": {},
+      "first_seen": "2026-07-07T06:46:09.223688",
+      "last_seen": "2026-07-07T06:46:09.223691"
+    },
+    {
+      "id": "bfe27fe3-b5fb-4b1b-91b7-4fa3c61b968c",
+      "asset_type": "IP_ADDRESS",
+      "display_name": "23.55.244.177",
+      "normalized_key": "23.55.244.177",
+      "confidence": 0.5,
+      "metadata": {},
+      "first_seen": "2026-07-07T06:46:09.235705",
+      "last_seen": "2026-07-07T06:46:09.235710"
+    },
+    {
+      "id": "3a4a8c02-d025-4abc-bec7-5dedd4ef7dca",
+      "asset_type": "ENDPOINT",
+      "display_name": "https://sahaj.sakra.co.in/uploads",
+      "normalized_key": "https://sahaj.sakra.co.in/uploads",
+      "confidence": 0.5,
+      "metadata": {
+        "method": "GET"
+      },
+      "first_seen": "2026-07-07T06:47:44.490246",
+      "last_seen": "2026-07-07T06:47:44.490250"
+    }
+  ],
+  "total": 6
+}

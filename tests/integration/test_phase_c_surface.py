@@ -30,7 +30,9 @@ async def test_surface_gaps_emitted_with_structure(db_session) -> None:
                     Event.event_type == "SURFACE_GAP_IDENTIFIED",
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(gap_events) >= 1
     payload = gap_events[0].payload
@@ -46,7 +48,9 @@ async def test_surface_gaps_emitted_with_structure(db_session) -> None:
                     Event.event_type == "SURFACE_COVERAGE_COMPUTED",
                 )
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(computed) >= 1
 
@@ -99,18 +103,14 @@ async def test_accepted_gaps_mark_requirements_non_blocking(db_session) -> None:
     assert open_req is not None
 
     accepted = {str(asset_id): [open_req.dimension]}
-    reqs_after = await engine.missing_requirements(
-        asset_id, scan.id, accepted_gaps=accepted
-    )
+    reqs_after = await engine.missing_requirements(asset_id, scan.id, accepted_gaps=accepted)
     accepted_req = next(r for r in reqs_after if r.dimension == open_req.dimension)
     assert accepted_req.accepted is True
     assert accepted_req.blocking is False
 
     record = (
         await db_session.execute(
-            select(AssessmentCompletionRecord).where(
-                AssessmentCompletionRecord.scan_id == scan.id
-            )
+            select(AssessmentCompletionRecord).where(AssessmentCompletionRecord.scan_id == scan.id)
         )
     ).scalar_one_or_none()
     if not record:
@@ -151,6 +151,8 @@ async def test_scan_surface_summary(db_session) -> None:
             await db_session.execute(
                 select(SurfaceCoverageRecord).where(SurfaceCoverageRecord.scan_id == scan.id)
             )
-        ).scalars().all()
+        )
+        .scalars()
+        .all()
     )
     assert len(surfaces) == len(records)

@@ -17,13 +17,13 @@ from vapt_platform.db.tables.models import (
     Task,
     Verdict,
 )
+from vapt_platform.engines.assessment import TestPlanner as Planner
 from vapt_platform.enrichment.mistral import (
     AdvisoryPriority,
     CrossAssetHypothesisSuggestion,
     MistralEnrichmentService,
     VulnerabilityCoverageAdvisory,
 )
-from vapt_platform.engines.assessment import TestPlanner as Planner
 from vapt_platform.mcp.read_tools import AssessmentMCPReadService
 from vapt_platform.services.core import ProjectService, ScanService
 
@@ -74,16 +74,12 @@ async def test_mistral_disabled_uses_cached_deterministic_fallback(db_session) -
     service = MistralEnrichmentService(db_session, settings)
 
     task_count_before = (
-        await db_session.execute(
-            select(func.count(Task.id)).where(Task.scan_id == scan.id)
-        )
+        await db_session.execute(select(func.count(Task.id)).where(Task.scan_id == scan.id))
     ).scalar_one()
     first = await service.enrich_vulnerability_coverage(scan.id)
     second = await service.enrich_vulnerability_coverage(scan.id)
     task_count_after = (
-        await db_session.execute(
-            select(func.count(Task.id)).where(Task.scan_id == scan.id)
-        )
+        await db_session.execute(select(func.count(Task.id)).where(Task.scan_id == scan.id))
     ).scalar_one()
 
     assert first.id == second.id
@@ -148,9 +144,7 @@ async def test_mistral_output_is_filtered_to_catalog_and_redacted_assets(
 
     assert record.provider == "mistral"
     assert record.validation_status == "VALID"
-    assert [item["class_code"] for item in record.output["priority_classes"]] == [
-        "AUTHORIZATION"
-    ]
+    assert [item["class_code"] for item in record.output["priority_classes"]] == ["AUTHORIZATION"]
     assert record.output["cross_asset_hypotheses"][0]["asset_ids"] == [valid_asset]
     assert set(class_codes) >= {"AUTHORIZATION"}
 

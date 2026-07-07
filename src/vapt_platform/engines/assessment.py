@@ -193,9 +193,7 @@ _MANUAL_CLASS_EVIDENCE: dict[str, list[dict[str, Any]]] = {
     "SESSION_MANAGEMENT": [{"evidence_type": "SESSION_FLOW_REVIEW", "minimum": 1}],
     "AUTHORIZATION": [{"evidence_type": "AUTHORIZATION_REVIEW", "minimum": 1}],
     "OBJECT_LEVEL_AUTHORIZATION": [{"evidence_type": "OBJECT_ACCESS_REVIEW", "minimum": 1}],
-    "CROSS_APPLICATION_AUTHORIZATION": [
-        {"evidence_type": "CROSS_APP_ACCESS_REVIEW", "minimum": 1}
-    ],
+    "CROSS_APPLICATION_AUTHORIZATION": [{"evidence_type": "CROSS_APP_ACCESS_REVIEW", "minimum": 1}],
     "BUSINESS_LOGIC": [{"evidence_type": "BUSINESS_LOGIC_REVIEW", "minimum": 1}],
 }
 
@@ -281,9 +279,13 @@ class TestMatrixEngine:
         asset_id: uuid.UUID,
         vulnerability_class_id: uuid.UUID,
     ) -> TestPlan | None:
-        stmt = select(TestPlan).where(TestPlan.scan_id == scan_id).order_by(
-            TestPlan.updated_at.desc(),
-            TestPlan.created_at.desc(),
+        stmt = (
+            select(TestPlan)
+            .where(TestPlan.scan_id == scan_id)
+            .order_by(
+                TestPlan.updated_at.desc(),
+                TestPlan.created_at.desc(),
+            )
         )
         plans = list((await self.session.execute(stmt)).scalars().all())
         asset_ref = str(asset_id)
@@ -407,9 +409,7 @@ def _required_evidence_payload(
         "applicability": {
             "state": app.applicability_state if app else ApplicabilityState.NOT_APPLICABLE.value,
             "rule_ids": list(app.rule_ids or []) if app else [],
-            "supporting_evidence_ids": (
-                list(app.supporting_evidence_ids or []) if app else []
-            ),
+            "supporting_evidence_ids": (list(app.supporting_evidence_ids or []) if app else []),
         },
     }
     return payload
@@ -590,9 +590,7 @@ class TestPlanner:
             ),
             hypothesis_type=class_code,
             affected_asset_ids=[str(asset_id)],
-            supporting_evidence_ids=list(
-                applicability.get("supporting_evidence_ids") or []
-            ),
+            supporting_evidence_ids=list(applicability.get("supporting_evidence_ids") or []),
             correlation_rule_ids=rule_ids,
             confidence=req.confidence,
             impact_if_confirmed=(
@@ -638,9 +636,7 @@ class TestPlanner:
                 scan_id, asset_id, req, plan, hypothesis, class_code
             )
         elif req.testing_mode == TestingMode.MANUAL.value:
-            await self._create_manual_backlog(
-                scan_id, asset_id, req, plan, hypothesis, class_code
-            )
+            await self._create_manual_backlog(scan_id, asset_id, req, plan, hypothesis, class_code)
 
         await self._emit_plan_created(plan)
         return plan
@@ -757,9 +753,7 @@ class TestPlanner:
                 event_type="TEST_PLAN_CREATED",
                 payload={
                     "plan_id": str(plan.id),
-                    "hypothesis_id": (
-                        str(plan.hypothesis_id) if plan.hypothesis_id else None
-                    ),
+                    "hypothesis_id": (str(plan.hypothesis_id) if plan.hypothesis_id else None),
                     "testing_mode": plan.testing_mode,
                     "asset_ids": plan.asset_ids,
                     "vulnerability_class_ids": plan.vulnerability_class_ids,
@@ -796,12 +790,8 @@ class TestPlanner:
                 event_type="VALIDATION_TASK_CREATED",
                 payload={
                     "validation_task_id": str(task.id),
-                    "hypothesis_id": (
-                        str(task.hypothesis_id) if task.hypothesis_id else None
-                    ),
-                    "test_plan_id": (
-                        str(task.test_plan_id) if task.test_plan_id else None
-                    ),
+                    "hypothesis_id": (str(task.hypothesis_id) if task.hypothesis_id else None),
+                    "test_plan_id": (str(task.test_plan_id) if task.test_plan_id else None),
                     "testing_mode": task.testing_mode,
                 },
                 correlation_id=uuid.uuid4(),
@@ -845,9 +835,7 @@ class VerdictEngine:
         if validation_result and validation_result.outcome != outcome:
             raise ValueError("Validation result outcome does not match verdict outcome")
         canonical_evidence_ids = list(
-            dict.fromkeys(
-                validation_result.evidence_ids if validation_result else evidence_ids
-            )
+            dict.fromkeys(validation_result.evidence_ids if validation_result else evidence_ids)
         )
         if outcome == "CONFIRMED" and not canonical_evidence_ids:
             raise ValueError("Confirmed verdict requires evidence")
@@ -864,15 +852,9 @@ class VerdictEngine:
             validation_result_id=validation_result_id,
             status=status,
             confidence=hyp.confidence,
-            supporting_evidence_ids=(
-                canonical_evidence_ids if outcome == "CONFIRMED" else []
-            ),
-            contradicting_evidence_ids=(
-                canonical_evidence_ids if outcome == "REJECTED" else []
-            ),
-            rule_ids=[
-                "verdict-automated" if test_execution_id else "verdict-manual"
-            ],
+            supporting_evidence_ids=(canonical_evidence_ids if outcome == "CONFIRMED" else []),
+            contradicting_evidence_ids=(canonical_evidence_ids if outcome == "REJECTED" else []),
+            rule_ids=["verdict-automated" if test_execution_id else "verdict-manual"],
             explanation=(
                 f"Verdict based on {'automated execution' if test_execution_id else 'validation'} "
                 f"outcome {outcome}"
@@ -888,9 +870,7 @@ class VerdictEngine:
         if canonical_evidence_ids:
             if outcome == "CONFIRMED":
                 hyp.supporting_evidence_ids = list(
-                    dict.fromkeys(
-                        [*(hyp.supporting_evidence_ids or []), *canonical_evidence_ids]
-                    )
+                    dict.fromkeys([*(hyp.supporting_evidence_ids or []), *canonical_evidence_ids])
                 )
             elif outcome == "REJECTED":
                 hyp.contradicting_evidence_ids = list(
@@ -921,9 +901,7 @@ class VerdictEngine:
         related_tasks = list(
             (
                 await self.session.execute(
-                    select(ValidationTask).where(
-                        ValidationTask.hypothesis_id == hypothesis_id
-                    )
+                    select(ValidationTask).where(ValidationTask.hypothesis_id == hypothesis_id)
                 )
             )
             .scalars()
@@ -942,11 +920,7 @@ class VerdictEngine:
             }:
                 task.status = terminal_task_status
 
-        plan = (
-            await self.session.get(TestPlan, resolved_plan_id)
-            if resolved_plan_id
-            else None
-        )
+        plan = await self.session.get(TestPlan, resolved_plan_id) if resolved_plan_id else None
         if plan:
             plan.status = TestPlanStatus.COMPLETED.value
 
@@ -981,9 +955,7 @@ class VerdictEngine:
                     "validation_result_id": (
                         str(validation_result_id) if validation_result_id else None
                     ),
-                    "test_execution_id": (
-                        str(test_execution_id) if test_execution_id else None
-                    ),
+                    "test_execution_id": (str(test_execution_id) if test_execution_id else None),
                     "status": verdict.status,
                 },
                 correlation_id=uuid.uuid4(),
@@ -1013,9 +985,7 @@ class VerdictEngine:
                     select(AssetVulnerabilityApplicability).where(
                         AssetVulnerabilityApplicability.scan_id == hypothesis.scan_id,
                         AssetVulnerabilityApplicability.asset_id.in_(asset_ids),
-                        AssetVulnerabilityApplicability.vulnerability_class_id.in_(
-                            class_ids
-                        ),
+                        AssetVulnerabilityApplicability.vulnerability_class_id.in_(class_ids),
                     )
                 )
             )
@@ -1032,12 +1002,8 @@ class VerdictEngine:
             row.supporting_evidence_ids = list(
                 dict.fromkeys([*(row.supporting_evidence_ids or []), *evidence_ids])
             )
-            row.rule_ids = list(
-                dict.fromkeys([*(row.rule_ids or []), "verdict-manual"])
-            )
-            row.explanation = (
-                f"Validation outcome {outcome}; verdict_id={verdict_id}"
-            )
+            row.rule_ids = list(dict.fromkeys([*(row.rule_ids or []), "verdict-manual"]))
+            row.explanation = f"Validation outcome {outcome}; verdict_id={verdict_id}"
             row.computed_at = datetime.now(UTC)
         for asset_id in asset_ids:
             await TestMatrixEngine(self.session).build(hypothesis.scan_id, asset_id)
@@ -1133,9 +1099,7 @@ class AssessmentCompletionEvaluator:
             list(
                 (
                     await self.session.execute(
-                        select(TestRequirement).where(
-                            TestRequirement.matrix_id.in_(matrix_ids)
-                        )
+                        select(TestRequirement).where(TestRequirement.matrix_id.in_(matrix_ids))
                     )
                 )
                 .scalars()
@@ -1154,9 +1118,7 @@ class AssessmentCompletionEvaluator:
         blocking_requirements = [
             {
                 "matrix_id": str(requirement.matrix_id),
-                "vulnerability_class_id": str(
-                    requirement.vulnerability_class_id
-                ),
+                "vulnerability_class_id": str(requirement.vulnerability_class_id),
                 "coverage_status": requirement.coverage_status,
                 "next_action": requirement.next_action,
             }
@@ -1173,7 +1135,9 @@ class AssessmentCompletionEvaluator:
                         Asset.asset_type == AssetType.WEB_APPLICATION.value,
                     )
                 )
-            ).scalars().all()
+            )
+            .scalars()
+            .all()
         )
 
         blocking_gaps: list[dict[str, Any]] = []
@@ -1198,9 +1162,7 @@ class AssessmentCompletionEvaluator:
         if blocking_gaps:
             blocking.append(f"{len(blocking_gaps)} blocking surface gaps")
         if blocking_requirements:
-            blocking.append(
-                f"{len(blocking_requirements)} unresolved test requirements"
-            )
+            blocking.append(f"{len(blocking_requirements)} unresolved test requirements")
 
         accepted_count = sum(
             len(v) if isinstance(v, list) else len(v.keys()) if isinstance(v, dict) else 0
