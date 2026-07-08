@@ -37,9 +37,31 @@ function renderStatusBadges() {
 
 /* ---------- helpers ---------- */
 function scanCredentials() {
+  const enabled = document.getElementById("credsToggle")?.checked;
+  if (!enabled) return { username: null, password: null };
   const username = document.getElementById("usernameInput")?.value.trim() || null;
   const password = document.getElementById("passwordInput")?.value || null;
   return { username: username || null, password: password || null };
+}
+
+function initCredentialsToggle() {
+  const toggle = document.getElementById("credsToggle");
+  const fields = document.getElementById("credsFields");
+  const username = document.getElementById("usernameInput");
+  const password = document.getElementById("passwordInput");
+  if (!toggle || !fields) return;
+  const apply = () => {
+    const on = toggle.checked;
+    fields.classList.toggle("hidden", !on);
+    if (username) username.disabled = !on;
+    if (password) password.disabled = !on;
+    if (!on) {
+      if (username) username.value = "";
+      if (password) password.value = "";
+    }
+  };
+  toggle.addEventListener("change", apply);
+  apply();
 }
 
 function showError(title, message, detail) {
@@ -255,7 +277,14 @@ function updateProgress(job) {
     bar.classList.remove("hidden");
     const idx = Math.max(0, phases.indexOf(job.phase));
     fill.style.width = `${(idx / (phases.length - 1)) * 100}%`;
-    label.textContent = `${job.phase} · ${job.elapsed_seconds || 0}s / budget ${job.time_budget_minutes}m`;
+    const recon = job.progress?.recon;
+    const current = recon?.current_tool;
+    const toolHint = current
+      ? ` · ${current.provider || "?"} (${current.capability || "tool"})`
+      : recon?.tools_completed
+        ? ` · ${recon.tools_completed} tools done`
+        : "";
+    label.textContent = `${job.phase}${toolHint} · ${job.elapsed_seconds || 0}s / budget ${job.time_budget_minutes}m`;
   }
   state.jobStatus = job.status;
   if (job.assessment_status) {
@@ -504,6 +533,30 @@ async function loadAssets(p) {
   data.items.forEach((a) => {
     const meta = a.metadata || {};
     const tech = (meta.technologies || []).join(", ");
+    const ports =
+      Array.isArray(meta.open_ports) && meta.open_ports.length
+        ? meta.open_ports.join(", ")
+        : meta.port != null
+          ? String(meta.port)
+          : "";
+    const serviceBits = [];
+    if (meta.service) serviceBits.push(meta.service);
+    if (meta.product) serviceBits.push(meta.product);
+    if (meta.version) serviceBits.push(meta.version);
+    const serviceInfo =
+      serviceBits.join(" ") ||
+      (Array.isArray(meta.services)
+        ? meta.services
+            .map((s) => {
+              const svc = s.service || s.protocol || "tcp";
+              const banner = [s.product, s.version].filter(Boolean).join(" ");
+              return banner ? `${s.port}/${svc} (${banner})` : `${s.port}/${svc}`;
+            })
+            .join(", ")
+        : "");
+    const detail = [ports && `ports: ${ports}`, serviceInfo && `svc: ${serviceInfo}`]
+      .filter(Boolean)
+      .join(" · ");
     body.appendChild(
       h(
         "tr",
@@ -511,7 +564,7 @@ async function loadAssets(p) {
         h("td", {}, h("span", { class: "pill mode" }, a.asset_type)),
         h("td", {}, a.display_name || a.normalized_key),
         h("td", { class: "mono" }, a.normalized_key),
-        h("td", {}, tech || "—"),
+        h("td", {}, detail || tech || "—"),
         h("td", {}, a.confidence != null ? a.confidence.toFixed(2) : "—")
       )
     );
@@ -521,7 +574,7 @@ async function loadAssets(p) {
     h(
       "table",
       {},
-      h("thead", {}, h("tr", {}, h("th", {}, "Type"), h("th", {}, "Name"), h("th", {}, "Key"), h("th", {}, "Technologies"), h("th", {}, "Conf."))),
+      h("thead", {}, h("tr", {}, h("th", {}, "Type"), h("th", {}, "Name"), h("th", {}, "Key"), h("th", {}, "Ports / service"), h("th", {}, "Conf."))),
       body
     )
   );
@@ -1011,6 +1064,7 @@ function showFindingDetail(f, map) {
 /* ---------- init ---------- */
 function init() {
   document.getElementById("scanForm").addEventListener("submit", startScan);
+  initCredentialsToggle();
   document.getElementById("refreshBtn").addEventListener("click", refreshCurrent);
   document.getElementById("fullValidateBtn").addEventListener("click", runFullValidation);
   document.getElementById("reportBtn").addEventListener("click", (e) => downloadReport(e.shiftKey));

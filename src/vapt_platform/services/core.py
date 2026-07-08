@@ -38,6 +38,7 @@ from vapt_platform.domain.exceptions import EntityNotFoundError
 from vapt_platform.engines.assessment import VerdictEngine
 from vapt_platform.scope.manager import ScopeManager, ScopeRuleData
 from vapt_platform.tools.manifest import ToolManifestSpec, load_tool_manifests, resolve_tool_binary
+from vapt_platform.tools.wordlists import resolve_wordlist_path
 
 
 class ProjectService:
@@ -183,6 +184,9 @@ class ScanService:
                 )
 
         if get_settings().scan_start_inline_execution:
+            # Persist RUNNING status and scope bootstrap before long-running recon
+            # so the UI/DB stay readable while tools execute one-by-one.
+            await self.session.commit()
             await self.run_recon_pipeline(scan_id, correlation_id)
         return scan
 
@@ -734,7 +738,7 @@ def _tool_target_compatible(spec: ToolManifestSpec, target: dict[str, Any]) -> b
             or target.get("domain")
         ),
         "ip": target.get("ip"),
-        "wordlist": target.get("wordlist", "config/wordlists/common.txt"),
+        "wordlist": resolve_wordlist_path(spec.name, target),
         "resolvers": target.get("resolvers", "config/resolvers.txt"),
         "output": target.get("output", "-"),
         "payload": target.get("payload", "FUZZ"),

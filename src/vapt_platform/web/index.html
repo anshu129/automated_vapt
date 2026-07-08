@@ -32,12 +32,18 @@
             <label>Time budget (minutes)
               <input id="budgetInput" type="number" min="1" max="240" value="30" />
             </label>
-            <label>Username <span class="muted">(optional, HTTP basic)</span>
-              <input id="usernameInput" type="text" placeholder="e.g. natas5" autocomplete="username" />
+            <label class="checkbox">
+              <input id="credsToggle" type="checkbox" />
+              Use HTTP basic credentials
             </label>
-            <label>Password <span class="muted">(optional)</span>
-              <input id="passwordInput" type="password" placeholder="Target password" autocomplete="current-password" />
-            </label>
+            <div id="credsFields" class="hidden">
+              <label>Username <span class="muted">(optional, HTTP basic)</span>
+                <input id="usernameInput" type="text" placeholder="e.g. natas5" autocomplete="username" disabled />
+              </label>
+              <label>Password <span class="muted">(optional)</span>
+                <input id="passwordInput" type="password" placeholder="Target password" autocomplete="current-password" disabled />
+              </label>
+            </div>
             <label class="checkbox">
               <input id="aiInput" type="checkbox" checked />
               Run AI validation &amp; assignment

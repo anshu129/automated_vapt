@@ -2,6 +2,8 @@
 
 import asyncio
 import hashlib
+import logging
+import time
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -59,12 +61,20 @@ from vapt_platform.evidence.quality import (
 )
 from vapt_platform.planning.adaptive_recon import AdaptiveReconPlanner
 from vapt_platform.planning.discovery_gain import MarginalDiscoveryGainEngine
+from vapt_platform.planning.port_scan import (
+    apply_port_scan_metadata,
+    http_service_port,
+    scheme_for_service,
+)
+from vapt_platform.planning.targets import as_str
 from vapt_platform.scope.manager import (
     ScopeManager,
     TargetDescriptor,
     task_uniqueness_key,
 )
 from vapt_platform.tools.manifest import load_tool_manifests
+
+logger = logging.getLogger(__name__)
 
 # Legacy export — planner is canonical for Phase B
 WORKFLOW_TRANSITIONS: dict[str, list[Capability]] = {}
@@ -121,6 +131,80 @@ class ReconController:
         self.max_pipeline_tasks = settings.scan_pipeline_max_tasks
         self._manifests = load_tool_manifests()
         self.planner = AdaptiveReconPlanner()
+
+    def _redacted_command(self, task: Task) -> str | None:
+        params = task.parameters or {}
+        decision = params.get("parameter_decision") or {}
+        command = decision.get("redacted_command")
+        return str(command) if command else None
+
+    def _notify_tool_start(self, task: Task, provider: CapabilityProvider | None) -> None:
+        settings = get_settings()
+        if not settings.recon_tool_logging:
+            return
+        provider_name = provider.provider_name if provider else None
+        logger.info(
+            "tool_start scan_id=%s task_id=%s capability=%s provider=%s target=%s",
+            task.scan_id,
+            task.id,
+            task.capability,
+            provider_name,
+            task.normalized_target,
+        )
+        from vapt_platform.services import scan_jobs
+
+        scan_jobs.notify_recon_tool_event(
+            str(task.scan_id),
+            event="start",
+            capability=task.capability,
+            provider=provider_name,
+            target=task.normalized_target,
+        )
+
+    async def _notify_tool_done(
+        self,
+        task: Task,
+        run: TaskRun,
+        provider: CapabilityProvider | None,
+        *,
+        started_at: float,
+        command: str | None = None,
+        out_bytes: int = 0,
+    ) -> None:
+        settings = get_settings()
+        duration_s = round(time.monotonic() - started_at, 2)
+        provider_name = provider.provider_name if provider else None
+        if settings.recon_tool_logging:
+            logger.info(
+                "tool_done scan_id=%s task_id=%s capability=%s provider=%s "
+                "exit_code=%s duration_s=%s task_status=%s out_bytes=%s error=%s command=%s",
+                task.scan_id,
+                task.id,
+                task.capability,
+                provider_name,
+                run.exit_code,
+                duration_s,
+                task.status,
+                out_bytes,
+                (run.error_summary or "")[:120] or None,
+                command,
+            )
+        from vapt_platform.services import scan_jobs
+
+        scan_jobs.notify_recon_tool_event(
+            str(task.scan_id),
+            event="done",
+            capability=task.capability,
+            provider=provider_name,
+            target=task.normalized_target,
+            exit_code=run.exit_code,
+            duration_s=duration_s,
+            task_status=task.status,
+            error=run.error_summary,
+            command=command,
+        )
+        if settings.recon_commit_per_task:
+            await self.session.commit()
 
     async def _next_sequence(self, scan_id: uuid.UUID) -> int:
         stmt = select(func.max(Event.sequence_number)).where(Event.scan_id == scan_id)
@@ -286,11 +370,15 @@ class ReconController:
         run = TaskRun(task_id=task.id, attempt_number=task.retry_count + 1)
         self.session.add(run)
         await self.session.flush()
+        started_at = time.monotonic()
+        self._notify_tool_start(task, provider)
 
         if not provider:
             run.exit_code = 1
             run.error_summary = "No provider"
+            run.completed_at = datetime.now(UTC)
             task.status = TaskStatus.FAILED_TERMINAL.value
+            await self._notify_tool_done(task, run, provider, started_at=started_at)
             return run
 
         manifest_spec = self._manifests.get(provider.provider_name)
@@ -323,7 +411,9 @@ class ReconController:
             if not adapter:
                 run.exit_code = 1
                 run.error_summary = "No adapter"
+                run.completed_at = datetime.now(UTC)
                 task.status = TaskStatus.FAILED_TERMINAL.value
+                await self._notify_tool_done(task, run, provider, started_at=started_at)
                 return run
             output = adapter.execute(
                 effective_target,
@@ -458,6 +548,15 @@ class ReconController:
             correlation_id,
             causation_id=run.id,
         )
+        out_bytes = len(output.stdout or "")
+        await self._notify_tool_done(
+            task,
+            run,
+            provider,
+            started_at=started_at,
+            command=self._redacted_command(task),
+            out_bytes=out_bytes,
+        )
         return run
 
     @staticmethod
@@ -514,14 +613,14 @@ class ReconController:
                 await self._add_relationship(
                     event.scan_id, host_asset.id, ip_asset.id, RelationshipType.RESOLVES_TO
                 )
-        meta = host_asset.metadata_ or {}
+        meta = dict(host_asset.metadata_ or {})
         meta["dns_resolved"] = True
         meta["dns_status"] = "COMPLETE"
         host_asset.metadata_ = meta
         await self.surface_engine.compute(event.scan_id, host_asset.id)
 
     async def _on_http_confirmed(self, event: Event) -> None:
-        url = event.payload.get("url", "")
+        url = as_str(event.payload.get("url"), "")
         parsed = urlparse(url)
         scheme = parsed.scheme or "http"
         host = parsed.hostname or url.replace("https://", "").replace("http://", "").split("/")[0]
@@ -536,7 +635,7 @@ class ReconController:
         )
 
     async def _on_web_app_confirmed(self, event: Event) -> None:
-        base_url = event.payload.get("base_url", "")
+        base_url = as_str(event.payload.get("base_url"), "")
         normalized = base_url.lower().rstrip("/")
         asset = await self._upsert_asset(
             event.scan_id,
@@ -628,29 +727,92 @@ class ReconController:
             await self.surface_engine.compute(event.scan_id, app.id)
 
     async def _on_service_observed(self, event: Event) -> None:
-        host = event.payload.get("host") or event.payload.get("ip") or ""
-        asset_type = AssetType.IP_ADDRESS if _looks_like_ip(host) else AssetType.HOSTNAME
-        host_asset = await self._find_asset(event.scan_id, asset_type, host.lower())
-        if not host_asset:
-            host_asset = await self._upsert_asset(
+        host = event.payload.get("hostname") or event.payload.get("host") or ""
+        ip = event.payload.get("ip") or ""
+        port = event.payload.get("port")
+        service_name = event.payload.get("service") or ""
+        protocol = event.payload.get("protocol") or "tcp"
+
+        host_key = host.lower() if host else ""
+        host_asset = None
+        if host_key:
+            host_asset = await self._find_asset(event.scan_id, AssetType.HOSTNAME, host_key)
+            if not host_asset:
+                host_asset = await self._upsert_asset(
+                    event.scan_id,
+                    AssetType.HOSTNAME,
+                    host_key,
+                    host,
+                    event.correlation_id,
+                )
+            host_asset.metadata_ = apply_port_scan_metadata(host_asset.metadata_, event.payload)
+
+        ip_asset = None
+        if ip:
+            ip_asset = await self._find_asset(event.scan_id, AssetType.IP_ADDRESS, ip)
+            if not ip_asset:
+                ip_asset = await self._upsert_asset(
+                    event.scan_id,
+                    AssetType.IP_ADDRESS,
+                    ip,
+                    ip,
+                    event.correlation_id,
+                )
+            ip_asset.metadata_ = apply_port_scan_metadata(ip_asset.metadata_, event.payload)
+
+        if port and (host or ip):
+            scheme = scheme_for_service(service_name, port)
+            host_label = host or ip
+            service_key = f"{host_label}:{port}".lower()
+            display = f"{service_name or scheme}-{host_label}:{port}"
+            service_meta = {
+                "hostname": host or None,
+                "ip": ip or None,
+                "port": port,
+                "protocol": protocol,
+                "scheme": scheme,
+                "service": service_name or None,
+                "product": event.payload.get("product"),
+                "version": event.payload.get("version"),
+                "source": event.payload.get("source") or "port_scan",
+            }
+            if http_service_port(port, service_name):
+                if int(port) in {80, 443}:
+                    service_meta["url"] = f"{scheme}://{host_label}"
+                else:
+                    service_meta["url"] = f"{scheme}://{host_label}:{port}"
+            service_asset = await self._upsert_asset(
                 event.scan_id,
-                asset_type,
-                host.lower(),
-                host,
+                AssetType.SERVICE,
+                service_key,
+                display,
                 event.correlation_id,
+                metadata=service_meta,
             )
-        meta = host_asset.metadata_ or {}
-        meta["ports_discovered"] = True
-        meta["services_identified"] = True
-        meta["last_observed_port"] = event.payload.get("port")
-        host_asset.metadata_ = meta
-        await self.surface_engine.compute(event.scan_id, host_asset.id)
-        await self._compute_and_emit_applicability(
-            event.scan_id,
-            host_asset.id,
-            event.correlation_id,
-            ApplicabilityTrigger.ASSET_UPDATED,
-        )
+            if host_asset:
+                await self._add_relationship(
+                    event.scan_id,
+                    host_asset.id,
+                    service_asset.id,
+                    RelationshipType.EXPOSES,
+                )
+            if ip_asset and (not host_asset or ip_asset.id != host_asset.id):
+                await self._add_relationship(
+                    event.scan_id,
+                    ip_asset.id,
+                    service_asset.id,
+                    RelationshipType.EXPOSES,
+                )
+
+        primary = host_asset or ip_asset
+        if primary:
+            await self.surface_engine.compute(event.scan_id, primary.id)
+            await self._compute_and_emit_applicability(
+                event.scan_id,
+                primary.id,
+                event.correlation_id,
+                ApplicabilityTrigger.ASSET_UPDATED,
+            )
 
     async def _on_javascript_discovered(self, event: Event) -> None:
         url = event.payload.get("url", "")

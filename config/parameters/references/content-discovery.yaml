@@ -24,9 +24,9 @@ tools:
         rationale: "Per-request timeout prevents hung fuzzer threads."
         operational_triggers: [previous_timeouts]
       - id: mc
-        flags: ["-mc", "200,204,301,302,307,401,403"]
+        flags: ["-mc", "200,204,301,302,307"]
         when_to_use: Filter meaningful HTTP status codes for surface inventory.
-        rationale: "ffuf match codes; 403 indicates existence behind auth/WAF."
+        rationale: "ffuf -mc allow-list; exclude 401/403 auth gates on unauthenticated scans."
         operational_triggers: [manifest_base]
       - id: recursion
         flags: ["-recursion", "-recursion-depth", "2"]
@@ -60,6 +60,11 @@ tools:
         when_to_use: WAF blocking recursive discovery; flat wordlist only.
         rationale: "Disables automatic subdirectory recursion."
         operational_triggers: [waf_detected, rate_limited]
+      - id: filter-auth
+        flags: ["--filter-status", "401", "403"]
+        when_to_use: Unauthenticated scans; deny auth challenge responses.
+        rationale: "feroxbuster --filter-status deny-list per official docs."
+        operational_triggers: [manifest_base]
 
   gobuster:
     official_docs:
@@ -77,9 +82,9 @@ tools:
         rationale: "-t thread count; lower reduces parallel request burst."
         operational_triggers: [waf_detected, rate_limited]
       - id: status-codes
-        flags: ["-s", "200,204,301,302,307,401,403"]
+        flags: ["-s", "200,204,301,302,307"]
         when_to_use: Match codes indicating existing resources.
-        rationale: "gobuster -s positive status code filter."
+        rationale: "gobuster -s allow-list; default omits 401/403 auth walls."
         operational_triggers: [manifest_base]
       - id: no-error
         flags: ["-b"]
@@ -108,8 +113,8 @@ tools:
         rationale: "Delay between requests in seconds."
         operational_triggers: [rate_limited, waf_detected]
       - id: exclude-status
-        flags: ["--exclude-status", "404,400"]
-        when_to_use: Filter noise from soft errors.
+        flags: ["--exclude-status", "404,400,401,403"]
+        when_to_use: Filter noise from soft errors and auth challenges.
         rationale: "Status exclusion per dirsearch filtering options."
         operational_triggers: [manifest_base]
 
@@ -122,6 +127,11 @@ tools:
         flags: ["--hc", "404"]
         when_to_use: Default; hide not-found responses.
         rationale: "wfuzz --hc hides response codes per documentation."
+        operational_triggers: [manifest_base]
+      - id: hide-auth
+        flags: ["--hc", "401,403"]
+        when_to_use: Unauthenticated scans; hide auth challenge responses.
+        rationale: "wfuzz --hc deny-list for 401/403 auth walls."
         operational_triggers: [manifest_base]
       - id: threads
         flags: ["-t", "20"]

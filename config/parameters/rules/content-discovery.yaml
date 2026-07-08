@@ -16,9 +16,38 @@ rules:
     reference_param: mc
     when:
       always: true
-    add_args: ["-mc", "200,204,301,302,307,401,403"]
+    add_args: ["-mc", "200,204,301,302,307"]
     explanation: >-
-      Match status codes indicating existing paths including 401/403 existence proofs.
+      Match only successful/redirect status codes. Exclude 401/403 so unauthenticated
+      auth walls are not reported as discovered paths (ffuf -mc allow-list).
+
+  - id: param-feroxbuster-filter-auth
+    tool: feroxbuster
+    reference_param: filter-status
+    when:
+      always: true
+    add_args: ["--filter-status", "401", "403"]
+    explanation: >-
+      Deny-list 401/403 per feroxbuster --filter-status; auth gates on every path
+      are not unique endpoints without credentials.
+
+  - id: param-gobuster-status-codes
+    tool: gobuster
+    reference_param: status-codes
+    when:
+      always: true
+    add_args: ["-s", "200,204,301,302,307"]
+    explanation: >-
+      gobuster -s allow-list; exclude 401/403 auth challenge responses.
+
+  - id: param-dirsearch-exclude-auth
+    tool: dirsearch
+    reference_param: exclude-status
+    when:
+      always: true
+    add_args: ["--exclude-status", "404,400,401,403"]
+    explanation: >-
+      dirsearch --exclude-status drops auth challenge and error responses.
 
   - id: param-ffuf-no-recursion-waf
     tool: ffuf

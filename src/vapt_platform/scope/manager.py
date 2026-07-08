@@ -21,9 +21,9 @@ class TargetDescriptor:
 
     def normalized_key(self) -> str:
         if self.url:
-            return self.url.lower().rstrip("/")
+            return str(self.url).lower().rstrip("/")
         if self.hostname:
-            return self.hostname.lower()
+            return str(self.hostname).lower()
         if self.ip:
             p = f":{self.port}" if self.port else ""
             return f"{self.ip}{p}"

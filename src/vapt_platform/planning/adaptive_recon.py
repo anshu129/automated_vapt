@@ -8,6 +8,8 @@ from typing import Any
 
 from vapt_platform.capabilities.matcher import CapabilityMatcher
 from vapt_platform.domain.enums import Capability, EventType, ExecutionProfile
+from vapt_platform.planning.port_scan import http_service_port, scheme_for_service
+from vapt_platform.planning.targets import as_str, host_from_payload, url_from_payload
 
 
 @dataclass
@@ -134,16 +136,32 @@ class AdaptiveReconPlanner:
             Capability.HTTP_CHARACTERIZATION,
             Capability.TECHNOLOGY_IDENTIFICATION,
         ):
-            host = (
-                payload.get("hostname")
-                or payload.get("host")
-                or payload.get("ip")
-                or (payload.get("base_url", "").replace("https://", "").split("/")[0])
-            )
-            url = payload.get("url") or payload.get("base_url") or f"https://{host}"
+            if payload.get("type") == "SERVICE_OBSERVED":
+                port = payload.get("port")
+                service = payload.get("service")
+                if not http_service_port(port, service):
+                    return []
+                host = host_from_payload(payload)
+                scheme = scheme_for_service(service, port)
+                try:
+                    port_num = int(port)
+                except (TypeError, ValueError):
+                    port_num = 0
+                if port_num in {80, 443}:
+                    url = f"{scheme}://{host}"
+                else:
+                    url = f"{scheme}://{host}:{port_num}"
+                target = {**base, "hostname": host, "url": url}
+                ip = as_str(payload.get("ip"), "")
+                if ip or _looks_like_ip(host):
+                    target["ip"] = ip or host
+                return [target]
+            host = host_from_payload(payload)
+            url = url_from_payload(payload)
             target = {**base, "hostname": host, "url": url}
-            if payload.get("ip") or _looks_like_ip(host):
-                target["ip"] = payload.get("ip") or host
+            ip = as_str(payload.get("ip"), "")
+            if ip or _looks_like_ip(host):
+                target["ip"] = ip or host
             return [target]
         if capability in (Capability.PORT_DISCOVERY, Capability.SERVICE_IDENTIFICATION):
             host = payload.get("hostname", "")
@@ -155,7 +173,7 @@ class AdaptiveReconPlanner:
                         break
             return [{**base, "hostname": host, "ip": ip or host}]
         if capability == Capability.TEMPLATE_BASED_ASSESSMENT:
-            return [{**base, "url": payload.get("base_url")}]
+            return [{**base, "url": url_from_payload(payload)}]
         return [{**base, **payload}]
 
 

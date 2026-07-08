@@ -11,6 +11,8 @@ import yaml
 
 from vapt_platform.parameters.context import OperationalContext
 from vapt_platform.parameters.references import find_parameter_in_reference, reference_for_tool
+from vapt_platform.tools.wordlists import resolve_wordlist_path
+from vapt_platform.planning.targets import as_str
 
 HTTP_BASIC_HEADER_TOOLS = {
     "arjun",
@@ -86,7 +88,7 @@ class ParameterSelectionEngine:
             if not self._rule_matches(rule, context):
                 continue
             for arg in rule.get("add_args", []):
-                resolved = self._resolve_placeholders(arg, target)
+                resolved = self._resolve_placeholders(arg, target, tool_name)
                 if resolved not in added and resolved not in base_args:
                     added.append(resolved)
             rule_ids.append(rule["id"])
@@ -105,7 +107,7 @@ class ParameterSelectionEngine:
             explanations.append("HTTP Basic credentials were provided for this target.")
 
         final = self._merge_args(tool_name, base_args, added)
-        final = [self._resolve_placeholders(a, target) for a in final]
+        final = [self._resolve_placeholders(a, target, tool_name) for a in final]
         redacted = self._redact_command(tool_name, final, target)
         ref = reference_for_tool(tool_name)
         doc_url = None
@@ -208,26 +210,30 @@ class ParameterSelectionEngine:
             "passive_only": ctx.passive_only,
         }
 
-    def _resolve_placeholders(self, arg: str, target: dict[str, Any]) -> str:
-        hostname = target.get("hostname") or target.get("ip", "")
-        domain = target.get("domain", hostname)
-        url = target.get("url", f"https://{hostname}" if hostname else "")
-        ip = target.get("ip", "")
+    def _resolve_placeholders(self, arg: str, target: dict[str, Any], tool_name: str = "") -> str:
+        if not isinstance(arg, str):
+            arg = as_str(arg, "")
+        hostname = as_str(target.get("hostname") or target.get("ip", ""), "")
+        domain = as_str(target.get("domain", hostname), hostname)
+        url = as_str(target.get("url"), f"https://{hostname}" if hostname else "")
+        ip = as_str(target.get("ip"), "")
         username, password = self._credentials_from_target(target)
         basic_auth_token = (
             base64.b64encode(f"{username}:{password}".encode()).decode()
             if username is not None and password is not None
             else ""
         )
-        token = target.get("token", "")
-        wordlist = target.get("wordlist", "config/wordlists/common.txt")
-        resolvers = target.get("resolvers", "config/resolvers.txt")
-        targets_file = target.get("targets_file", "")
-        hosts_file = target.get("hosts_file", targets_file)
-        output = target.get("output", "-")
-        path = target.get("path", ".")
-        payload = target.get("payload", "FUZZ")
-        pattern = target.get("pattern", "xss")
+        token = as_str(target.get("token"), "")
+        wordlist = resolve_wordlist_path(tool_name, target) if tool_name else as_str(
+            target.get("wordlist"), "config/wordlists/common.txt"
+        )
+        resolvers = as_str(target.get("resolvers"), "config/resolvers.txt")
+        targets_file = as_str(target.get("targets_file"), "")
+        hosts_file = as_str(target.get("hosts_file"), targets_file)
+        output = as_str(target.get("output"), "-")
+        path = as_str(target.get("path"), ".")
+        payload = as_str(target.get("payload"), "FUZZ")
+        pattern = as_str(target.get("pattern"), "xss")
         return (
             arg.replace("{hostname}", hostname)
             .replace("{domain}", domain)

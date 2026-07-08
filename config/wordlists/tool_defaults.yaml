@@ -1,0 +1,26 @@
+# Per-tool default wordlists under SecLists-master.
+# Override the root with SECLISTS_ROOT in .env (default: SecLists-master).
+version: "1.0"
+seclists_root: SecLists-master
+fallback_wordlist: config/wordlists/common.txt
+
+tools:
+  shuffledns:
+    path: Discovery/DNS/subdomains-top1million-5000.txt
+    note: DNS subdomain brute-force (shuffledns -w)
+
+  ffuf:
+    path: Discovery/Web-Content/common.txt
+    note: Directory/file fuzzing (ffuf -w)
+
+  feroxbuster:
+    path: Discovery/Web-Content/common.txt
+    note: Recursive content discovery (feroxbuster -w)
+
+  gobuster:
+    path: Discovery/Web-Content/common.txt
+    note: Gobuster dir mode default (common list keeps interactive scans fast)
+
+  wfuzz:
+    path: Discovery/Web-Content/common.txt
+    note: Wfuzz file payload source (-z file,...)

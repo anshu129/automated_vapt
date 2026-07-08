@@ -49,6 +49,58 @@ def _set(job_id: str, **fields: Any) -> None:
         job["updated_at"] = _now()
 
 
+def _normalize_scan_id(scan_id: str) -> str:
+    return scan_id.replace("-", "")
+
+
+def notify_recon_tool_event(
+    scan_id: str,
+    *,
+    event: str,
+    capability: str,
+    provider: str | None,
+    target: str | None = None,
+    exit_code: int | None = None,
+    duration_s: float | None = None,
+    task_status: str | None = None,
+    error: str | None = None,
+    command: str | None = None,
+) -> None:
+    """Update in-memory job progress for UI polling during reconnaissance."""
+    wanted = _normalize_scan_id(scan_id)
+    for job in _JOBS.values():
+        if _normalize_scan_id(str(job.get("scan_id", ""))) != wanted:
+            continue
+        progress = dict(job.get("progress") or {})
+        recon = dict(progress.get("recon") or {})
+        if event == "start":
+            recon["current_tool"] = {
+                "capability": capability,
+                "provider": provider,
+                "target": target,
+                "command": command,
+            }
+        else:
+            completed = list(recon.get("completed_tools") or [])
+            completed.append(
+                {
+                    "capability": capability,
+                    "provider": provider,
+                    "exit_code": exit_code,
+                    "duration_s": duration_s,
+                    "status": task_status,
+                    "error": (error or "")[:200] or None,
+                }
+            )
+            recon["completed_tools"] = completed[-30:]
+            recon["tools_completed"] = len(completed)
+            recon.pop("current_tool", None)
+        progress["recon"] = recon
+        job["progress"] = progress
+        job["updated_at"] = _now()
+        break
+
+
 def infer_scope_rules(host: str) -> tuple[list[dict[str, Any]], str, str | None]:
     """Return (scope_rules, hostname_or_ip, url) for a raw host/URL input."""
     raw = host.strip()

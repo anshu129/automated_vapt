@@ -1,8 +1,24 @@
 """Parse tool output into observations and events."""
 
 import json
+import xml.etree.ElementTree as ET
 from ipaddress import ip_address
 from typing import Any
+
+# Auth-gate responses are not treated as discovered endpoints without credentials.
+AUTH_CHALLENGE_STATUS_CODES = frozenset({401, 403})
+
+
+def _status_code(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _is_auth_challenge(status: Any) -> bool:
+    code = _status_code(status)
+    return code in AUTH_CHALLENGE_STATUS_CODES if code is not None else False
 
 
 def _is_ip(value: str) -> bool:
@@ -115,19 +131,21 @@ def _parse_httpx(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str
     for line in stdout.strip().splitlines():
         try:
             rec = json.loads(line)
-            url = rec.get("url") or rec.get("input", target.get("url", ""))
+            raw_url = rec.get("url") or rec.get("input", target.get("url", ""))
+            url = raw_url if isinstance(raw_url, str) else ""
             status = rec.get("status_code") or rec.get("status-code", 0)
-            if url and status:
+            if url and status and ("://" in url or url.startswith("//")):
                 events.append({"type": "HTTP_SERVICE_CONFIRMED", "url": url, "status_code": status})
-                events.append(
-                    {
-                        "type": "WEB_APPLICATION_CONFIRMED",
-                        "base_url": url.split("/", 3)[0] + "//" + url.split("/")[2]
-                        if "/" in url
-                        else url,
-                        "title": rec.get("title", ""),
-                    }
-                )
+                if not _is_auth_challenge(status):
+                    events.append(
+                        {
+                            "type": "WEB_APPLICATION_CONFIRMED",
+                            "base_url": url.split("/", 3)[0] + "//" + url.split("/")[2]
+                            if "/" in url
+                            else url,
+                            "title": rec.get("title", ""),
+                        }
+                    )
             tech = rec.get("tech") or rec.get("technologies") or []
             for t in tech:
                 name = t if isinstance(t, str) else t.get("name", "")
@@ -160,9 +178,10 @@ def _parse_httpx(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str
 
 
 def _parse_nmap(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
-    events = []
-    observations = []
-    if "filtered" in stdout.lower():
+    events: list[dict[str, Any]] = []
+    observations: list[dict[str, Any]] = []
+    lower = stdout.lower()
+    if "filtered" in lower:
         observations.append(
             {
                 "type": "OPERATIONAL_OBSERVATION",
@@ -170,8 +189,7 @@ def _parse_nmap(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str,
                 "firewall_inferred": True,
             }
         )
-    lower = stdout.lower()
-    if "host down" in lower or "0 hosts up" in lower:
+    if "host down" in lower or "0 hosts up" in lower or 'hosts up="0"' in lower:
         observations.append(
             {
                 "type": "OPERATIONAL_OBSERVATION",
@@ -186,16 +204,72 @@ def _parse_nmap(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str,
                 "local_network_target": True,
             }
         )
-    if "<host>" in stdout:
-        events.append(
-            {
-                "type": "SERVICE_OBSERVED",
-                "host": target.get("hostname") or target.get("ip", ""),
-                "port": 443,
-                "protocol": "tcp",
-            }
-        )
+
+    events.extend(_parse_nmap_xml(stdout, target))
     return {"events": events, "observations": observations}
+
+
+def _parse_nmap_xml(stdout: str, target: dict[str, Any]) -> list[dict[str, Any]]:
+    """Extract SERVICE_OBSERVED events from nmap XML (``-oX -``) output.
+
+    nmap always emits ``<host starttime=...>`` (never a bare ``<host>``) and one
+    ``<port>`` element per scanned port, so structured parsing is required to
+    recover the real ports/services identified by ``-sV``.
+    """
+    text = (stdout or "").strip()
+    if "<nmaprun" not in text:
+        return []
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError:
+        return []
+
+    events: list[dict[str, Any]] = []
+    for host in root.iter("host"):
+        ipv4 = ""
+        for addr in host.findall("address"):
+            if addr.get("addrtype") == "ipv4":
+                ipv4 = addr.get("addr", "")
+                break
+        hostname = ""
+        hn = host.find("hostnames/hostname")
+        if hn is not None:
+            hostname = hn.get("name", "")
+
+        target_ip = ipv4 or str(target.get("ip") or "")
+        target_hostname = str(target.get("hostname") or "")
+        # Prefer the scan target's own hostname for asset correlation; fall back
+        # to nmap's reverse-DNS PTR, then the IP.
+        host_value = target_hostname or hostname or target_ip
+
+        for port in host.iter("port"):
+            state = port.find("state")
+            if state is None or state.get("state") != "open":
+                continue
+            try:
+                portid = int(port.get("portid", "0") or 0)
+            except ValueError:
+                portid = 0
+            protocol = port.get("protocol", "tcp")
+            svc = port.find("service")
+            service_name = svc.get("name") if svc is not None else None
+            product = svc.get("product") if svc is not None else None
+            version = svc.get("version") if svc is not None else None
+            events.append(
+                {
+                    "type": "SERVICE_OBSERVED",
+                    "host": host_value,
+                    "ip": target_ip,
+                    "hostname": target_hostname or hostname,
+                    "port": portid,
+                    "protocol": protocol,
+                    "service": service_name,
+                    "product": product,
+                    "version": version,
+                    "source": "nmap",
+                }
+            )
+    return events
 
 
 def _parse_katana(stdout: str, target: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
@@ -263,6 +337,8 @@ def _parse_content_discovery(
         if url.startswith("/"):
             base = target.get("url", "").rstrip("/")
             url = f"{base}{url}"
+        if _is_auth_challenge(status):
+            continue
         if url.startswith("http"):
             events.append({"type": "ENDPOINT_DISCOVERED", "url": url, "method": "GET"})
             observations.append(

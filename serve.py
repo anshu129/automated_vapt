@@ -48,15 +48,23 @@ def configure_env() -> None:
     existing_tool_dirs = [str(p) for p in candidate_tool_dirs if p.is_dir()]
     _default("TOOL_SEARCH_PATHS", os.pathsep.join(existing_tool_dirs))
 
+    seclists = Path("SecLists-master")
+    if seclists.is_dir():
+        _default("SECLISTS_ROOT", str(seclists.resolve()))
+
     # Real tools, honest results by default; scans run to natural completion.
     _default("USE_FAKE_FALLBACK", "false")
     _default("SEED_ON_STARTUP", "true")
     _default("SCAN_START_INLINE_EXECUTION", "true")
 
-    # Generous budget so scans are not cut off early ("no time-limit boundation").
-    _default("TOOL_TIMEOUT_SECONDS", "300")
-    _default("SCAN_PIPELINE_MAX_ITERATIONS", "40")
-    _default("SCAN_PIPELINE_MAX_TASKS", "200")
+    # Per-tool wall-clock cap. Kept modest so a single brute-force tool (ffuf,
+    # gobuster, feroxbuster) cannot stall the inline recon pipeline for minutes
+    # on auth-gated or low-yield targets. Raise for large authorized engagements.
+    _default("TOOL_TIMEOUT_SECONDS", "60")
+    _default("SCAN_PIPELINE_MAX_ITERATIONS", "25")
+    _default("SCAN_PIPELINE_MAX_TASKS", "120")
+    _default("RECON_COMMIT_PER_TASK", "true")
+    _default("RECON_TOOL_LOGGING", "true")
 
 
 def main() -> None:
